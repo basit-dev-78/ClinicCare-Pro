@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ClinicCare Pro | Receptionist Desk</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Poppins', sans-serif; background: #f8fafc; min-height: 100vh; }
+        
+        .dashboard { display: flex; min-height: 100vh; background: #f8fafc; }
+        .sidebar { width: 290px; background: white; box-shadow: 8px 0 24px rgba(0,0,0,0.05); display: flex; flex-direction: column; position: fixed; height: 100vh; z-index: 50; }
+        .sidebar-header { padding: 24px 20px; border-bottom: 1px solid #eef2f6; display: flex; align-items: center; gap: 10px; }
+        .sidebar-header i { font-size: 2.2rem; color: #4f46e5; }
+        .sidebar-header h3 { font-size: 1.3rem; color: #0f172a; }
+        .user-info { padding: 22px 20px; background: #f1f5f9; border-bottom: 1px solid #dee5ed; }
+        .user-info h4 { font-size: 1.2rem; color: #0f172a; margin-bottom: 4px; }
+        .user-info p { color: #334155; font-size: 0.9rem; margin: 5px 0; display: flex; align-items: center; gap: 6px; }
+        .sidebar-nav { flex:1; padding: 20px 0; overflow-y: auto; }
+        .sidebar-nav ul { list-style: none; }
+        .sidebar-nav li { padding: 14px 24px; margin: 4px 12px; border-radius: 14px; cursor: pointer; transition: all 0.15s; display: flex; align-items: center; gap: 14px; color: #1e293b; font-weight: 500; }
+        .sidebar-nav li:hover { background: #eef2ff; color: #4f46e5; }
+        .sidebar-nav li.active { background: #4f46e5; color: white; box-shadow: 0 8px 14px -6px #a5b4fc; }
+        .sidebar-nav li i { width: 24px; font-size: 1.2rem; }
+        .btn-logout { margin: 20px 18px; padding: 14px; background: #ef4444; color: white; border: none; border-radius: 18px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: 0.2s; }
+        .btn-logout:hover { background: #dc2626; transform: translateY(-2px); }
+        .main-content { flex:1; margin-left: 290px; padding: 30px 35px; }
+        .dashboard-header { background: white; border-radius: 24px; padding: 20px 30px; margin-bottom: 30px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 12px rgba(0,0,0,0.02); }
+        .dashboard-header h2 { color: #0f172a; font-weight: 600; }
+        .header-actions span { background: #eef2ff; padding: 8px 18px; border-radius: 40px; color: #1e293b; }
+
+        .dashboard-content { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px,1fr)); gap: 26px; }
+        .dashboard-card { background: white; border-radius: 28px; padding: 1.8rem 1.8rem; box-shadow: 0 6px 18px rgba(0,0,0,0.02); transition: 0.2s; border: 1px solid #f0f4f9; }
+        .dashboard-card:hover { box-shadow: 0 18px 30px -10px #cbd5e1; transform: translateY(-4px); }
+        .dashboard-card h3 { color: #1e293b; font-size: 1.2rem; margin-bottom: 12px; }
+        .dashboard-card p { color: #475569; font-size: 1rem; }
+        .stat-large { font-size: 2.2rem; font-weight: 700; color: #4f46e5; }
+
+        .admin-table { background: white; border-radius: 28px; padding: 1.8rem; grid-column: 1/-1; }
+        .table { width: 100%; border-collapse: collapse; }
+        .table th { text-align: left; padding: 14px 8px; color: #475569; font-weight: 500; border-bottom: 2px solid #eef2f6; }
+        .table td { padding: 12px 8px; border-bottom: 1px solid #f1f5f9; vertical-align: middle; }
+        .badge { padding: 6px 12px; border-radius: 40px; font-size: 0.8rem; font-weight: 500; display: inline-block; }
+        .badge-success { background: #dcfce7; color: #166534; }
+        .badge-warning { background: #fef9c3; color: #854d0e; }
+        .badge-info { background: #dbeafe; color: #1e40af; }
+        .action-btn { background: none; border: none; color: #4f46e5; cursor: pointer; margin: 0 6px; font-size: 1rem; }
+        .action-btn:hover { color: #1e1b4b; }
+        .action-btn.success { color: #10b981; }
+        .modal-overlay { position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; z-index: 1000; }
+        .modal-content { background: white; border-radius: 32px; max-width: 500px; width: 90%; padding: 2rem; }
+        .flex-row { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+        .btn-primary { padding: 14px; background: #4f46e5; color: white; border: none; border-radius: 40px; font-weight: 600; cursor: pointer; }
+        .btn-primary:hover { background: #4338ca; }
+        .btn-secondary { background: #e2e8f0; color: #1e293b; padding: 10px 20px; border: none; border-radius: 40px; font-weight: 500; cursor: pointer; }
+        .login-container { max-width: 400px; margin: 100px auto; background: white; border-radius: 24px; padding: 2rem; box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
+        .login-header { text-align: center; margin-bottom: 2rem; }
+        .login-header i { font-size: 3rem; color: #4f46e5; }
+        .form-group { margin-bottom: 1.25rem; }
+        .form-group label { display: block; margin-bottom: 6px; font-weight: 500; color: #1e293b; }
+        .form-group input, .form-group select { width: 100%; padding: 12px 18px; border: 2px solid #e2e8f0; border-radius: 16px; }
+        .hidden { display: none !important; }
+    </style>
+</head>
+<body>
+    <!-- Login Page -->
+    <div id="loginContainer" class="login-container">
+        <div class="login-header">
+            <i class="fas fa-user-nurse"></i>
+            <h2>Receptionist Login</h2>
+            <p>Front desk operations</p>
+        </div>
+        <form id="loginForm">
+            <div class="form-group">
+                <label>Email</label>
+                <input type="email" id="email" value="reception@demo.com" required>
+            </div>
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" id="password" value="rec123" required>
+            </div>
+            <button type="submit" class="btn-primary">Login</button>
+        </form>
+        <p style="text-align: center; margin-top: 1rem;">
+            <a href="index.html">Back to Home</a>
+        </p>
+    </div>
+
+    <!-- Dashboard -->
+    <div class="dashboard hidden" id="dashboard">
+        <div class="sidebar">
+            <div class="sidebar-header"><i class="fas fa-clinic-medical"></i><h3>ClinicCare Pro</h3></div>
+            <div class="user-info" id="userInfo"></div>
+            <nav class="sidebar-nav" id="sidebarNav"></nav>
+            <button class="btn-logout" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</button>
+        </div>
+        <div class="main-content">
+            <div class="dashboard-header">
+                <h2 id="dashboardTitle">Reception Desk</h2>
+                <div class="header-actions"><span id="currentDate"></span></div>
+            </div>
+            <div class="dashboard-content" id="dashboardContent"></div>
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            let users = JSON.parse(localStorage.getItem('users')) || [];
+            let appointments = JSON.parse(localStorage.getItem('appointments')) || [];
+            let patients = JSON.parse(localStorage.getItem('patients')) || [];
+
+            if (users.length === 0) {
+                users = [
+                    { id: '4', name: 'Lisa Ray', email: 'reception@demo.com', password: 'rec123', role: 'receptionist', phone: '5551004' }
+                ];
+                localStorage.setItem('users', JSON.stringify(users));
+            }
+
+            let currentUser = null;
+
+            document.getElementById('loginForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                const email = document.getElementById('email').value;
+                const password = document.getElementById('password').value;
+                const user = users.find(u => u.email === email && u.password === password && u.role === 'receptionist');
+                
+                if (user) {
+                    currentUser = user;
+                    document.getElementById('loginContainer').classList.add('hidden');
+                    document.getElementById('dashboard').classList.remove('hidden');
+                    updateUserInfo();
+                    updateSidebarNavigation();
+                    updateCurrentDate();
+                    loadReceptionDashboard();
+                } else {
+                    alert('Invalid receptionist credentials');
+                }
+            });
+
+            function updateUserInfo() {
+                document.getElementById('userInfo').innerHTML = `
+                    <h4>${currentUser.name}</h4>
+                    <p><i class="fas fa-envelope"></i> ${currentUser.email}</p>
+                    <p><i class="fas fa-user-tag"></i> Receptionist</p>
+                `;
+            }
+
+            function updateSidebarNavigation() {
+                const items = [
+                    { text: 'Dashboard', icon: 'fa-chart-line' },
+                    { text: 'Manage Appointments', icon: 'fa-calendar-check' },
+                    { text: 'Register Patient', icon: 'fa-user-plus' },
+                    { text: 'Check-ins', icon: 'fa-clipboard-list' },
+                    { text: 'Billing', icon: 'fa-file-invoice' }
+                ];
+                
+                let html = '<ul>';
+                items.forEach(item => {
+                    html += `<li onclick="handleNavigation('${item.text}')"><i class="fas ${item.icon}"></i><span>${item.text}</span></li>`;
+                });
+                html += '</ul>';
+                document.getElementById('sidebarNav').innerHTML = html;
+                document.querySelector('#sidebarNav li').classList.add('active');
+            }
+
+            window.handleNavigation = function(item) {
+                document.querySelectorAll('.sidebar-nav li').forEach(li => li.classList.remove('active'));
+                event.currentTarget.classList.add('active');
+                
+                if (item === 'Dashboard') loadReceptionDashboard();
+                else if (item === 'Manage Appointments') manageAppointments();
+                else if (item === 'Register Patient') showRegisterPatient();
+                else if (item === 'Check-ins') showCheckIns();
+                else if (item === 'Billing') showBilling();
+            };
+
+            function loadReceptionDashboard() {
+                const today = new Date().toISOString().split('T')[0];
+                const todayApps = appointments.filter(a => a.date === today);
+                const checkedIn = todayApps.filter(a => a.status === 'confirmed');
+                
+                document.getElementById('dashboardContent').innerHTML = `
+                    <div class="dashboard-card"><h3>📅 Today's Appointments</h3><p class="stat-large">${todayApps.length}</p></div>
+                    <div class="dashboard-card"><h3>✅ Checked In</h3><p class="stat-large">${checkedIn.length}</p></div>
+                    <div class="dashboard-card"><h3>⏳ Waiting</h3><p class="stat-large">${todayApps.length - checkedIn.length}</p></div>
+                    <div class="dashboard-card"><h3>🆕 New Patients</h3><p class="stat-large">${patients.length}</p></div>
+                `;
+            }
+
+            window.manageAppointments = function() {
+                let rows = appointments.map(a => `
+                    <tr>
+                        <td>${a.patient}</td><td>${a.doctor}</td><td>${a.date}</td><td>${a.time}</td>
+                        <td><span class="badge ${a.status === 'confirmed' ? 'badge-success' : 'badge-warning'}">${a.status}</span></td>
+                        <td>
+                            <button class="action-btn success" onclick="checkInPatient('${a.id}')"><i class="fas fa-check-circle"></i></button>
+                            <button class="action-btn" onclick="editAppointment('${a.id}')"><i class="fas fa-edit"></i></button>
+                        </td>
+                    </tr>`).join('');
+                
+                document.getElementById('dashboardContent').innerHTML = `
+                    <div class="admin-table">
+                        <h3>📋 Manage Appointments</h3>
+                        <table class="table">
+                            <thead><tr><th>Patient</th><th>Doctor</th><th>Date</th><th>Time</th><th>Status</th><th>Actions</th></tr></thead>
+                            <tbody>${rows}</tbody>
+                        </table>
+                    </div>`;
+            };
+
+            window.checkInPatient = function(id) {
+                const app = appointments.find(a => a.id === id);
+                if (app) {
+                    app.status = 'confirmed';
+                    localStorage.setItem('appointments', JSON.stringify(appointments));
+                    manageAppointments();
+                    alert(`${app.patient} checked in successfully`);
+                }
+            };
+
+            window.editAppointment = function(id) {
+                const newTime = prompt('Enter new time (HH:MM):');
+                if (newTime) {
+                    const app = appointments.find(a => a.id === id);
+                    app.time = newTime;
+                    localStorage.setItem('appointments', JSON.stringify(appointments));
+                    manageAppointments();
+                }
+            };
+
+            window.showRegisterPatient = function() {
+                const modalHtml = `
+                    <div class="modal-overlay" id="regModal">
+                        <div class="modal-content">
+                            <h3>Register New Patient</h3>
+                            <input type="text" id="regName" placeholder="Full Name" style="width:100%; padding:12px; margin-bottom:12px;">
+                            <input type="email" id="regEmail" placeholder="Email" style="width:100%; padding:12px; margin-bottom:12px;">
+                            <input type="tel" id="regPhone" placeholder="Phone" style="width:100%; padding:12px; margin-bottom:12px;">
+                            <input type="date" id="regDob" placeholder="Date of Birth" style="width:100%; padding:12px; margin-bottom:12px;">
+                            <input type="text" id="regBlood" placeholder="Blood Group" style="width:100%; padding:12px; margin-bottom:12px;">
+                            <div class="flex-row">
+                                <button class="btn-primary" onclick="saveNewPatient()">Register</button>
+                                <button class="btn-secondary" onclick="closeModal()">Cancel</button>
+                            </div>
+                        </div>
+                    </div>`;
+                document.body.insertAdjacentHTML('beforeend', modalHtml);
+            };
+
+            window.saveNewPatient = function() {
+                const newPatient = {
+                    id: Date.now().toString(),
+                    name: document.getElementById('regName').value,
+                    email: document.getElementById('regEmail').value,
+                    password: 'welcome123',
+                    role: 'patient',
+                    phone: document.getElementById('regPhone').value,
+                    dob: document.getElementById('regDob').value,
+                    bloodGroup: document.getElementById('regBlood').value
+                };
+                
+                users.push(newPatient);
+                patients.push({
+                    id: newPatient.id,
+                    name: newPatient.name,
+                    phone: newPatient.phone,
+                    dob: newPatient.dob,
+                    bloodGroup: newPatient.bloodGroup
+                });
+                
+                localStorage.setItem('users', JSON.stringify(users));
+                localStorage.setItem('patients', JSON.stringify(patients));
+                closeModal();
+                alert('Patient registered successfully! Password: welcome123');
+            };
+
+            window.showCheckIns = function() {
+                const today = new Date().toISOString().split('T')[0];
+                const todayApps = appointments.filter(a => a.date === today);
+                let rows = todayApps.map(a => `
+                    <tr>
+                        <td>${a.patient}</td><td>${a.time}</td><td>${a.doctor}</td>
+                        <td><span class="badge ${a.status === 'confirmed' ? 'badge-success' : 'badge-warning'}">${a.status === 'confirmed' ? 'Checked In' : 'Scheduled'}</span></td>
+                        <td><button class="action-btn success" onclick="checkInPatient('${a.id}')">Check In</button></td>
+                    </tr>`).join('');
+                
+                document.getElementById('dashboardContent').innerHTML = `
+                    <div class="admin-table">
+                        <h3>✅ Today's Check-ins</h3>
+                        <table class="table">
+                            <thead><tr><th>Patient</th><th>Time</th><th>Doctor</th><th>Status</th><th></th></tr></thead>
+                            <tbody>${rows}</tbody>
+                        </table>
+                    </div>`;
+            };
+
+            window.showBilling = function() {
+                document.getElementById('dashboardContent').innerHTML = `
+                    <div class="admin-table">
+                        <h3>💰 Billing</h3>
+                        <p>Billing module - process payments, generate invoices</p>
+                        <button class="btn-primary" onclick="alert('Billing functionality')">Process Payment</button>
+                    </div>`;
+            };
+
+            window.closeModal = function() { 
+                const modal = document.querySelector('.modal-overlay'); 
+                if (modal) modal.remove(); 
+            };
+
+            function updateCurrentDate() { 
+                document.getElementById('currentDate').innerText = new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }); 
+            }
+
+            window.logout = function() { 
+                currentUser = null; 
+                document.getElementById('dashboard').classList.add('hidden');
+                document.getElementById('loginContainer').classList.remove('hidden');
+            };
+        })();
+    </script>
+</body>
+</html>

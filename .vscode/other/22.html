@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ClinicCare Pro | Authentication</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .auth-container {
+            width: 100%;
+            max-width: 500px;
+        }
+
+        .auth-card {
+            background: white;
+            border-radius: 40px;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            animation: slideUp 0.5s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .auth-header {
+            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .auth-header i {
+            font-size: 4rem;
+            margin-bottom: 15px;
+            color: #ffefc0;
+        }
+
+        .auth-header h1 {
+            font-size: 2.2rem;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .auth-header p {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        .auth-body {
+            padding: 40px;
+        }
+
+        .tab-buttons {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            background: #f1f5f9;
+            padding: 5px;
+            border-radius: 60px;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 40px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: transparent;
+            color: #64748b;
+        }
+
+        .tab-btn.active {
+            background: #4f46e5;
+            color: white;
+            box-shadow: 0 4px 10px rgba(79, 70, 229, 0.3);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #334155;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 14px 18px;
+            border: 2px solid #e2e8f0;
+            border-radius: 16px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #4f46e5;
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        }
+
+        .form-group input.error,
+        .form-group select.error {
+            border-color: #ef4444;
+        }
+
+        .role-selector {
+            margin-bottom: 20px;
+        }
+
+        .role-selector label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #334155;
+        }
+
+        .role-options {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+
+        .role-option {
+            position: relative;
+        }
+
+        .role-option input[type="radio"] {
+            position: absolute;
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .role-option label {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 15px;
+            background: #f8fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 0;
+        }
+
+        .role-option input[type="radio"]:checked + label {
+            background: #eef2ff;
+            border-color: #4f46e5;
+            color: #4f46e5;
+        }
+
+        .role-option label i {
+            font-size: 1.8rem;
+            margin-bottom: 8px;
+            color: #64748b;
+        }
+
+        .role-option input[type="radio"]:checked + label i {
+            color: #4f46e5;
+        }
+
+        .role-option label span {
+            font-weight: 500;
+        }
+
+        .btn-auth {
+            width: 100%;
+            padding: 16px;
+            background: #4f46e5;
+            color: white;
+            border: none;
+            border-radius: 40px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+        }
+
+        .btn-auth:hover {
+            background: #4338ca;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(79, 70, 229, 0.3);
+        }
+
+        .demo-credentials {
+            margin-top: 25px;
+            padding: 20px;
+            background: #f8fafc;
+            border-radius: 20px;
+        }
+
+        .demo-credentials h3 {
+            color: #0f172a;
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .demo-credentials h3 i {
+            color: #4f46e5;
+        }
+
+        .credential-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 0;
+            border-bottom: 1px solid #e2e8f0;
+            font-size: 0.9rem;
+        }
+
+        .credential-item:last-child {
+            border-bottom: none;
+        }
+
+        .credential-role {
+            min-width: 100px;
+            font-weight: 600;
+            color: #4f46e5;
+        }
+
+        .credential-details {
+            color: #64748b;
+        }
+
+        .back-link {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .back-link a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .back-link a:hover {
+            text-decoration: underline;
+        }
+
+        .error-message {
+            color: #ef4444;
+            font-size: 0.9rem;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+
+        .password-strength {
+            margin-top: 8px;
+            height: 4px;
+            background: #e2e8f0;
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .password-strength-bar {
+            height: 100%;
+            width: 0;
+            transition: all 0.3s ease;
+        }
+
+        .password-strength-text {
+            font-size: 0.8rem;
+            margin-top: 4px;
+            color: #64748b;
+        }
+
+        /* Responsive */
+        @media (max-width: 480px) {
+            .auth-body {
+                padding: 20px;
+            }
+            
+            .role-options {
+                grid-template-columns: 1fr;
+            }
+            
+            .credential-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 5px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="auth-container">
+        <div class="auth-card">
+            <div class="auth-header">
+                <i class="fas fa-clinic-medical"></i>
+                <h1 id="formTitle">Welcome Back</h1>
+                <p id="formSubtitle">Sign in to continue to ClinicCare Pro</p>
+            </div>
+            
+            <div class="auth-body">
+                <!-- Tabs -->
+                <div class="tab-buttons">
+                    <button class="tab-btn active" id="loginTab" onclick="switchTab('login')">Sign In</button>
+                    <button class="tab-btn" id="signupTab" onclick="switchTab('signup')">Create Account</button>
+                </div>
+
+                <!-- Login Form -->
+                <form id="loginForm" onsubmit="handleLogin(event)">
+                    <div class="role-selector">
+                        <label>Select Your Role</label>
+                        <div class="role-options">
+                            <div class="role-option">
+                                <input type="radio" name="loginRole" id="loginAdmin" value="admin" checked>
+                                <label for="loginAdmin">
+                                    <i class="fas fa-user-tie"></i>
+                                    <span>Admin</span>
+                                </label>
+                            </div>
+                            <div class="role-option">
+                                <input type="radio" name="loginRole" id="loginDoctor" value="doctor">
+                                <label for="loginDoctor">
+                                    <i class="fas fa-user-md"></i>
+                                    <span>Doctor</span>
+                                </label>
+                            </div>
+                            <div class="role-option">
+                                <input type="radio" name="loginRole" id="loginPatient" value="patient">
+                                <label for="loginPatient">
+                                    <i class="fas fa-user"></i>
+                                    <span>Patient</span>
+                                </label>
+                            </div>
+                            <div class="role-option">
+                                <input type="radio" name="loginRole" id="loginReceptionist" value="receptionist">
+                                <label for="loginReceptionist">
+                                    <i class="fas fa-user-nurse"></i>
+                                    <span>Receptionist</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="loginEmail">Email Address</label>
+                        <input type="email" id="loginEmail" placeholder="Enter your email" required>
+                        <div class="error-message" id="loginEmailError">Please enter a valid email</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="loginPassword">Password</label>
+                        <input type="password" id="loginPassword" placeholder="Enter your password" required>
+                        <div class="error-message" id="loginPasswordError">Password is required</div>
+                    </div>
+
+                    <button type="submit" class="btn-auth">
+                        <i class="fas fa-sign-in-alt"></i> Sign In
+                    </button>
+                </form>
+
+                <!-- Signup Form (Hidden by default) -->
+                <form id="signupForm" onsubmit="handleSignup(event)" style="display: none;">
+                    <div class="role-selector">
+                        <label>Select Your Role</label>
+                        <div class="role-options">
+                            <div class="role-option">
+                                <input type="radio" name="signupRole" id="signupAdmin" value="admin">
+                                <label for="signupAdmin">
+                                    <i class="fas fa-user-tie"></i>
+                                    <span>Admin</span>
+                                </label>
+                            </div>
+                            <div class="role-option">
+                                <input type="radio" name="signupRole" id="signupDoctor" value="doctor" checked>
+                                <label for="signupDoctor">
+                                    <i class="fas fa-user-md"></i>
+                                    <span>Doctor</span>
+                                </label>
+                            </div>
+                            <div class="role-option">
+                                <input type="radio" name="signupRole" id="signupPatient" value="patient">
+                                <label for="signupPatient">
+                                    <i class="fas fa-user"></i>
+                                    <span>Patient</span>
+                                </label>
+                            </div>
+                            <div class="role-option">
+                                <input type="radio" name="signupRole" id="signupReceptionist" value="receptionist">
+                                <label for="signupReceptionist">
+                                    <i class="fas fa-user-nurse"></i>
+                                    <span>Receptionist</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="signupName">Full Name</label>
+                        <input type="text" id="signupName" placeholder="Enter your full name" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="signupEmail">Email Address</label>
+                        <input type="email" id="signupEmail" placeholder="Enter your email" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="signupPhone">Phone Number</label>
+                        <input type="tel" id="signupPhone" placeholder="Enter your phone number" required>
+                    </div>
+
+                    <div class="form-group" id="specializationGroup">
+                        <label for="signupSpecialization">Specialization (For Doctors)</label>
+                        <input type="text" id="signupSpecialization" placeholder="e.g., Cardiology">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="signupPassword">Password</label>
+                        <input type="password" id="signupPassword" placeholder="Create a password" required onkeyup="checkPasswordStrength()">
+                        <div class="password-strength">
+                            <div class="password-strength-bar" id="passwordStrengthBar"></div>
+                        </div>
+                        <div class="password-strength-text" id="passwordStrengthText">Enter a password</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="signupConfirmPassword">Confirm Password</label>
+                        <input type="password" id="signupConfirmPassword" placeholder="Confirm your password" required>
+                    </div>
+
+                    <button type="submit" class="btn-auth">
+                        <i class="fas fa-user-plus"></i> Create Account
+                    </button>
+                </form>
+
+                <!-- Demo Credentials -->
+                <div class="demo-credentials">
+                    <h3><i class="fas fa-info-circle"></i> Demo Credentials</h3>
+                    <div class="credential-item">
+                        <span class="credential-role">Admin:</span>
+                        <span class="credential-details">admin@demo.com / admin123</span>
+                    </div>
+                    <div class="credential-item">
+                        <span class="credential-role">Doctor:</span>
+                        <span class="credential-details">doctor@demo.com / doc123</span>
+                    </div>
+                    <div class="credential-item">
+                        <span class="credential-role">Patient:</span>
+                        <span class="credential-details">patient@demo.com / pat123</span>
+                    </div>
+                    <div class="credential-item">
+                        <span class="credential-role">Receptionist:</span>
+                        <span class="credential-details">reception@demo.com / rec123</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="back-link">
+            <a href="index.html"><i class="fas fa-arrow-left"></i> Back to Home</a>
+        </div>
+    </div>
+
+    <script>
+        // Check URL parameter for action
+        const urlParams = new URLSearchParams(window.location.search);
+        const action = urlParams.get('action');
+        
+        // Initialize users in localStorage if not exists
+        let users = JSON.parse(localStorage.getItem('users')) || [];
+        
+        if (users.length === 0) {
+            users = [
+                { id: '1', name: 'Dr. Emily Carter', email: 'doctor@demo.com', password: 'doc123', role: 'doctor', phone: '5551001', specialization: 'Cardiologist' },
+                { id: '2', name: 'John Miller', email: 'patient@demo.com', password: 'pat123', role: 'patient', phone: '5551002' },
+                { id: '3', name: 'Michael Chen', email: 'admin@demo.com', password: 'admin123', role: 'admin', phone: '5551003' },
+                { id: '4', name: 'Lisa Ray', email: 'reception@demo.com', password: 'rec123', role: 'receptionist', phone: '5551004' }
+            ];
+            localStorage.setItem('users', JSON.stringify(users));
+        }
+
+        // Switch between login and signup tabs
+        window.switchTab = function(tab) {
+            const loginTab = document.getElementById('loginTab');
+            const signupTab = document.getElementById('signupTab');
+            const loginForm = document.getElementById('loginForm');
+            const signupForm = document.getElementById('signupForm');
+            const formTitle = document.getElementById('formTitle');
+            const formSubtitle = document.getElementById('formSubtitle');
+
+            if (tab === 'login') {
+                loginTab.classList.add('active');
+                signupTab.classList.remove('active');
+                loginForm.style.display = 'block';
+                signupForm.style.display = 'none';
+                formTitle.textContent = 'Welcome Back';
+                formSubtitle.textContent = 'Sign in to continue to ClinicCare Pro';
+            } else {
+                loginTab.classList.remove('active');
+                signupTab.classList.add('active');
+                loginForm.style.display = 'none';
+                signupForm.style.display = 'block';
+                formTitle.textContent = 'Create Account';
+                formSubtitle.textContent = 'Join ClinicCare Pro today';
+            }
+        };
+
+        // Show/hide specialization field based on role selection
+        document.querySelectorAll('input[name="signupRole"]').forEach(radio => {
+            radio.addEventListener('change', function() {
+                const specGroup = document.getElementById('specializationGroup');
+                if (this.value === 'doctor') {
+                    specGroup.style.display = 'block';
+                } else {
+                    specGroup.style.display = 'none';
+                }
+            });
+        });
+
+        // Password strength checker
+        window.checkPasswordStrength = function() {
+            const password = document.getElementById('signupPassword').value;
+            const bar = document.getElementById('passwordStrengthBar');
+            const text = document.getElementById('passwordStrengthText');
+            
+            let strength = 0;
+            let color = '#ef4444';
+            
+            if (password.length >= 8) strength += 25;
+            if (password.match(/[a-z]+/)) strength += 25;
+            if (password.match(/[A-Z]+/)) strength += 25;
+            if (password.match(/[0-9]+/) || password.match(/[$@#&!]+/)) strength += 25;
+            
+            bar.style.width = strength + '%';
+            
+            if (strength < 50) {
+                color = '#ef4444';
+                text.textContent = 'Weak password';
+            } else if (strength < 75) {
+                color = '#f59e0b';
+                text.textContent = 'Medium password';
+            } else {
+                color = '#10b981';
+                text.textContent = 'Strong password';
+            }
+            
+            bar.style.background = color;
+        };
+
+        // Handle Login
+        window.handleLogin = function(event) {
+            event.preventDefault();
+            
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            const role = document.querySelector('input[name="loginRole"]:checked').value;
+            
+            // Find user
+            const user = users.find(u => u.email === email && u.password === password && u.role === role);
+            
+            if (user) {
+                // Store current user
+                localStorage.setItem('currentUser', JSON.stringify(user));
+                
+                // Redirect to appropriate dashboard based on role
+                window.location.href = `${role}-dashboard.html`;
+            } else {
+                alert('Invalid credentials. Please check your email, password, and selected role.');
+            }
+        };
+
+        // Handle Signup
+        window.handleSignup = function(event) {
+            event.preventDefault();
+            
+            const name = document.getElementById('signupName').value;
+            const email = document.getElementById('signupEmail').value;
+            const phone = document.getElementById('signupPhone').value;
+            const password = document.getElementById('signupPassword').value;
+            const confirmPassword = document.getElementById('signupConfirmPassword').value;
+            const role = document.querySelector('input[name="signupRole"]:checked').value;
+            const specialization = document.getElementById('signupSpecialization').value;
+            
+            // Validation
+            if (password !== confirmPassword) {
+                alert('Passwords do not match!');
+                return;
+            }
+            
+            if (password.length < 6) {
+                alert('Password must be at least 6 characters long');
+                return;
+            }
+            
+            // Check if email already exists
+            if (users.find(u => u.email === email)) {
+                alert('Email already registered. Please use a different email or sign in.');
+                return;
+            }
+            
+            // Create new user
+            const newUser = {
+                id: Date.now().toString(),
+                name,
+                email,
+                password,
+                role,
+                phone,
+                ...(role === 'doctor' && { specialization })
+            };
+            
+            users.push(newUser);
+            localStorage.setItem('users', JSON.stringify(users));
+            
+            alert('Account created successfully! You can now sign in.');
+            switchTab('login');
+            
+            // Pre-fill login form
+            document.getElementById('loginEmail').value = email;
+            document.getElementById('loginPassword').value = password;
+            document.querySelector(`input[name="loginRole"][value="${role}"]`).checked = true;
+        };
+
+        // Initialize based on URL parameter
+        if (action === 'signup') {
+            switchTab('signup');
+        }
+
+        // Check if user is already logged in
+        const currentUser = localStorage.getItem('currentUser');
+        if (currentUser) {
+            const user = JSON.parse(currentUser);
+            // Redirect to appropriate dashboard
+            window.location.href = `${user.role}-dashboard.html`;
+        }
+    </script>
+</body>
+</html>

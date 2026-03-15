@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up | Clinic Management System</title>
+    <!-- Font Awesome 6 (free) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(145deg, #eef7f9 0%, #d4e7ed 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+        }
+
+        .card {
+            background: #ffffff;
+            width: 100%;
+            max-width: 520px;
+            border-radius: 48px;
+            box-shadow: 0 30px 60px rgba(0, 60, 70, 0.25);
+            padding: 2.5rem 2.2rem;
+            transition: 0.2s;
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .logo-area i {
+            font-size: 2.5rem;
+            color: #0b6e76;
+        }
+
+        .logo-area span {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #144d57;
+            letter-spacing: -0.5px;
+        }
+
+        h2 {
+            font-size: 2.2rem;
+            color: #144d57;
+            margin-bottom: 0.3rem;
+        }
+
+        .sub {
+            color: #2b6774;
+            margin-bottom: 2rem;
+            font-size: 1rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            font-weight: 600;
+            color: #11505c;
+            font-size: 0.95rem;
+        }
+
+        .form-group label i {
+            color: #0b6e76;
+            width: 22px;
+        }
+
+        .form-group input,
+        .form-group select {
+            padding: 1rem 1.3rem;
+            border: 1.5px solid #c2dce2;
+            border-radius: 60px;
+            font-size: 1rem;
+            background: #fbfeff;
+            transition: 0.2s;
+            outline: none;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            border-color: #0b6e76;
+            box-shadow: 0 0 0 4px rgba(11, 110, 118, 0.15);
+        }
+
+        /* custom role picker */
+        .role-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.6rem;
+            margin: 0.2rem 0 0.2rem;
+        }
+
+        .role-option {
+            flex: 1 0 auto;
+            background: #f0f7f9;
+            border-radius: 60px;
+            padding: 0.8rem 0.8rem;
+            text-align: center;
+            font-weight: 500;
+            border: 1.5px solid transparent;
+            cursor: pointer;
+            color: #124e5a;
+            min-width: 105px;
+            transition: 0.1s;
+            font-size: 0.95rem;
+        }
+
+        .role-option i {
+            margin-right: 4px;
+            color: #0b6e76;
+        }
+
+        .role-option.selected {
+            background: #b3e0db;
+            border-color: #0b6e76;
+            color: #033b44;
+            font-weight: 600;
+        }
+
+        .hidden-select {
+            display: none;
+        }
+
+        .btn-primary {
+            background: #0b6e76;
+            border: none;
+            padding: 1rem;
+            border-radius: 60px;
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: white;
+            width: 100%;
+            cursor: pointer;
+            transition: 0.2s;
+            margin: 0.5rem 0 1.5rem;
+            border: 2px solid #0b6e76;
+        }
+
+        .btn-primary:hover {
+            background: #08545c;
+        }
+
+        .footer-links {
+            text-align: center;
+            color: #2f6d7a;
+        }
+
+        .footer-links a {
+            color: #0b6e76;
+            font-weight: 600;
+            text-decoration: none;
+            border-bottom: 2px solid #7fc1c5;
+        }
+
+        .demo-note {
+            background: #e2f0f3;
+            padding: 0.8rem;
+            border-radius: 60px;
+            color: #144d57;
+            font-size: 0.85rem;
+            text-align: center;
+            margin-top: 1.8rem;
+            border: 1px dashed #0b6e76;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-bottom: 1.2rem;
+            color: #0b6e76;
+            text-decoration: none;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <a href="#" onclick="alert('Return to main clinic site (simulated)'); return false;" class="back-link"><i class="fas fa-arrow-left"></i> Back to Clinic</a>
+
+        <div class="logo-area">
+            <i class="fas fa-hospital-user"></i>
+            <span>Healios</span>
+        </div>
+
+        <h2>Create account</h2>
+        <div class="sub">choose your role to get started</div>
+
+        <!-- SIGN UP FORM (fully functional) -->
+        <form id="signupForm">
+            <!-- role picker (custom + hidden select) -->
+            <div class="form-group">
+                <label><i class="fas fa-user-tie"></i> Role *</label>
+                <div class="role-row" id="roleRow">
+                    <div class="role-option" data-role="doctor"><i class="fas fa-stethoscope"></i> Doctor</div>
+                    <div class="role-option" data-role="patient"><i class="fas fa-user"></i> Patient</div>
+                    <div class="role-option" data-role="recipient"><i class="fas fa-file-invoice"></i> Recipient</div>
+                    <div class="role-option" data-role="admin"><i class="fas fa-user-cog"></i> Admin</div>
+                </div>
+                <select name="role" id="signupRoleSelect" class="hidden-select" required>
+                    <option value="">-- select --</option>
+                    <option value="doctor">Doctor</option>
+                    <option value="patient">Patient</option>
+                    <option value="recipient">Recipient</option>
+                    <option value="admin">Admin</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label><i class="fas fa-user-circle"></i> Full name *</label>
+                <input type="text" id="fullName" placeholder="Alex Morgan" required>
+            </div>
+
+            <div class="form-group">
+                <label><i class="fas fa-envelope"></i> Email *</label>
+                <input type="email" id="email" placeholder="hello@domain.com" required>
+            </div>
+
+            <div class="form-group">
+                <label><i class="fas fa-lock"></i> Password * (min 6 characters)</label>
+                <input type="password" id="password" placeholder="••••••••" required minlength="6">
+            </div>
+
+            <button type="submit" class="btn-primary"><i class="fas fa-user-check"></i> Register</button>
+        </form>
+
+        <div class="footer-links">
+            Already have an account? <a href="#" onclick="alert('Please open signin.html separately'); return false;">Sign in</a>
+        </div>
+
+        <div class="demo-note">
+            <i class="fas fa-flask"></i> Demo: any valid credentials. Role stored in localStorage.
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            // DOM elements
+            const roleOptions = document.querySelectorAll('.role-option');
+            const hiddenRoleSelect = document.getElementById('signupRoleSelect');
+            const form = document.getElementById('signupForm');
+            const nameInput = document.getElementById('fullName');
+            const emailInput = document.getElementById('email');
+            const passwordInput = document.getElementById('password');
+
+            // --- custom role selector logic ---
+            roleOptions.forEach(opt => {
+                opt.addEventListener('click', function() {
+                    // remove selected class from all
+                    roleOptions.forEach(o => o.classList.remove('selected'));
+                    this.classList.add('selected');
+                    const selectedRole = this.getAttribute('data-role'); // "doctor", "patient", etc.
+                    hiddenRoleSelect.value = selectedRole;
+                });
+            });
+
+            // optional: if user somehow changes hidden select manually? we keep custom in sync only one way, but fine.
+
+            // --- form submission ---
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+
+                const name = nameInput.value.trim();
+                const email = emailInput.value.trim();
+                const password = passwordInput.value;
+                const role = hiddenRoleSelect.value;
+
+                // validations
+                if (!name || !email || !password || !role) {
+                    alert('❗ Please fill all fields and select a role.');
+                    return;
+                }
+
+                if (password.length < 6) {
+                    alert('Password must be at least 6 characters.');
+                    return;
+                }
+
+                if (!email.includes('@') || !email.includes('.')) {
+                    alert('Please enter a valid email address.');
+                    return;
+                }
+
+                // store user in localStorage
+                localStorage.setItem('clinicUser', JSON.stringify({
+                    fullName: name,
+                    email: email,
+                    role: role,
+                    authenticated: true,
+                    signupTime: new Date().toISOString()
+                }));
+
+                alert(`✅ Registration successful!\n\nName: ${name}\nRole: ${role}\nEmail: ${email}\n\n(You are now signed up.)`);
+
+                // optionally redirect (commented out)
+                // window.location.href = 'dashboard.html';
+
+                // clear form? up to you - we keep for demo
+                // nameInput.value = ''; emailInput.value = ''; passwordInput.value = ''; 
+                // roleOptions.forEach(o => o.classList.remove('selected')); hiddenRoleSelect.value = '';
+            });
+
+            // double-click on demo note to fill example (convenience)
+            const demoDiv = document.querySelector('.demo-note');
+            demoDiv.addEventListener('dblclick', function() {
+                nameInput.value = 'Taylor Smith';
+                emailInput.value = 'taylor@clinic.demo';
+                passwordInput.value = 'demo123';
+                // set role 'doctor' via custom picker
+                const doctorOption = Array.from(roleOptions).find(opt => opt.getAttribute('data-role') === 'doctor');
+                if (doctorOption) {
+                    roleOptions.forEach(o => o.classList.remove('selected'));
+                    doctorOption.classList.add('selected');
+                    hiddenRoleSelect.value = 'doctor';
+                }
+            });
+        })();
+    </script>
+</body>
+</html>

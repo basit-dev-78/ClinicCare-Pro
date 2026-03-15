@@ -1,0 +1,2258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ClinicFlow · management system</title>
+    <!-- Font Awesome 6 (free) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            background: #e9eef2;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 1.5rem;
+        }
+
+        /* main app card */
+        .app-container {
+            max-width: 1400px;
+            width: 100%;
+            background: white;
+            border-radius: 2rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            overflow: hidden;
+            transition: all 0.2s ease;
+        }
+
+        /* header with role-based welcome */
+        .app-header {
+            background: #ffffff;
+            padding: 1.2rem 2rem;
+            border-bottom: 1px solid #eef2f6;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .logo-area h2 {
+            font-weight: 600;
+            color: #0b2b40;
+            font-size: 1.6rem;
+            letter-spacing: -0.3px;
+        }
+
+        .logo-area h2 i {
+            color: #2d7a9b;
+            margin-right: 8px;
+        }
+
+        .role-indicator {
+            background: #f1f9ff;
+            padding: 0.5rem 1.3rem;
+            border-radius: 100px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: #136b8f;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* main area : login/register vs admin panel */
+        .main-stage {
+            padding: 0;
+            background: #f8fafc;
+            min-height: calc(100vh - 80px);
+        }
+
+        /* login/register card (visible when not logged in as admin) */
+        .auth-section {
+            padding: 2rem;
+        }
+
+        .auth-card {
+            background: white;
+            border-radius: 1.5rem;
+            padding: 2rem;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.02);
+            max-width: 520px;
+            margin: 1rem auto 2rem auto;
+            border: 1px solid #dee7ed;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid #dde5eb;
+            padding-bottom: 0.8rem;
+        }
+
+        .tab-btn {
+            background: none;
+            border: none;
+            padding: 0.6rem 1.8rem;
+            font-size: 1rem;
+            font-weight: 500;
+            border-radius: 40px;
+            color: #4f5f6f;
+            cursor: pointer;
+            transition: 0.15s;
+        }
+
+        .tab-btn.active {
+            background: #e3f0f7;
+            color: #105e7c;
+        }
+
+        .auth-form h3 {
+            margin-bottom: 1.5rem;
+            font-weight: 600;
+            color: #173342;
+        }
+
+        .input-group {
+            margin-bottom: 1.25rem;
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: #38596e;
+            margin-bottom: 0.25rem;
+        }
+
+        .input-group input, .input-group select, .input-group textarea {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            border: 1.5px solid #d9e2ea;
+            border-radius: 14px;
+            font-size: 0.95rem;
+            background: white;
+            transition: 0.15s;
+        }
+
+        .input-group input:focus, .input-group select:focus, .input-group textarea:focus {
+            outline: none;
+            border-color: #2d7a9b;
+            box-shadow: 0 0 0 3px rgba(45,122,155,0.1);
+        }
+
+        .btn-primary {
+            background: #186f94;
+            color: white;
+            border: none;
+            padding: 0.9rem 1.5rem;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 1rem;
+            width: 100%;
+            cursor: pointer;
+            transition: 0.15s;
+            box-shadow: 0 4px 6px -2px rgba(20,88,120,0.3);
+        }
+
+        .btn-primary:hover {
+            background: #0e5a7c;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1.5px solid #bacfd9;
+            padding: 0.7rem 1.5rem;
+            border-radius: 40px;
+            font-weight: 500;
+            color: #1a4c63;
+            cursor: pointer;
+        }
+
+        .btn-outline:hover {
+            background: #eef6fc;
+        }
+
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .btn-danger:hover {
+            background: #c82333;
+        }
+
+        .btn-success {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .btn-success:hover {
+            background: #218838;
+        }
+
+        .info-note {
+            background: #ecf7fc;
+            border-radius: 12px;
+            padding: 0.7rem 1rem;
+            font-size: 0.85rem;
+            color: #19536b;
+            margin-top: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* ADMIN PANEL with Sidebar */
+        .admin-panel {
+            display: none;
+            height: 100%;
+        }
+
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.2rem 2rem;
+            background: white;
+            border-bottom: 1px solid #eef2f6;
+        }
+
+        .admin-header h2 {
+            font-weight: 600;
+            color: #0e2e3d;
+        }
+
+        .log-out {
+            background: none;
+            border: 1px solid #c7d8e3;
+            padding: 0.5rem 1.4rem;
+            border-radius: 40px;
+            color: #375f74;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .log-out:hover {
+            background: #f0f7fc;
+        }
+
+        /* Sidebar Layout */
+        .admin-layout {
+            display: flex;
+            min-height: calc(100vh - 140px);
+        }
+
+        /* Left Sidebar */
+        .admin-sidebar {
+            width: 280px;
+            background: white;
+            border-right: 1px solid #dee9f0;
+            padding: 1.5rem 0;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+        }
+
+        .sidebar-menu li {
+            margin: 0.2rem 0;
+        }
+
+        .sidebar-menu button {
+            width: 100%;
+            text-align: left;
+            padding: 1rem 1.5rem;
+            background: transparent;
+            border: none;
+            font-size: 1rem;
+            font-weight: 500;
+            color: #3c6379;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: 0.15s;
+            border-left: 4px solid transparent;
+        }
+
+        .sidebar-menu button i {
+            width: 24px;
+            font-size: 1.2rem;
+            color: #4f7e9c;
+        }
+
+        .sidebar-menu button:hover {
+            background: #f0f7fc;
+            color: #094c69;
+        }
+
+        .sidebar-menu button.active {
+            background: #e3f0f7;
+            color: #094c69;
+            border-left-color: #186f94;
+            font-weight: 600;
+        }
+
+        .sidebar-menu button.active i {
+            color: #186f94;
+        }
+
+        .sidebar-divider {
+            height: 1px;
+            background: #dee9f0;
+            margin: 1rem 1.5rem;
+        }
+
+        .sidebar-header {
+            padding: 0 1.5rem 1rem 1.5rem;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #7f9eb3;
+            font-weight: 600;
+        }
+
+        /* Main Content Area */
+        .admin-content {
+            flex: 1;
+            padding: 2rem;
+            background: #f8fafc;
+            overflow-y: auto;
+        }
+
+        .tab-content {
+            background: white;
+            border-radius: 1.8rem;
+            padding: 1.8rem;
+            border: 1px solid #e2eef5;
+            box-shadow: 0 6px 14px rgba(0,0,0,0.02);
+        }
+
+        .table-mini {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+
+        .table-mini th {
+            text-align: left;
+            padding: 0.8rem 0.2rem 0.5rem 0.2rem;
+            color: #3f6279;
+            font-weight: 600;
+            border-bottom: 1px solid #d4e2ec;
+        }
+
+        .table-mini td {
+            padding: 0.8rem 0.2rem;
+            border-bottom: 1px solid #ecf3f8;
+        }
+
+        .badge {
+            background: #e1f0f8;
+            padding: 0.2rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            color: #146080;
+            cursor: pointer;
+            display: inline-block;
+            margin: 0 2px;
+        }
+
+        .badge:hover {
+            background: #c0d9e8;
+        }
+
+        .stat-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: #f2f8fd;
+            border-radius: 1.2rem;
+            padding: 1.2rem 1.8rem;
+            border: 1px solid #dae9f2;
+        }
+
+        .stat-card h4 {
+            color: #114e69;
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-card .number {
+            font-size: 2.2rem;
+            font-weight: 600;
+            color: #0b3b4f;
+            line-height: 1.2;
+        }
+
+        .stat-card .trend {
+            font-size: 0.85rem;
+            color: #28a745;
+        }
+
+        .subscription-sim {
+            background: #e9f3fa;
+            border-radius: 1.5rem;
+            padding: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .flex-row {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .usage-bar {
+            background: #deecf5;
+            border-radius: 20px;
+            height: 18px;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .usage-fill {
+            background: #1f7b9e;
+            height: 18px;
+            border-radius: 20px;
+            width: 62%;
+        }
+
+        hr {
+            border: none;
+            border-top: 1px solid #cbdbe7;
+            margin: 1.2rem 0;
+        }
+
+        .footer-note {
+            font-size: 0.8rem;
+            color: #587f96;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 1.5rem;
+            padding: 2rem;
+            max-width: 600px;
+            margin: 30px auto;
+            position: relative;
+            animation: slideDown 0.3s ease;
+        }
+
+        @keyframes slideDown {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #eef2f6;
+        }
+
+        .modal-header h3 {
+            color: #0b2b40;
+            font-size: 1.4rem;
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #7f8c8d;
+            padding: 0 5px;
+        }
+
+        .close-modal:hover {
+            color: #34495e;
+        }
+
+        .modal-footer {
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+            margin-top: 2rem;
+            padding-top: 1rem;
+            border-top: 2px solid #eef2f6;
+        }
+
+        .modal-footer button {
+            width: auto;
+            padding: 0.7rem 1.8rem;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .search-box {
+            margin-bottom: 1.5rem;
+            padding: 0.8rem 1.2rem;
+            border: 1.5px solid #d9e2ea;
+            border-radius: 40px;
+            width: 100%;
+            max-width: 300px;
+        }
+
+        .filter-tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-tab {
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            background: #f0f5f9;
+            border: none;
+            cursor: pointer;
+            font-size: 0.85rem;
+        }
+
+        .filter-tab.active {
+            background: #186f94;
+            color: white;
+        }
+
+        .summary-cards {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .summary-card {
+            background: linear-gradient(135deg, #f2f8fd 0%, #ffffff 100%);
+            border-radius: 1rem;
+            padding: 1rem;
+            border: 1px solid #dae9f2;
+            text-align: center;
+        }
+
+        .summary-card .number {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: #0b3b4f;
+        }
+
+        .summary-card .label {
+            color: #587f96;
+            font-size: 0.85rem;
+        }
+    </style>
+</head>
+<body>
+<div class="app-container" id="appContainer">
+    <!-- header (common) -->
+    <div class="app-header">
+        <div class="logo-area">
+            <h2><i class="fas fa-clinic-medical"></i> ClinicFlow</h2>
+        </div>
+        <div class="role-indicator" id="roleHeader">
+            <i class="fas fa-circle-user"></i>
+            <span id="currentRoleDisplay">Not logged in</span>
+        </div>
+    </div>
+
+    <!-- main stage: dynamic content -->
+    <div class="main-stage" id="mainStage">
+        <!-- AUTH SECTION -->
+        <div id="authSection" class="auth-section">
+            <div class="auth-card">
+                <div class="tabs">
+                    <button class="tab-btn active" id="loginTabBtn">Log in</button>
+                    <button class="tab-btn" id="signupTabBtn">Create account</button>
+                </div>
+
+                <!-- LOGIN FORM -->
+                <div id="loginForm" class="auth-form">
+                    <h3>Welcome back</h3>
+                    <div class="input-group">
+                        <label>Email</label>
+                        <input type="email" id="loginEmail" placeholder="e.g. admin@clinic.com" value="admin@clinic.com">
+                    </div>
+                    <div class="input-group">
+                        <label>Password</label>
+                        <input type="password" id="loginPassword" placeholder="••••••••" value="admin123">
+                    </div>
+                    <button class="btn-primary" id="loginBtn"><i class="fas fa-arrow-right-to-bracket" style="margin-right: 8px;"></i> Sign in</button>
+                    <div id="loginError" class="info-note" style="background: #f8d7da; color: #721c24; display: none;"><i class="fas fa-exclamation-circle"></i> <span></span></div>
+                </div>
+
+                <!-- SIGNUP FORM -->
+                <div id="signupForm" class="auth-form" style="display: none;">
+                    <h3>Register new account</h3>
+                    <div class="input-group">
+                        <label>Full name</label>
+                        <input type="text" id="signupName" placeholder="Alex Smith">
+                    </div>
+                    <div class="input-group">
+                        <label>Email</label>
+                        <input type="email" id="signupEmail" placeholder="alex@example.com">
+                    </div>
+                    <div class="input-group">
+                        <label>Role</label>
+                        <select id="signupRole">
+                            <option value="doctor">👨‍⚕️ Doctor</option>
+                            <option value="receptionist">💁 Receptionist</option>
+                            <option value="patient">🩺 Patient</option>
+                            <option value="recipient">📦 Recipient (lab/research)</option>
+                            <option value="admin">⚙️ Admin</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label>Password</label>
+                        <input type="password" id="signupPassword" placeholder="create password">
+                    </div>
+                    <button class="btn-primary" id="signupBtn"><i class="fas fa-user-plus" style="margin-right: 8px;"></i> Create account</button>
+                    <div id="signupError" class="info-note" style="background: #f8d7da; color: #721c24; display: none;"><i class="fas fa-exclamation-circle"></i> <span></span></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ADMIN PANEL with Sidebar -->
+        <div id="adminPanel" class="admin-panel">
+            <div class="admin-header">
+                <h2><i class="fas fa-lock" style="margin-right: 8px; color:#1f6e92;"></i> Admin Dashboard</h2>
+                <button class="log-out" id="logoutBtn"><i class="fas fa-sign-out-alt" style="margin-right: 6px;"></i>Log out</button>
+            </div>
+
+            <!-- Sidebar Layout -->
+            <div class="admin-layout">
+                <!-- Left Sidebar Navigation -->
+                <div class="admin-sidebar">
+                    <div class="sidebar-header">MAIN NAVIGATION</div>
+                    <ul class="sidebar-menu">
+                        <li>
+                            <button class="sidebar-tab active" data-tab="dashboard">
+                                <i class="fas fa-home"></i>
+                                <span>Dashboard</span>
+                            </button>
+                        </li>
+                    </ul>
+                    
+                    <div class="sidebar-divider"></div>
+                    <div class="sidebar-header">USER MANAGEMENT</div>
+                    <ul class="sidebar-menu">
+                        <li>
+                            <button class="sidebar-tab" data-tab="manageDoctors">
+                                <i class="fas fa-user-md"></i>
+                                <span>Doctors</span>
+                                <span class="badge" style="margin-left: auto;" id="doctorCount">0</span>
+                            </button>
+                        </li>
+                        <li>
+                            <button class="sidebar-tab" data-tab="manageReceptionists">
+                                <i class="fas fa-user-tie"></i>
+                                <span>Receptionists</span>
+                                <span class="badge" style="margin-left: auto;" id="receptionistCount">0</span>
+                            </button>
+                        </li>
+                        <li>
+                            <button class="sidebar-tab" data-tab="managePatients">
+                                <i class="fas fa-user-injured"></i>
+                                <span>Patients</span>
+                                <span class="badge" style="margin-left: auto;" id="patientCount">0</span>
+                            </button>
+                        </li>
+                        <li>
+                            <button class="sidebar-tab" data-tab="manageRecipients">
+                                <i class="fas fa-hand-holding-heart"></i>
+                                <span>Recipients</span>
+                                <span class="badge" style="margin-left: auto;" id="recipientCount">0</span>
+                            </button>
+                        </li>
+                    </ul>
+
+                    <div class="sidebar-divider"></div>
+                    <div class="sidebar-header">ANALYTICS & SETTINGS</div>
+                    <ul class="sidebar-menu">
+                        <li>
+                            <button class="sidebar-tab" data-tab="analytics">
+                                <i class="fas fa-chart-line"></i>
+                                <span>Analytics</span>
+                            </button>
+                        </li>
+                        <li>
+                            <button class="sidebar-tab" data-tab="subscription">
+                                <i class="fas fa-credit-card"></i>
+                                <span>Subscription</span>
+                            </button>
+                        </li>
+                        <li>
+                            <button class="sidebar-tab" data-tab="systemUsage">
+                                <i class="fas fa-desktop"></i>
+                                <span>System Usage</span>
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Main Content Area -->
+                <div class="admin-content">
+                    <div class="tab-content" id="adminTabContent">
+                        <!-- Dynamic content will be loaded here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Doctor Modal -->
+<div id="doctorModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 id="doctorModalTitle"><i class="fas fa-user-md"></i> Add New Doctor</h3>
+            <button class="close-modal" onclick="closeAllModals()">&times;</button>
+        </div>
+        <form id="doctorForm">
+            <div class="form-row">
+                <div class="input-group">
+                    <label>First Name *</label>
+                    <input type="text" id="doctorFirstName" placeholder="John" required>
+                </div>
+                <div class="input-group">
+                    <label>Last Name *</label>
+                    <input type="text" id="doctorLastName" placeholder="Doe" required>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="input-group">
+                    <label>Email *</label>
+                    <input type="email" id="doctorEmail" placeholder="john.doe@clinic.com" required>
+                </div>
+                <div class="input-group">
+                    <label>Phone *</label>
+                    <input type="tel" id="doctorPhone" placeholder="+1 234 567 8900" required>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="input-group">
+                    <label>Specialty *</label>
+                    <select id="doctorSpecialty" required>
+                        <option value="">Select Specialty</option>
+                        <option value="Cardiology">Cardiology</option>
+                        <option value="Neurology">Neurology</option>
+                        <option value="Pediatrics">Pediatrics</option>
+                        <option value="Orthopedics">Orthopedics</option>
+                        <option value="Dermatology">Dermatology</option>
+                        <option value="Ophthalmology">Ophthalmology</option>
+                        <option value="Psychiatry">Psychiatry</option>
+                        <option value="Radiology">Radiology</option>
+                        <option value="Surgery">Surgery</option>
+                        <option value="Family Medicine">Family Medicine</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label>License Number *</label>
+                    <input type="text" id="doctorLicense" placeholder="MD123456" required>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="input-group">
+                    <label>Years of Experience</label>
+                    <input type="number" id="doctorExperience" placeholder="10" min="0">
+                </div>
+                <div class="input-group">
+                    <label>Consultation Fee ($)</label>
+                    <input type="number" id="doctorFee" placeholder="150" min="0">
+                </div>
+            </div>
+            <div class="input-group">
+                <label>Qualifications</label>
+                <textarea id="doctorQualifications" placeholder="MBBS, MD, Fellowship in Cardiology..." rows="2"></textarea>
+            </div>
+            <div class="input-group">
+                <label>Address</label>
+                <textarea id="doctorAddress" placeholder="123 Medical Center, City, State" rows="2"></textarea>
+            </div>
+            <div class="form-row">
+                <div class="input-group">
+                    <label>Available Days</label>
+                    <select id="doctorDays" multiple size="3">
+                        <option value="Monday">Monday</option>
+                        <option value="Tuesday">Tuesday</option>
+                        <option value="Wednesday">Wednesday</option>
+                        <option value="Thursday">Thursday</option>
+                        <option value="Friday">Friday</option>
+                        <option value="Saturday">Saturday</option>
+                    </select>
+                    <small>Hold Ctrl to select multiple</small>
+                </div>
+                <div class="input-group">
+                    <label>Status</label>
+                    <select id="doctorStatus">
+                        <option value="active">Active</option>
+                        <option value="on-leave">On Leave</option>
+                        <option value="inactive">Inactive</option>
+                    </select>
+                </div>
+            </div>
+            <input type="hidden" id="doctorId">
+            <div class="modal-footer">
+                <button type="button" class="btn-outline" onclick="closeAllModals()">Cancel</button>
+                <button type="submit" class="btn-primary">Save Doctor</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Receptionist Modal -->
+<div id="receptionistModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 id="receptionistModalTitle"><i class="fas fa-user-tie"></i> Add New Receptionist</h3>
+            <button class="close-modal" onclick="closeAllModals()">&times;</button>
+        </div>
+        <form id="receptionistForm">
+            <div class="form-row">
+                <div class="input-group">
+                    <label>First Name *</label>
+                    <input type="text" id="receptionistFirstName" placeholder="Jane" required>
+                </div>
+                <div class="input-group">
+                    <label>Last Name *</label>
+                    <input type="text" id="receptionistLastName" placeholder="Smith" required>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="input-group">
+                    <label>Email *</label>
+                    <input type="email" id="receptionistEmail" placeholder="jane.smith@clinic.com" required>
+                </div>
+                <div class="input-group">
+                    <label>Phone *</label>
+                    <input type="tel" id="receptionistPhone" placeholder="+1 234 567 8900" required>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="input-group">
+                    <label>Employee ID *</label>
+                    <input type="text" id="receptionistEmpId" placeholder="EMP001" required>
+                </div>
+                <div class="input-group">
+                    <label>Shift</label>
+                    <select id="receptionistShift">
+                        <option value="morning">Morning (8AM - 2PM)</option>
+                        <option value="afternoon">Afternoon (2PM - 8PM)</option>
+                        <option value="evening">Evening (8PM - 2AM)</option>
+                        <option value="night">Night (2AM - 8AM)</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="input-group">
+                    <label>Date of Birth</label>
+                    <input type="date" id="receptionistDob">
+                </div>
+                <div class="input-group">
+                    <label>Join Date</label>
+                    <input type="date" id="receptionistJoinDate">
+                </div>
+            </div>
+            <div class="input-group">
+                <label>Skills / Languages</label>
+                <textarea id="receptionistSkills" placeholder="English, Spanish, Microsoft Office..." rows="2"></textarea>
+            </div>
+            <div class="input-group">
+                <label>Address</label>
+                <textarea id="receptionistAddress" placeholder="456 Reception St, City, State" rows="2"></textarea>
+            </div>
+            <div class="form-row">
+                <div class="input-group">
+                    <label>Salary ($)</label>
+                    <input type="number" id="receptionistSalary" placeholder="35000" min="0">
+                </div>
+                <div class="input-group">
+                    <label>Status</label>
+                    <select id="receptionistStatus">
+                        <option value="active">Active</option>
+                        <option value="on-leave">On Leave</option>
+                        <option value="terminated">Terminated</option>
+                    </select>
+                </div>
+            </div>
+            <input type="hidden" id="receptionistId">
+            <div class="modal-footer">
+                <button type="button" class="btn-outline" onclick="closeAllModals()">Cancel</button>
+                <button type="submit" class="btn-primary">Save Receptionist</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Recipient Modal -->
+<div id="recipientModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 id="recipientModalTitle"><i class="fas fa-hand-holding-heart"></i> Add New Recipient</h3>
+            <button class="close-modal" onclick="closeAllModals()">&times;</button>
+        </div>
+        <form id="recipientForm">
+            <div class="input-group">
+                <label>Organization/Lab Name *</label>
+                <input type="text" id="recipientName" placeholder="Northside Medical Lab" required>
+            </div>
+            <div class="form-row">
+                <div class="input-group">
+                    <label>Type *</label>
+                    <select id="recipientType" required>
+                        <option value="Research">Research Lab</option>
+                        <option value="Recipient">Blood Bank</option>
+                        <option value="Hospital">Hospital</option>
+                        <option value="Clinic">Clinic</option>
+                        <option value="University">University</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label>Contact Person</label>
+                    <input type="text" id="recipientContact" placeholder="Dr. Wilson">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="input-group">
+                    <label>Email</label>
+                    <input type="email" id="recipientEmail" placeholder="contact@lab.com">
+                </div>
+                <div class="input-group">
+                    <label>Phone</label>
+                    <input type="tel" id="recipientPhone" placeholder="+1 234 567 8900">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="input-group">
+                    <label>Number of Samples</label>
+                    <input type="number" id="recipientSamples" placeholder="0" min="0" value="0">
+                </div>
+                <div class="input-group">
+                    <label>Status</label>
+                    <select id="recipientStatus">
+                        <option value="active">Active</option>
+                        <option value="inactive">Inactive</option>
+                        <option value="pending">Pending</option>
+                    </select>
+                </div>
+            </div>
+            <div class="input-group">
+                <label>Address</label>
+                <textarea id="recipientAddress" placeholder="789 Lab Road, City, State" rows="2"></textarea>
+            </div>
+            <div class="input-group">
+                <label>Notes / Requirements</label>
+                <textarea id="recipientNotes" placeholder="Special requirements or notes..." rows="2"></textarea>
+            </div>
+            <input type="hidden" id="recipientId">
+            <div class="modal-footer">
+                <button type="button" class="btn-outline" onclick="closeAllModals()">Cancel</button>
+                <button type="submit" class="btn-primary">Save Recipient</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Patient Modal -->
+<div id="patientModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 id="patientModalTitle"><i class="fas fa-user-injured"></i> Add New Patient</h3>
+            <button class="close-modal" onclick="closeAllModals()">&times;</button>
+        </div>
+        <form id="patientForm">
+            <div class="form-row">
+                <div class="input-group">
+                    <label>First Name *</label>
+                    <input type="text" id="patientFirstName" placeholder="John" required>
+                </div>
+                <div class="input-group">
+                    <label>Last Name *</label>
+                    <input type="text" id="patientLastName" placeholder="Doe" required>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="input-group">
+                    <label>Date of Birth *</label>
+                    <input type="date" id="patientDob" required>
+                </div>
+                <div class="input-group">
+                    <label>Gender</label>
+                    <select id="patientGender">
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="input-group">
+                    <label>Email</label>
+                    <input type="email" id="patientEmail" placeholder="john.doe@email.com">
+                </div>
+                <div class="input-group">
+                    <label>Phone *</label>
+                    <input type="tel" id="patientPhone" placeholder="+1 234 567 8900" required>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="input-group">
+                    <label>Blood Group</label>
+                    <select id="patientBloodGroup">
+                        <option value="">Select</option>
+                        <option value="A+">A+</option>
+                        <option value="A-">A-</option>
+                        <option value="B+">B+</option>
+                        <option value="B-">B-</option>
+                        <option value="O+">O+</option>
+                        <option value="O-">O-</option>
+                        <option value="AB+">AB+</option>
+                        <option value="AB-">AB-</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label>Emergency Contact</label>
+                    <input type="text" id="patientEmergency" placeholder="+1 234 567 8901">
+                </div>
+            </div>
+            <div class="input-group">
+                <label>Address</label>
+                <textarea id="patientAddress" placeholder="123 Patient St, City, State" rows="2"></textarea>
+            </div>
+            <div class="form-row">
+                <div class="input-group">
+                    <label>Insurance Provider</label>
+                    <input type="text" id="patientInsurance" placeholder="Blue Cross">
+                </div>
+                <div class="input-group">
+                    <label>Insurance ID</label>
+                    <input type="text" id="patientInsuranceId" placeholder="INS123456">
+                </div>
+            </div>
+            <div class="input-group">
+                <label>Medical History / Notes</label>
+                <textarea id="patientHistory" placeholder="Allergies, chronic conditions..." rows="2"></textarea>
+            </div>
+            <input type="hidden" id="patientId">
+            <div class="modal-footer">
+                <button type="button" class="btn-outline" onclick="closeAllModals()">Cancel</button>
+                <button type="submit" class="btn-primary">Save Patient</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    (function() {
+        // ----- State management -----
+        let currentUser = null;
+        let users = JSON.parse(localStorage.getItem('clinicflow_users')) || [];
+        
+        // Initialize data with sample data if empty
+        let doctors = JSON.parse(localStorage.getItem('clinicflow_doctors')) || [
+            { 
+                id: 1, 
+                firstName: 'Sarah', 
+                lastName: 'Chen', 
+                name: 'Dr. Sarah Chen',
+                email: 'sarah.chen@clinic.com',
+                phone: '+1 234 567 8901',
+                specialty: 'Cardiology', 
+                patients: 142,
+                license: 'MD123456',
+                experience: 12,
+                fee: 200,
+                qualifications: 'MBBS, MD Cardiology',
+                address: '123 Medical Center, NY',
+                days: ['Monday', 'Wednesday', 'Friday'],
+                status: 'active'
+            },
+            { 
+                id: 2, 
+                firstName: 'Marcus', 
+                lastName: 'Webb', 
+                name: 'Dr. Marcus Webb',
+                email: 'marcus.webb@clinic.com',
+                phone: '+1 234 567 8902',
+                specialty: 'Neurology', 
+                patients: 98,
+                license: 'MD789012',
+                experience: 8,
+                fee: 180,
+                qualifications: 'MBBS, MD Neurology',
+                address: '123 Medical Center, NY',
+                days: ['Tuesday', 'Thursday'],
+                status: 'active'
+            },
+            { 
+                id: 3, 
+                firstName: 'Priya', 
+                lastName: 'Kapoor', 
+                name: 'Dr. Priya Kapoor',
+                email: 'priya.kapoor@clinic.com',
+                phone: '+1 234 567 8903',
+                specialty: 'Pediatrics', 
+                patients: 211,
+                license: 'MD345678',
+                experience: 15,
+                fee: 190,
+                qualifications: 'MBBS, MD Pediatrics',
+                address: '123 Medical Center, NY',
+                days: ['Monday', 'Tuesday', 'Thursday'],
+                status: 'active'
+            }
+        ];
+
+        let receptionists = JSON.parse(localStorage.getItem('clinicflow_receptionists')) || [
+            {
+                id: 1,
+                firstName: 'Emily',
+                lastName: 'Johnson',
+                name: 'Emily Johnson',
+                email: 'emily.j@clinic.com',
+                phone: '+1 234 567 8910',
+                employeeId: 'REC001',
+                shift: 'morning',
+                dob: '1990-05-15',
+                joinDate: '2023-01-10',
+                skills: 'English, Spanish, MS Office',
+                address: '456 Staff Lane, NY',
+                salary: 38000,
+                status: 'active'
+            },
+            {
+                id: 2,
+                firstName: 'Michael',
+                lastName: 'Brown',
+                name: 'Michael Brown',
+                email: 'michael.b@clinic.com',
+                phone: '+1 234 567 8911',
+                employeeId: 'REC002',
+                shift: 'afternoon',
+                dob: '1988-11-20',
+                joinDate: '2023-03-15',
+                skills: 'English, French, Medical Terminology',
+                address: '789 Staff Ave, NY',
+                salary: 39500,
+                status: 'active'
+            }
+        ];
+
+        let recipients = JSON.parse(localStorage.getItem('clinicflow_recipients')) || [
+            { 
+                id: 101, 
+                name: 'Northside Lab', 
+                type: 'Research', 
+                samples: 45,
+                contact: 'Dr. Wilson',
+                email: 'contact@northside.com',
+                phone: '+1 234 567 8920',
+                address: '789 Lab Road, NY',
+                status: 'active',
+                notes: 'Priority partner'
+            },
+            { 
+                id: 102, 
+                name: 'Blood Bank Center', 
+                type: 'Recipient', 
+                samples: 112,
+                contact: 'Sarah Miller',
+                email: 'sarah@bloodbank.org',
+                phone: '+1 234 567 8921',
+                address: '321 Donor St, NY',
+                status: 'active',
+                notes: 'Urgent needs'
+            },
+            { 
+                id: 103, 
+                name: 'University Genetics', 
+                type: 'Research', 
+                samples: 28,
+                contact: 'Prof. Adams',
+                email: 'genetics@university.edu',
+                phone: '+1 234 567 8922',
+                address: '555 University Blvd, NY',
+                status: 'active',
+                notes: 'Research partnership'
+            }
+        ];
+
+        let patients = JSON.parse(localStorage.getItem('clinicflow_patients')) || [
+            {
+                id: 201,
+                firstName: 'Robert',
+                lastName: 'Johnson',
+                name: 'Robert Johnson',
+                dob: '1985-03-20',
+                gender: 'male',
+                email: 'robert.j@email.com',
+                phone: '+1 234 567 8930',
+                bloodGroup: 'O+',
+                emergencyContact: '+1 234 567 8931',
+                address: '567 Patient Ave, NY',
+                insurance: 'Blue Cross',
+                insuranceId: 'BC123456',
+                history: 'No known allergies',
+                status: 'active'
+            },
+            {
+                id: 202,
+                firstName: 'Mary',
+                lastName: 'Williams',
+                name: 'Mary Williams',
+                dob: '1992-07-15',
+                gender: 'female',
+                email: 'mary.w@email.com',
+                phone: '+1 234 567 8932',
+                bloodGroup: 'A+',
+                emergencyContact: '+1 234 567 8933',
+                address: '890 Patient St, NY',
+                insurance: 'Aetna',
+                insuranceId: 'AE789012',
+                history: 'Asthma',
+                status: 'active'
+            }
+        ];
+        
+        let currentPlan = localStorage.getItem('clinicflow_plan') || 'Clinical Premium';
+        let systemMetrics = {
+            cpuLoad: 34,
+            storageUsed: 2.1,
+            storageTotal: 5,
+            activeSessions: 9,
+            appointments: 847,
+            newPatients: 128,
+            activeRecipients: 31,
+            revenue: 184200,
+            occupancy: 78
+        };
+
+        // DOM elements
+        const authSection = document.getElementById('authSection');
+        const adminPanel = document.getElementById('adminPanel');
+        const roleHeader = document.getElementById('currentRoleDisplay');
+        const loginTabBtn = document.getElementById('loginTabBtn');
+        const signupTabBtn = document.getElementById('signupTabBtn');
+        const loginFormDiv = document.getElementById('loginForm');
+        const signupFormDiv = document.getElementById('signupForm');
+        const loginBtn = document.getElementById('loginBtn');
+        const signupBtn = document.getElementById('signupBtn');
+        const logoutBtn = document.getElementById('logoutBtn');
+        const loginError = document.getElementById('loginError');
+        const signupError = document.getElementById('signupError');
+        
+        // Sidebar elements
+        const sidebarTabs = document.querySelectorAll('.sidebar-tab');
+        const adminTabContent = document.getElementById('adminTabContent');
+
+        // Modals
+        const doctorModal = document.getElementById('doctorModal');
+        const receptionistModal = document.getElementById('receptionistModal');
+        const recipientModal = document.getElementById('recipientModal');
+        const patientModal = document.getElementById('patientModal');
+        
+        let currentEditId = null;
+        let currentFilter = 'all';
+        let searchTerm = '';
+
+        // ----- Helper functions -----
+        function saveToLocalStorage() {
+            localStorage.setItem('clinicflow_users', JSON.stringify(users));
+            localStorage.setItem('clinicflow_doctors', JSON.stringify(doctors));
+            localStorage.setItem('clinicflow_receptionists', JSON.stringify(receptionists));
+            localStorage.setItem('clinicflow_recipients', JSON.stringify(recipients));
+            localStorage.setItem('clinicflow_patients', JSON.stringify(patients));
+            localStorage.setItem('clinicflow_plan', currentPlan);
+        }
+
+        function updateSidebarCounts() {
+            document.getElementById('doctorCount').textContent = doctors.length;
+            document.getElementById('receptionistCount').textContent = receptionists.length;
+            document.getElementById('patientCount').textContent = patients.length;
+            document.getElementById('recipientCount').textContent = recipients.length;
+        }
+
+        function showError(element, message) {
+            element.style.display = 'flex';
+            element.querySelector('span').textContent = message;
+            setTimeout(() => { element.style.display = 'none'; }, 3000);
+        }
+
+        // ----- Modal functions -----
+        window.closeAllModals = function() {
+            doctorModal.style.display = 'none';
+            receptionistModal.style.display = 'none';
+            recipientModal.style.display = 'none';
+            patientModal.style.display = 'none';
+            document.querySelectorAll('form').forEach(form => form.reset());
+            currentEditId = null;
+        };
+
+        // Doctor Modal Functions
+        window.openAddDoctorModal = function() {
+            document.getElementById('doctorModalTitle').innerHTML = '<i class="fas fa-user-md"></i> Add New Doctor';
+            document.getElementById('doctorForm').reset();
+            document.getElementById('doctorId').value = '';
+            doctorModal.style.display = 'block';
+        };
+
+        window.editDoctor = function(id) {
+            const doctor = doctors.find(d => d.id === id);
+            if (doctor) {
+                document.getElementById('doctorModalTitle').innerHTML = '<i class="fas fa-user-md"></i> Edit Doctor';
+                document.getElementById('doctorFirstName').value = doctor.firstName || '';
+                document.getElementById('doctorLastName').value = doctor.lastName || '';
+                document.getElementById('doctorEmail').value = doctor.email || '';
+                document.getElementById('doctorPhone').value = doctor.phone || '';
+                document.getElementById('doctorSpecialty').value = doctor.specialty || '';
+                document.getElementById('doctorLicense').value = doctor.license || '';
+                document.getElementById('doctorExperience').value = doctor.experience || '';
+                document.getElementById('doctorFee').value = doctor.fee || '';
+                document.getElementById('doctorQualifications').value = doctor.qualifications || '';
+                document.getElementById('doctorAddress').value = doctor.address || '';
+                document.getElementById('doctorStatus').value = doctor.status || 'active';
+                document.getElementById('doctorId').value = id;
+                
+                // Handle multiple days selection
+                const daysSelect = document.getElementById('doctorDays');
+                if (doctor.days) {
+                    Array.from(daysSelect.options).forEach(option => {
+                        option.selected = doctor.days.includes(option.value);
+                    });
+                }
+                
+                doctorModal.style.display = 'block';
+            }
+        };
+
+        window.deleteDoctor = function(id) {
+            if (confirm('Are you sure you want to delete this doctor? This action cannot be undone.')) {
+                doctors = doctors.filter(d => d.id !== id);
+                saveToLocalStorage();
+                updateSidebarCounts();
+                const activeTab = document.querySelector('.sidebar-tab.active');
+                if (activeTab) {
+                    renderAdminTab(activeTab.dataset.tab);
+                }
+            }
+        };
+
+        // Receptionist Modal Functions - FIXED DELETE FUNCTION
+        window.openAddReceptionistModal = function() {
+            document.getElementById('receptionistModalTitle').innerHTML = '<i class="fas fa-user-tie"></i> Add New Receptionist';
+            document.getElementById('receptionistForm').reset();
+            document.getElementById('receptionistId').value = '';
+            receptionistModal.style.display = 'block';
+        };
+
+        window.editReceptionist = function(id) {
+            const receptionist = receptionists.find(r => r.id === id);
+            if (receptionist) {
+                document.getElementById('receptionistModalTitle').innerHTML = '<i class="fas fa-user-tie"></i> Edit Receptionist';
+                document.getElementById('receptionistFirstName').value = receptionist.firstName || '';
+                document.getElementById('receptionistLastName').value = receptionist.lastName || '';
+                document.getElementById('receptionistEmail').value = receptionist.email || '';
+                document.getElementById('receptionistPhone').value = receptionist.phone || '';
+                document.getElementById('receptionistEmpId').value = receptionist.employeeId || '';
+                document.getElementById('receptionistShift').value = receptionist.shift || 'morning';
+                document.getElementById('receptionistDob').value = receptionist.dob || '';
+                document.getElementById('receptionistJoinDate').value = receptionist.joinDate || '';
+                document.getElementById('receptionistSkills').value = receptionist.skills || '';
+                document.getElementById('receptionistAddress').value = receptionist.address || '';
+                document.getElementById('receptionistSalary').value = receptionist.salary || '';
+                document.getElementById('receptionistStatus').value = receptionist.status || 'active';
+                document.getElementById('receptionistId').value = id;
+                receptionistModal.style.display = 'block';
+            }
+        };
+
+        window.deleteReceptionist = function(id) {
+            if (confirm('Are you sure you want to delete this receptionist? This action cannot be undone.')) {
+                receptionists = receptionists.filter(r => r.id !== id);
+                saveToLocalStorage();
+                updateSidebarCounts();
+                const activeTab = document.querySelector('.sidebar-tab.active');
+                if (activeTab) {
+                    renderAdminTab(activeTab.dataset.tab);
+                }
+            }
+        };
+
+        // Recipient Modal Functions
+        window.openAddRecipientModal = function() {
+            document.getElementById('recipientModalTitle').innerHTML = '<i class="fas fa-hand-holding-heart"></i> Add New Recipient';
+            document.getElementById('recipientForm').reset();
+            document.getElementById('recipientId').value = '';
+            recipientModal.style.display = 'block';
+        };
+
+        window.editRecipient = function(id) {
+            const recipient = recipients.find(r => r.id === id);
+            if (recipient) {
+                document.getElementById('recipientModalTitle').innerHTML = '<i class="fas fa-hand-holding-heart"></i> Edit Recipient';
+                document.getElementById('recipientName').value = recipient.name || '';
+                document.getElementById('recipientType').value = recipient.type || 'Research';
+                document.getElementById('recipientContact').value = recipient.contact || '';
+                document.getElementById('recipientEmail').value = recipient.email || '';
+                document.getElementById('recipientPhone').value = recipient.phone || '';
+                document.getElementById('recipientSamples').value = recipient.samples || 0;
+                document.getElementById('recipientStatus').value = recipient.status || 'active';
+                document.getElementById('recipientAddress').value = recipient.address || '';
+                document.getElementById('recipientNotes').value = recipient.notes || '';
+                document.getElementById('recipientId').value = id;
+                recipientModal.style.display = 'block';
+            }
+        };
+
+        window.deleteRecipient = function(id) {
+            if (confirm('Are you sure you want to delete this recipient? This action cannot be undone.')) {
+                recipients = recipients.filter(r => r.id !== id);
+                saveToLocalStorage();
+                updateSidebarCounts();
+                const activeTab = document.querySelector('.sidebar-tab.active');
+                if (activeTab) {
+                    renderAdminTab(activeTab.dataset.tab);
+                }
+            }
+        };
+
+        // Patient Modal Functions
+        window.openAddPatientModal = function() {
+            document.getElementById('patientModalTitle').innerHTML = '<i class="fas fa-user-injured"></i> Add New Patient';
+            document.getElementById('patientForm').reset();
+            document.getElementById('patientId').value = '';
+            patientModal.style.display = 'block';
+        };
+
+        window.editPatient = function(id) {
+            const patient = patients.find(p => p.id === id);
+            if (patient) {
+                document.getElementById('patientModalTitle').innerHTML = '<i class="fas fa-user-injured"></i> Edit Patient';
+                document.getElementById('patientFirstName').value = patient.firstName || '';
+                document.getElementById('patientLastName').value = patient.lastName || '';
+                document.getElementById('patientDob').value = patient.dob || '';
+                document.getElementById('patientGender').value = patient.gender || 'male';
+                document.getElementById('patientEmail').value = patient.email || '';
+                document.getElementById('patientPhone').value = patient.phone || '';
+                document.getElementById('patientBloodGroup').value = patient.bloodGroup || '';
+                document.getElementById('patientEmergency').value = patient.emergencyContact || '';
+                document.getElementById('patientAddress').value = patient.address || '';
+                document.getElementById('patientInsurance').value = patient.insurance || '';
+                document.getElementById('patientInsuranceId').value = patient.insuranceId || '';
+                document.getElementById('patientHistory').value = patient.history || '';
+                document.getElementById('patientId').value = id;
+                patientModal.style.display = 'block';
+            }
+        };
+
+        window.deletePatient = function(id) {
+            if (confirm('Are you sure you want to delete this patient? This action cannot be undone.')) {
+                patients = patients.filter(p => p.id !== id);
+                saveToLocalStorage();
+                updateSidebarCounts();
+                const activeTab = document.querySelector('.sidebar-tab.active');
+                if (activeTab) {
+                    renderAdminTab(activeTab.dataset.tab);
+                }
+            }
+        };
+
+        // ----- Form Submissions -----
+        document.getElementById('doctorForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const doctorData = {
+                id: document.getElementById('doctorId').value || Date.now(),
+                firstName: document.getElementById('doctorFirstName').value,
+                lastName: document.getElementById('doctorLastName').value,
+                name: `Dr. ${document.getElementById('doctorFirstName').value} ${document.getElementById('doctorLastName').value}`,
+                email: document.getElementById('doctorEmail').value,
+                phone: document.getElementById('doctorPhone').value,
+                specialty: document.getElementById('doctorSpecialty').value,
+                license: document.getElementById('doctorLicense').value,
+                experience: parseInt(document.getElementById('doctorExperience').value) || 0,
+                fee: parseInt(document.getElementById('doctorFee').value) || 0,
+                qualifications: document.getElementById('doctorQualifications').value,
+                address: document.getElementById('doctorAddress').value,
+                days: Array.from(document.getElementById('doctorDays').selectedOptions).map(opt => opt.value),
+                status: document.getElementById('doctorStatus').value,
+                patients: 0
+            };
+
+            const id = document.getElementById('doctorId').value;
+            if (id) {
+                const index = doctors.findIndex(d => d.id == id);
+                if (index !== -1) {
+                    doctorData.patients = doctors[index].patients;
+                    doctors[index] = doctorData;
+                }
+            } else {
+                doctors.push(doctorData);
+            }
+
+            saveToLocalStorage();
+            updateSidebarCounts();
+            closeAllModals();
+            const activeTab = document.querySelector('.sidebar-tab.active');
+            if (activeTab) {
+                renderAdminTab(activeTab.dataset.tab);
+            }
+        });
+
+        document.getElementById('receptionistForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const receptionistData = {
+                id: document.getElementById('receptionistId').value || Date.now(),
+                firstName: document.getElementById('receptionistFirstName').value,
+                lastName: document.getElementById('receptionistLastName').value,
+                name: `${document.getElementById('receptionistFirstName').value} ${document.getElementById('receptionistLastName').value}`,
+                email: document.getElementById('receptionistEmail').value,
+                phone: document.getElementById('receptionistPhone').value,
+                employeeId: document.getElementById('receptionistEmpId').value,
+                shift: document.getElementById('receptionistShift').value,
+                dob: document.getElementById('receptionistDob').value,
+                joinDate: document.getElementById('receptionistJoinDate').value || new Date().toISOString().split('T')[0],
+                skills: document.getElementById('receptionistSkills').value,
+                address: document.getElementById('receptionistAddress').value,
+                salary: parseInt(document.getElementById('receptionistSalary').value) || 0,
+                status: document.getElementById('receptionistStatus').value
+            };
+
+            const id = document.getElementById('receptionistId').value;
+            if (id) {
+                const index = receptionists.findIndex(r => r.id == id);
+                if (index !== -1) receptionists[index] = receptionistData;
+            } else {
+                receptionists.push(receptionistData);
+            }
+
+            saveToLocalStorage();
+            updateSidebarCounts();
+            closeAllModals();
+            const activeTab = document.querySelector('.sidebar-tab.active');
+            if (activeTab) {
+                renderAdminTab(activeTab.dataset.tab);
+            }
+        });
+
+        document.getElementById('recipientForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const recipientData = {
+                id: document.getElementById('recipientId').value || Date.now(),
+                name: document.getElementById('recipientName').value,
+                type: document.getElementById('recipientType').value,
+                contact: document.getElementById('recipientContact').value,
+                email: document.getElementById('recipientEmail').value,
+                phone: document.getElementById('recipientPhone').value,
+                samples: parseInt(document.getElementById('recipientSamples').value) || 0,
+                status: document.getElementById('recipientStatus').value,
+                address: document.getElementById('recipientAddress').value,
+                notes: document.getElementById('recipientNotes').value
+            };
+
+            const id = document.getElementById('recipientId').value;
+            if (id) {
+                const index = recipients.findIndex(r => r.id == id);
+                if (index !== -1) recipients[index] = recipientData;
+            } else {
+                recipients.push(recipientData);
+            }
+
+            saveToLocalStorage();
+            updateSidebarCounts();
+            closeAllModals();
+            const activeTab = document.querySelector('.sidebar-tab.active');
+            if (activeTab) {
+                renderAdminTab(activeTab.dataset.tab);
+            }
+        });
+
+        document.getElementById('patientForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const patientData = {
+                id: document.getElementById('patientId').value || Date.now(),
+                firstName: document.getElementById('patientFirstName').value,
+                lastName: document.getElementById('patientLastName').value,
+                name: `${document.getElementById('patientFirstName').value} ${document.getElementById('patientLastName').value}`,
+                dob: document.getElementById('patientDob').value,
+                gender: document.getElementById('patientGender').value,
+                email: document.getElementById('patientEmail').value,
+                phone: document.getElementById('patientPhone').value,
+                bloodGroup: document.getElementById('patientBloodGroup').value,
+                emergencyContact: document.getElementById('patientEmergency').value,
+                address: document.getElementById('patientAddress').value,
+                insurance: document.getElementById('patientInsurance').value,
+                insuranceId: document.getElementById('patientInsuranceId').value,
+                history: document.getElementById('patientHistory').value,
+                status: 'active'
+            };
+
+            const id = document.getElementById('patientId').value;
+            if (id) {
+                const index = patients.findIndex(p => p.id == id);
+                if (index !== -1) patients[index] = patientData;
+            } else {
+                patients.push(patientData);
+            }
+
+            saveToLocalStorage();
+            updateSidebarCounts();
+            closeAllModals();
+            const activeTab = document.querySelector('.sidebar-tab.active');
+            if (activeTab) {
+                renderAdminTab(activeTab.dataset.tab);
+            }
+        });
+
+        // ----- Dashboard Tab Rendering -----
+        function renderDashboard() {
+            const totalPatients = patients.length;
+            const activeDoctors = doctors.filter(d => d.status === 'active').length;
+            const activeReceptionists = receptionists.filter(r => r.status === 'active').length;
+            const totalSamples = recipients.reduce((sum, r) => sum + r.samples, 0);
+            
+            const html = `
+                <h3 style="margin-bottom: 1.5rem;"><i class="fas fa-home"></i> Dashboard Overview</h3>
+                
+                <div class="summary-cards">
+                    <div class="summary-card">
+                        <div class="number">${doctors.length}</div>
+                        <div class="label">Total Doctors</div>
+                        <small>${activeDoctors} active</small>
+                    </div>
+                    <div class="summary-card">
+                        <div class="number">${receptionists.length}</div>
+                        <div class="label">Receptionists</div>
+                        <small>${activeReceptionists} active</small>
+                    </div>
+                    <div class="summary-card">
+                        <div class="number">${patients.length}</div>
+                        <div class="label">Patients</div>
+                        <small>Registered</small>
+                    </div>
+                    <div class="summary-card">
+                        <div class="number">${recipients.length}</div>
+                        <div class="label">Recipients</div>
+                        <small>${totalSamples} samples</small>
+                    </div>
+                </div>
+
+                <div class="stat-cards">
+                    <div class="stat-card">
+                        <h4>Today's Appointments</h4>
+                        <div class="number">${systemMetrics.appointments}</div>
+                        <span class="trend">↑ 12% from yesterday</span>
+                    </div>
+                    <div class="stat-card">
+                        <h4>New Patients (This Month)</h4>
+                        <div class="number">${systemMetrics.newPatients}</div>
+                        <span class="trend">↑ 8% growth</span>
+                    </div>
+                    <div class="stat-card">
+                        <h4>Revenue YTD</h4>
+                        <div class="number">$${systemMetrics.revenue.toLocaleString()}</div>
+                        <span>On track for goal</span>
+                    </div>
+                    <div class="stat-card">
+                        <h4>Clinic Occupancy</h4>
+                        <div class="number">${systemMetrics.occupancy}%</div>
+                        <div class="usage-bar" style="margin-top: 10px;">
+                            <div class="usage-fill" style="width: ${systemMetrics.occupancy}%;"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="margin-top: 2rem;">
+                    <h4>Quick Actions</h4>
+                    <div class="flex-row" style="margin-top: 1rem;">
+                        <button class="btn-success" onclick="openAddDoctorModal()"><i class="fas fa-user-md"></i> Add Doctor</button>
+                        <button class="btn-success" onclick="openAddReceptionistModal()"><i class="fas fa-user-tie"></i> Add Receptionist</button>
+                        <button class="btn-success" onclick="openAddPatientModal()"><i class="fas fa-user-injured"></i> Add Patient</button>
+                        <button class="btn-success" onclick="openAddRecipientModal()"><i class="fas fa-hand-holding-heart"></i> Add Recipient</button>
+                    </div>
+                </div>
+            `;
+            
+            adminTabContent.innerHTML = html;
+        }
+
+        // ----- Admin tab rendering -----
+        function renderAdminTab(tabId) {
+            if (!adminTabContent) return;
+            
+            if (tabId === 'dashboard') {
+                renderDashboard();
+                return;
+            }
+
+            let html = '';
+
+            if (tabId === 'manageDoctors') {
+                html = `
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                        <h3><i class="fas fa-user-md"></i> Manage Doctors (${doctors.length})</h3>
+                        <button class="btn-success" onclick="openAddDoctorModal()"><i class="fas fa-plus"></i> Add Doctor</button>
+                    </div>
+                    <input type="text" class="search-box" placeholder="Search doctors by name, specialty, email..." id="doctorSearch" onkeyup="filterDoctors()">
+                    <div class="table-responsive">
+                        <table class="table-mini">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Specialty</th>
+                                    <th>Email</th>
+                                    <th>Phone</th>
+                                    <th>Patients</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${doctors.map(d => `
+                                    <tr>
+                                        <td><strong>${d.name}</strong></td>
+                                        <td>${d.specialty}</td>
+                                        <td>${d.email}</td>
+                                        <td>${d.phone}</td>
+                                        <td>${d.patients || 0}</td>
+                                        <td><span class="badge" style="background: ${d.status === 'active' ? '#d4edda' : '#f8d7da'}">${d.status}</span></td>
+                                        <td class="action-buttons">
+                                            <span class="badge" onclick="editDoctor(${d.id})"><i class="far fa-edit"></i> Edit</span>
+                                            <span class="badge" style="background: #f8d7da; color: #721c24;" onclick="deleteDoctor(${d.id})"><i class="fas fa-trash"></i> Delete</span>
+                                        </td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                `;
+            } else if (tabId === 'manageReceptionists') {
+                html = `
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                        <h3><i class="fas fa-user-tie"></i> Manage Receptionists (${receptionists.length})</h3>
+                        <button class="btn-success" onclick="openAddReceptionistModal()"><i class="fas fa-plus"></i> Add Receptionist</button>
+                    </div>
+                    <input type="text" class="search-box" placeholder="Search receptionists...">
+                    <div class="table-responsive">
+                        <table class="table-mini">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Employee ID</th>
+                                    <th>Email</th>
+                                    <th>Phone</th>
+                                    <th>Shift</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${receptionists.map(r => `
+                                    <tr>
+                                        <td><strong>${r.name}</strong></td>
+                                        <td>${r.employeeId}</td>
+                                        <td>${r.email}</td>
+                                        <td>${r.phone}</td>
+                                        <td>${r.shift}</td>
+                                        <td><span class="badge" style="background: ${r.status === 'active' ? '#d4edda' : '#f8d7da'}">${r.status}</span></td>
+                                        <td class="action-buttons">
+                                            <span class="badge" onclick="editReceptionist(${r.id})"><i class="far fa-edit"></i> Edit</span>
+                                            <span class="badge" style="background: #f8d7da; color: #721c24;" onclick="deleteReceptionist(${r.id})"><i class="fas fa-trash"></i> Delete</span>
+                                        </td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                `;
+            } else if (tabId === 'manageRecipients') {
+                const totalSamples = recipients.reduce((sum, r) => sum + r.samples, 0);
+                html = `
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                        <h3><i class="fas fa-hand-holding-heart"></i> Manage Recipients (${recipients.length})</h3>
+                        <button class="btn-success" onclick="openAddRecipientModal()"><i class="fas fa-plus"></i> Add Recipient</button>
+                    </div>
+                    <div class="summary-cards" style="margin-bottom: 1.5rem;">
+                        <div class="summary-card">
+                            <div class="number">${totalSamples}</div>
+                            <div class="label">Total Samples</div>
+                        </div>
+                        <div class="summary-card">
+                            <div class="number">${recipients.filter(r => r.type === 'Research').length}</div>
+                            <div class="label">Research Labs</div>
+                        </div>
+                        <div class="summary-card">
+                            <div class="number">${recipients.filter(r => r.type === 'Recipient').length}</div>
+                            <div class="label">Blood Banks</div>
+                        </div>
+                    </div>
+                    <input type="text" class="search-box" placeholder="Search recipients...">
+                    <div class="table-responsive">
+                        <table class="table-mini">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Type</th>
+                                    <th>Contact</th>
+                                    <th>Samples</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${recipients.map(r => `
+                                    <tr>
+                                        <td><strong>${r.name}</strong></td>
+                                        <td>${r.type}</td>
+                                        <td>${r.contact || r.email}</td>
+                                        <td><span class="badge">${r.samples}</span></td>
+                                        <td><span class="badge" style="background: ${r.status === 'active' ? '#d4edda' : '#f8d7da'}">${r.status}</span></td>
+                                        <td class="action-buttons">
+                                            <span class="badge" onclick="editRecipient(${r.id})"><i class="far fa-edit"></i> Edit</span>
+                                            <span class="badge" style="background: #f8d7da; color: #721c24;" onclick="deleteRecipient(${r.id})"><i class="fas fa-trash"></i> Delete</span>
+                                        </td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                `;
+            } else if (tabId === 'managePatients') {
+                html = `
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                        <h3><i class="fas fa-user-injured"></i> Manage Patients (${patients.length})</h3>
+                        <button class="btn-success" onclick="openAddPatientModal()"><i class="fas fa-plus"></i> Add Patient</button>
+                    </div>
+                    <input type="text" class="search-box" placeholder="Search patients...">
+                    <div class="table-responsive">
+                        <table class="table-mini">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>DOB</th>
+                                    <th>Phone</th>
+                                    <th>Blood Group</th>
+                                    <th>Insurance</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${patients.map(p => `
+                                    <tr>
+                                        <td><strong>${p.name}</strong></td>
+                                        <td>${p.dob}</td>
+                                        <td>${p.phone}</td>
+                                        <td><span class="badge">${p.bloodGroup || 'N/A'}</span></td>
+                                        <td>${p.insurance || 'N/A'}</td>
+                                        <td class="action-buttons">
+                                            <span class="badge" onclick="editPatient(${p.id})"><i class="far fa-edit"></i> Edit</span>
+                                            <span class="badge" style="background: #f8d7da; color: #721c24;" onclick="deletePatient(${p.id})"><i class="fas fa-trash"></i> Delete</span>
+                                        </td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                `;
+            } else if (tabId === 'analytics') {
+                const totalPatients = patients.length;
+                const totalDoctors = doctors.length;
+                const activeDoctors = doctors.filter(d => d.status === 'active').length;
+                const totalReceptionists = receptionists.length;
+                const totalRecipients = recipients.length;
+                const totalSamples = recipients.reduce((sum, r) => sum + r.samples, 0);
+                
+                html = `
+                    <h3 style="margin-bottom: 1.5rem;"><i class="fas fa-chart-line"></i> Analytics Overview</h3>
+                    
+                    <div class="stat-cards">
+                        <div class="stat-card">
+                            <h4>Total Patients</h4>
+                            <div class="number">${totalPatients}</div>
+                            <span>registered patients</span>
+                        </div>
+                        <div class="stat-card">
+                            <h4>Medical Staff</h4>
+                            <div class="number">${totalDoctors + totalReceptionists}</div>
+                            <span>${activeDoctors} active doctors</span>
+                        </div>
+                        <div class="stat-card">
+                            <h4>Recipients</h4>
+                            <div class="number">${totalRecipients}</div>
+                            <span>${totalSamples} total samples</span>
+                        </div>
+                        <div class="stat-card">
+                            <h4>Appointments</h4>
+                            <div class="number">${systemMetrics.appointments}</div>
+                            <span>this month</span>
+                        </div>
+                    </div>
+
+                    <div class="stat-cards">
+                        <div class="stat-card">
+                            <h4>Revenue YTD</h4>
+                            <div class="number">$${systemMetrics.revenue.toLocaleString()}</div>
+                            <span>↑ 15% vs last year</span>
+                        </div>
+                        <div class="stat-card">
+                            <h4>New Patients</h4>
+                            <div class="number">${systemMetrics.newPatients}</div>
+                            <span>this month</span>
+                        </div>
+                        <div class="stat-card">
+                            <h4>Clinic Occupancy</h4>
+                            <div class="number">${systemMetrics.occupancy}%</div>
+                            <span>current capacity</span>
+                        </div>
+                        <div class="stat-card">
+                            <h4>Active Sessions</h4>
+                            <div class="number">${systemMetrics.activeSessions}</div>
+                            <span>users online</span>
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 2rem;">
+                        <h4>Distribution by Department</h4>
+                        <div style="margin-top: 1rem;">
+                            ${doctors.map(d => `
+                                <div style="margin-bottom: 0.5rem;">
+                                    <span>${d.specialty}</span>
+                                    <div class="usage-bar" style="margin-top: 5px;">
+                                        <div class="usage-fill" style="width: ${Math.min(100, (d.patients / 200) * 100)}%;"></div>
+                                    </div>
+                                    <small>${d.patients} patients</small>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            } else if (tabId === 'subscription') {
+                html = `
+                    <h3><i class="fas fa-credit-card"></i> Subscription Management</h3>
+                    <div class="subscription-sim">
+                        <div class="flex-row" style="justify-content: space-between;">
+                            <div>
+                                <span><strong>Current plan:</strong> <span class="badge" style="background:#c0e2f2;">${currentPlan}</span></span>
+                            </div>
+                            <div>
+                                <span><strong>Next billing:</strong> ${new Date(new Date().setMonth(new Date().getMonth() + 1)).toLocaleDateString()}</span>
+                            </div>
+                        </div>
+                        <div style="margin-top: 1rem;">
+                            <span><strong>Monthly cost:</strong> $${currentPlan === 'Clinical Premium' ? '299' : currentPlan === 'Basic' ? '99' : '499'}</span>
+                        </div>
+                        <hr>
+                        <div class="flex-row">
+                            <button class="btn-outline" id="planBasicBtn"><i class="fas fa-arrow-down"></i> Basic ($99/mo)</button>
+                            <button class="btn-primary" id="planPremiumBtn" style="width: auto; padding: 0.6rem 1.5rem;">Premium ($299/mo)</button>
+                            <button class="btn-outline" id="planEnterpriseBtn">Enterprise ($499/mo)</button>
+                        </div>
+                        <p class="footer-note" style="margin-top: 1rem;">
+                            <i class="fas fa-sync-alt"></i> 
+                            Current features: ${currentPlan === 'Clinical Premium' ? 'Unlimited staff, advanced analytics, priority support, API access' : 
+                                              currentPlan === 'Basic' ? 'Up to 5 doctors, basic analytics, email support' : 
+                                              'Unlimited everything, dedicated account manager, custom integrations, 24/7 phone support'}
+                        </p>
+                    </div>
+                `;
+            } else if (tabId === 'systemUsage') {
+                const storagePercent = (systemMetrics.storageUsed / systemMetrics.storageTotal) * 100;
+                const totalRecords = doctors.length + receptionists.length + recipients.length + patients.length + users.length;
+                
+                html = `
+                    <h3><i class="fas fa-chart-simple"></i> System Usage & Monitoring</h3>
+                    <div style="margin: 1.8rem 0;">
+                        <div>
+                            <span><strong>CPU / Server Load</strong></span>
+                            <div class="usage-bar" style="margin-top:5px;">
+                                <div class="usage-fill" style="width: ${systemMetrics.cpuLoad}%;"></div>
+                            </div>
+                            <small>${systemMetrics.cpuLoad}% utilized - ${systemMetrics.cpuLoad < 50 ? 'Normal' : 'High'}</small>
+                        </div>
+                        <div style="margin-top: 1.2rem;">
+                            <span><strong>Storage (Database)</strong> ${systemMetrics.storageUsed} GB / ${systemMetrics.storageTotal} GB</span>
+                            <div class="usage-bar">
+                                <div class="usage-fill" style="width: ${storagePercent}%;"></div>
+                            </div>
+                            <small>${storagePercent.toFixed(1)}% used - ${(systemMetrics.storageTotal - systemMetrics.storageUsed).toFixed(1)} GB free</small>
+                        </div>
+                        <div style="margin-top: 1.2rem;">
+                            <span><strong>Active Sessions:</strong> ${systemMetrics.activeSessions}</span>
+                        </div>
+                        <div style="margin-top: 0.5rem;">
+                            <span><strong>Total Records:</strong> ${totalRecords}</span>
+                        </div>
+                        <div style="margin-top: 0.5rem;">
+                            <span><strong>Database Size:</strong> ${(totalRecords * 0.001).toFixed(2)} MB</span>
+                        </div>
+                    </div>
+                    <div class="info-note">
+                        <i class="fas fa-microchip"></i> 
+                        System logs: no anomalies detected. Last backup: ${new Date().toLocaleDateString()} at 03:00 AM
+                    </div>
+                    <div class="info-note" style="background: #d4edda; color: #155724;">
+                        <i class="fas fa-check-circle"></i> 
+                        System status: All systems operational. Uptime: 99.7%
+                    </div>
+                    <button class="btn-outline" style="margin-top: 1rem;" id="refreshMetricsBtn">
+                        <i class="fas fa-sync-alt"></i> Refresh Metrics
+                    </button>
+                `;
+            }
+            
+            adminTabContent.innerHTML = html;
+
+            // Attach event listeners
+            if (tabId === 'subscription') {
+                document.getElementById('planBasicBtn')?.addEventListener('click', () => changePlan('Basic'));
+                document.getElementById('planPremiumBtn')?.addEventListener('click', () => changePlan('Clinical Premium'));
+                document.getElementById('planEnterpriseBtn')?.addEventListener('click', () => changePlan('Enterprise'));
+            } else if (tabId === 'systemUsage') {
+                document.getElementById('refreshMetricsBtn')?.addEventListener('click', () => {
+                    systemMetrics.cpuLoad = Math.floor(Math.random() * 60) + 20;
+                    systemMetrics.activeSessions = Math.floor(Math.random() * 15) + 5;
+                    systemMetrics.storageUsed = parseFloat((2.1 + Math.random()).toFixed(1));
+                    renderAdminTab('systemUsage');
+                });
+            }
+        }
+
+        // Filter functions
+        window.filterDoctors = function() {
+            const search = document.getElementById('doctorSearch')?.value.toLowerCase();
+            // Implement filtering logic here if needed
+        };
+
+        function changePlan(plan) {
+            currentPlan = plan;
+            saveToLocalStorage();
+            alert(`✅ Plan successfully changed to ${plan}`);
+            renderAdminTab('subscription');
+        }
+
+        // ----- Authentication functions -----
+        function loginAsAdmin() {
+            currentUser = { email: 'admin@clinic.com', role: 'admin', name: 'Admin User' };
+            authSection.style.display = 'none';
+            adminPanel.style.display = 'block';
+            roleHeader.innerText = 'Admin (full access)';
+            updateSidebarCounts();
+            setActiveSidebarTab('dashboard');
+        }
+
+        function loginAsUser(email, role) {
+            currentUser = { email, role, name: email.split('@')[0] };
+            roleHeader.innerText = role.charAt(0).toUpperCase() + role.slice(1) + ' (demo)';
+            
+            if (role === 'admin') {
+                authSection.style.display = 'none';
+                adminPanel.style.display = 'block';
+                updateSidebarCounts();
+                setActiveSidebarTab('dashboard');
+            } else {
+                alert(`Welcome ${role}! You have limited access. Contact admin for full features.`);
+            }
+        }
+
+        function logout() {
+            currentUser = null;
+            authSection.style.display = 'block';
+            adminPanel.style.display = 'none';
+            roleHeader.innerText = 'Not logged in';
+            showLoginTab();
+        }
+
+        // ----- UI functions -----
+        function setActiveSidebarTab(tabId) {
+            sidebarTabs.forEach(btn => {
+                const t = btn.getAttribute('data-tab');
+                if (t === tabId) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+            renderAdminTab(tabId);
+        }
+
+        function showLoginTab() {
+            loginTabBtn.classList.add('active');
+            signupTabBtn.classList.remove('active');
+            loginFormDiv.style.display = 'block';
+            signupFormDiv.style.display = 'none';
+        }
+
+        function showSignupTab() {
+            signupTabBtn.classList.add('active');
+            loginTabBtn.classList.remove('active');
+            loginFormDiv.style.display = 'none';
+            signupFormDiv.style.display = 'block';
+        }
+
+        // ----- Event Listeners -----
+        loginTabBtn.addEventListener('click', showLoginTab);
+        signupTabBtn.addEventListener('click', showSignupTab);
+
+        loginBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            const email = document.getElementById('loginEmail').value.trim();
+            const password = document.getElementById('loginPassword').value;
+
+            if (!email || !password) {
+                showError(loginError, 'Please enter both email and password');
+                return;
+            }
+
+            if (email === 'admin@clinic.com') {
+                loginAsAdmin();
+            } else {
+                const user = users.find(u => u.email === email && u.password === password);
+                if (user) {
+                    loginAsUser(email, user.role);
+                } else {
+                    showError(loginError, 'Invalid email or password');
+                }
+            }
+        });
+
+        signupBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            const name = document.getElementById('signupName').value.trim();
+            const email = document.getElementById('signupEmail').value.trim();
+            const role = document.getElementById('signupRole').value;
+            const password = document.getElementById('signupPassword').value;
+
+            if (!name || !email || !password) {
+                showError(signupError, 'Please fill in all fields');
+                return;
+            }
+
+            if (users.some(u => u.email === email)) {
+                showError(signupError, 'Email already exists');
+                return;
+            }
+
+            const newUser = {
+                id: Date.now(),
+                name,
+                email,
+                role,
+                password,
+                createdAt: new Date().toISOString()
+            };
+
+            users.push(newUser);
+            saveToLocalStorage();
+
+            alert(`✅ Account created for ${name} (Role: ${role}). You can now log in.`);
+            showLoginTab();
+            
+            // Clear form
+            document.getElementById('signupName').value = '';
+            document.getElementById('signupEmail').value = '';
+            document.getElementById('signupPassword').value = '';
+        });
+
+        logoutBtn.addEventListener('click', logout);
+
+        // Sidebar tab switching
+        sidebarTabs.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const tabId = btn.getAttribute('data-tab');
+                setActiveSidebarTab(tabId);
+            });
+        });
+
+        // Close modals when clicking outside
+        window.addEventListener('click', (e) => {
+            if (e.target === doctorModal) doctorModal.style.display = 'none';
+            if (e.target === receptionistModal) receptionistModal.style.display = 'none';
+            if (e.target === recipientModal) recipientModal.style.display = 'none';
+            if (e.target === patientModal) patientModal.style.display = 'none';
+        });
+
+        // Make functions global
+        window.openAddDoctorModal = openAddDoctorModal;
+        window.openAddReceptionistModal = openAddReceptionistModal;
+        window.openAddRecipientModal = openAddRecipientModal;
+        window.openAddPatientModal = openAddPatientModal;
+        window.editDoctor = editDoctor;
+        window.editReceptionist = editReceptionist;
+        window.editRecipient = editRecipient;
+        window.editPatient = editPatient;
+        window.deleteDoctor = deleteDoctor;
+        window.deleteReceptionist = deleteReceptionist;
+        window.deleteRecipient = deleteRecipient;
+        window.deletePatient = deletePatient;
+        window.closeAllModals = closeAllModals;
+        window.filterDoctors = filterDoctors;
+
+        // Initialize
+        logout();
+        saveToLocalStorage();
+        updateSidebarCounts();
+    })();
+</script>
+</body>
+</html>

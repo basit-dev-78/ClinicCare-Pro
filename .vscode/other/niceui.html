@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ClinicFlow · Admin</title>
+    <!-- Font Awesome 6 (free) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Google Font: Inter (professional) -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <!-- Chart.js for analytics usage graph -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f4f6fb;
+            color: #1a2639;
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* ----- SIDEBAR (elegant dark) ----- */
+        .sidebar {
+            width: 280px;
+            background: linear-gradient(180deg, #0f172a 0%, #1a253b 100%);
+            color: #e2e8f0;
+            padding: 2rem 1.5rem;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 8px 0 20px rgba(0,0,0,0.12);
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 3rem;
+            padding-left: 6px;
+        }
+
+        .logo-icon {
+            background: #3b82f6;
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: white;
+            box-shadow: 0 10px 20px -5px #1e3a8a66;
+        }
+
+        .logo-text h2 {
+            font-weight: 600;
+            font-size: 1.5rem;
+            letter-spacing: -0.5px;
+            color: white;
+        }
+        .logo-text span {
+            font-size: 0.75rem;
+            color: #94a3b8;
+            font-weight: 500;
+            letter-spacing: 0.3px;
+        }
+
+        .nav-links {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 12px 16px;
+            border-radius: 14px;
+            font-weight: 500;
+            color: #b0c4de;
+            transition: 0.2s;
+            cursor: default;
+        }
+
+        .nav-item i {
+            width: 24px;
+            font-size: 1.25rem;
+            color: #5f7b9c;
+        }
+
+        .nav-item.active {
+            background: #2d3b5a;
+            color: white;
+            box-shadow: 0 6px 14px rgba(0, 35, 70, 0.4);
+        }
+        .nav-item.active i {
+            color: #90caf9;
+        }
+        .nav-item:not(.active):hover {
+            background: #253247;
+            color: #e0edff;
+        }
+
+        .bottom-stats {
+            background: #1e2a3a;
+            border-radius: 20px;
+            padding: 18px 16px;
+            margin-top: 20px;
+            border: 1px solid #2f4058;
+        }
+        .bottom-stats p {
+            color: #a6c1e0;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            margin-bottom: 8px;
+        }
+        .usage-ring {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .percent {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: white;
+        }
+        .small-note {
+            color: #7c93b5;
+            font-size: 0.75rem;
+        }
+
+        /* ----- MAIN PANEL (white + glass) ----- */
+        .main-panel {
+            flex: 1;
+            overflow-y: auto;
+            padding: 2rem 2.2rem;
+            background: #f4f6fb;
+        }
+
+        /* top bar */
+        .top-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 2rem;
+        }
+        .page-title h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #0b1e3a;
+        }
+        .page-title p {
+            color: #566b8c;
+            font-weight: 500;
+            margin-top: 4px;
+            font-size: 0.9rem;
+        }
+        .admin-profile {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            background: white;
+            padding: 8px 18px 8px 12px;
+            border-radius: 40px;
+            box-shadow: 0 8px 18px -8px rgba(0,32,64,0.08);
+        }
+        .admin-profile i {
+            font-size: 1.4rem;
+            color: #2e4b74;
+        }
+        .avatar {
+            background: #3b82f6;
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 1.2rem;
+        }
+
+        /* card grid */
+        .insight-cards {
+            display: grid;
+            grid-template-columns: repeat(4,1fr);
+            gap: 20px;
+            margin-bottom: 32px;
+        }
+        .stat-card {
+            background: white;
+            border-radius: 24px;
+            padding: 1.5rem 1.2rem;
+            box-shadow: 0 18px 30px -12px rgba(0,20,50,0.1);
+            transition: all 0.2s;
+            border: 1px solid rgba(255,255,255,0.5);
+            backdrop-filter: blur(2px);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .stat-left h3 {
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #6d85aa;
+            margin-bottom: 8px;
+        }
+        .stat-left .number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #0f2b50;
+        }
+        .stat-icon {
+            width: 56px;
+            height: 56px;
+            background: #eef3fe;
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #2d68c4;
+            font-size: 2rem;
+        }
+
+        /* management sections grid */
+        .mgrid {
+            display: grid;
+            grid-template-columns: repeat(2,1fr);
+            gap: 24px;
+            margin-bottom: 28px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 28px;
+            padding: 1.5rem 1.4rem;
+            box-shadow: 0 20px 35px -10px #d0dcee;
+            border: 1px solid #ffffff50;
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.2rem;
+        }
+        .card-header h2 {
+            font-size: 1.35rem;
+            font-weight: 700;
+            color: #13294b;
+        }
+        .badge {
+            background: #dfe9f5;
+            padding: 6px 14px;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #1f4a9c;
+        }
+        .badge i {
+            margin-right: 4px;
+        }
+
+        .list-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid #eef3fa;
+        }
+        .list-item:last-child {
+            border-bottom: none;
+        }
+        .info span {
+            font-weight: 600;
+            color: #1d3a5c;
+        }
+        .info p {
+            font-size: 0.8rem;
+            color: #6b7f9f;
+        }
+        .pill {
+            background: #ecfdf3;
+            color: #0f6e3f;
+            padding: 4px 12px;
+            border-radius: 40px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        .pill.orange {
+            background: #fffbeb;
+            color: #b85b14;
+        }
+        .action-icon {
+            color: #8099bb;
+            margin-left: 12px;
+            cursor: default;
+        }
+
+        /* analyst & usage row */
+        .analyst-row {
+            display: grid;
+            grid-template-columns: 1.2fr 0.8fr;
+            gap: 24px;
+            margin-top: 16px;
+        }
+        .chart-container {
+            max-height: 180px;
+            position: relative;
+        }
+        .metric-list {
+            margin-top: 10px;
+        }
+        .metric {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.95rem;
+            padding: 8px 0;
+        }
+
+        .subscription-plan {
+            background: #f0f4fe;
+            border-radius: 20px;
+            padding: 18px;
+            margin: 12px 0;
+        }
+
+        .btn-ghost {
+            background: transparent;
+            border: 1.5px solid #cbd6e8;
+            padding: 10px 18px;
+            border-radius: 40px;
+            font-weight: 600;
+            color: #1f3c6c;
+            width: 100%;
+            margin-top: 8px;
+            transition: 0.2s;
+            cursor: default;
+        }
+        .btn-ghost:hover {
+            background: #e5ecf9;
+        }
+
+        /* fake attachment / supabase "connected" tag */
+        .supabase-tag {
+            background: #1e293b;
+            color: #b9d2f0;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 5px 16px 5px 12px;
+            border-radius: 40px;
+            font-size: 0.8rem;
+            border: 1px solid #435574;
+        }
+    </style>
+</head>
+<body>
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+        <div class="logo-area">
+            <div class="logo-icon"><i class="fas fa-stethoscope"></i></div>
+            <div class="logo-text">
+                <h2>ClinicFlow</h2>
+                <span>admin console</span>
+            </div>
+        </div>
+
+        <div class="nav-links">
+            <div class="nav-item active"><i class="fas fa-chart-pie"></i> Dashboard</div>
+            <div class="nav-item"><i class="fas fa-user-md"></i> Manage doctors</div>
+            <div class="nav-item"><i class="fas fa-user-nurse"></i> Receptionists</div>
+            <div class="nav-item"><i class="fas fa-chart-line"></i> View analyst</div>
+            <div class="nav-item"><i class="fas fa-credit-card"></i> Subscriptions</div>
+            <div class="nav-item"><i class="fas fa-microchip"></i> System usage</div>
+            <div class="nav-item"><i class="fas fa-cog"></i> Settings</div>
+        </div>
+
+        <div class="bottom-stats">
+            <p><i class="far fa-clock"></i> system health</p>
+            <div class="usage-ring">
+                <span class="percent">78%</span>
+                <span class="small-note">⬆️ 12% vs last month</span>
+            </div>
+            <div style="margin-top: 12px; background:#27384e; height:6px; border-radius:6px;">
+                <div style="width:78%; height:6px; background:#3b82f6; border-radius:6px;"></div>
+            </div>
+            <p style="margin-top: 15px; color:#9bb1cf;"><i class="fas fa-database"></i> Supabase · live</p>
+        </div>
+    </div>
+
+    <!-- MAIN PANEL -->
+    <div class="main-panel">
+        <!-- top header with supabase attachment tag -->
+        <div class="top-bar">
+            <div class="page-title">
+                <h1>Clinic administration</h1>
+                <p><i class="fas fa-map-pin" style="margin-right: 4px;"></i> Dashboard / real‑time from Supabase</p>
+            </div>
+            <div style="display: flex; gap: 16px; align-items: center;">
+                <div class="supabase-tag"><i class="fas fa-link" style="color:#3b82f6;"></i> supabase connected · edge functions</div>
+                <div class="admin-profile">
+                    <i class="far fa-bell"></i>
+                    <div class="avatar">AD</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 4 insight cards (simulated supabase data) -->
+        <div class="insight-cards">
+            <div class="stat-card">
+                <div class="stat-left">
+                    <h3>👨‍⚕️ doctors</h3>
+                    <span class="number" id="statDoctors">14</span>
+                </div>
+                <div class="stat-icon"><i class="fas fa-user-md"></i></div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-left">
+                    <h3>🧑‍💼 receptionists</h3>
+                    <span class="number" id="statRecep">8</span>
+                </div>
+                <div class="stat-icon"><i class="fas fa-headset"></i></div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-left">
+                    <h3>📊 active subs</h3>
+                    <span class="number" id="statSubs">132</span>
+                </div>
+                <div class="stat-icon"><i class="fas fa-crown"></i></div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-left">
+                    <h3>⚙️ usage (today)</h3>
+                    <span class="number" id="statUsage">2.4k</span>
+                </div>
+                <div class="stat-icon"><i class="fas fa-gauge-high"></i></div>
+            </div>
+        </div>
+
+        <!-- manage doctors & manage receptionist (two columns) -->
+        <div class="mgrid">
+            <!-- manage doctors card -->
+            <div class="card">
+                <div class="card-header">
+                    <h2><i class="fas fa-user-md" style="margin-right: 8px; color:#2563eb;"></i> Manage doctors</h2>
+                    <div class="badge"><i class="fas-regular fa-plus"></i> 4 departments</div>
+                </div>
+                <div class="list-item">
+                    <div class="info"><span>Dr. Emily Chen</span><p>Cardiology · FT</p></div>
+                    <div><span class="pill"><i class="fas fa-circle-check"></i> active</span><i class="fas fa-ellipsis-v action-icon"></i></div>
+                </div>
+                <div class="list-item">
+                    <div class="info"><span>Dr. James Okonkwo</span><p>Neurology · PT</p></div>
+                    <div><span class="pill orange"><i class="fas fa-clock"></i> rounds</span><i class="fas fa-ellipsis-v action-icon"></i></div>
+                </div>
+                <div class="list-item">
+                    <div class="info"><span>Dr. Sophia Rossi</span><p>Pediatrics · FT</p></div>
+                    <div><span class="pill"><i class="fas fa-circle-check"></i> active</span><i class="fas fa-ellipsis-v action-icon"></i></div>
+                </div>
+                <div class="list-item">
+                    <div class="info"><span>Dr. Michael Park</span><p>Dermatology · locum</p></div>
+                    <div><span class="pill"><i class="fas fa-circle-check"></i> active</span><i class="fas fa-ellipsis-v action-icon"></i></div>
+                </div>
+                <button class="btn-ghost"><i class="fas-regular fa-pen-to-square"></i> manage all doctors (8 more)</button>
+            </div>
+
+            <!-- manage receptionists card -->
+            <div class="card">
+                <div class="card-header">
+                    <h2><i class="fas fa-user-tie" style="margin-right: 8px; color:#16a34a;"></i> Receptionists</h2>
+                    <div class="badge"><i class="fas fa-clock"></i> shift now: 3</div>
+                </div>
+                <div class="list-item">
+                    <div class="info"><span>Linda Foster</span><p>front desk · morning</p></div>
+                    <div><span class="pill"><i class="fas fa-circle"></i> on duty</span><i class="fas fa-ellipsis-v action-icon"></i></div>
+                </div>
+                <div class="list-item">
+                    <div class="info"><span>Robert Hayes</span><p>insurance · afternoon</p></div>
+                    <div><span class="pill orange">break</span><i class="fas fa-ellipsis-v action-icon"></i></div>
+                </div>
+                <div class="list-item">
+                    <div class="info"><span>Priya Kapoor</span><p>front desk · afternoon</p></div>
+                    <div><span class="pill"><i class="fas fa-circle"></i> on duty</span><i class="fas fa-ellipsis-v action-icon"></i></div>
+                </div>
+                <div class="list-item">
+                    <div class="info"><span>Carlos Mendez</span><p>evening lead</p></div>
+                    <div><span class="pill">off</span><i class="fas fa-ellipsis-v action-icon"></i></div>
+                </div>
+                <button class="btn-ghost"><i class="fas-regular fa-calendar"></i> schedules & roles</button>
+            </div>
+        </div>
+
+        <!-- View analyst + subscriptions + system usage combined row -->
+        <div class="analyst-row">
+            <!-- left: analyst block with simple chart -->
+            <div class="card" style="padding-bottom: 1rem;">
+                <div class="card-header">
+                    <h2><i class="fas fa-magnifying-glass-chart" style="margin-right: 8px; color:#7b4ef3;"></i> View analyst</h2>
+                    <div class="badge">monthly</div>
+                </div>
+                <p style="color:#456185; margin-bottom: 12px;"><i class="fas fa-arrow-trend-up"></i> patient visits + revenue</p>
+                <div class="chart-container">
+                    <canvas id="analystChart" style="width:100%; max-height:150px;"></canvas>
+                </div>
+                <div class="metric-list">
+                    <div class="metric"><span>📈 consultations</span> <strong>2,430</strong></div>
+                    <div class="metric"><span>💰 average revenue</span> <strong>$187.5k</strong></div>
+                    <div class="metric"><span>🔄 retention</span> <strong>92%</strong></div>
+                </div>
+            </div>
+
+            <!-- right: subscriptions + system usage combined card -->
+            <div class="card" style="display: flex; flex-direction: column;">
+                <div class="card-header">
+                    <h2><i class="fas fa-file-invoice" style="margin-right: 8px; color:#d97706;"></i> subscriptions</h2>
+                    <div class="badge">active 132</div>
+                </div>
+                <div class="subscription-plan">
+                    <div style="display: flex; justify-content: space-between;">
+                        <span><strong>🏥 Premium clinic</strong></span> <span class="pill">78%</span>
+                    </div>
+                    <div style="font-size:0.9rem; margin: 8px 0 4px;">Basic · 22%  |  Enterprise 12</div>
+                    <div style="background:#dbe5f5; height:6px; border-radius:8px;"><div style="width:78%; background:#d97706; height:6px; border-radius:8px;"></div></div>
+                </div>
+                <div style="margin: 16px 0 12px;">
+                    <span><i class="fas fa-microchip"></i> <strong>System usage monitor</strong> (last 24h)</span>
+                </div>
+                <!-- usage mini monitor -->
+                <div style="background: #f2f6fd; border-radius: 20px; padding: 14px;">
+                    <div style="display: flex; justify-content: space-between; color:#234570;">
+                        <span>API calls</span> <span>47.2k <span style="color:#2b6c47;">↑9%</span></span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin-top: 8px;">
+                        <span>Storage (GB)</span> <span>312 / 500</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin-top: 8px;">
+                        <span>Active sessions</span> <span>24</span>
+                    </div>
+                </div>
+                <button class="btn-ghost" style="margin-top: 16px;"><i class="fas-regular fa-chart-bar"></i> full usage analytics</button>
+            </div>
+        </div>
+
+        <!-- subtle footer: attachment with supabase function simulation -->
+        <div style="margin-top: 2rem; font-size:0.9rem; display: flex; gap: 20px; color:#6c85ad; border-top: 1px dashed #cbd5e4; padding-top: 1.5rem; align-items: center; justify-content: space-between;">
+            <span><i class="fas fa-code-branch"></i> data attached from supabase/edge functions · all panels reactive</span>
+            <span><i class="fas fa-rotate" id="refreshSim"></i> sync: live</span>
+        </div>
+    </div>
+
+    <!-- tiny JS: chart init + mimic supabase dynamic attachment (static demo) -->
+    <script>
+        (function() {
+            // supabase simulation: attach some demo random values (as if from functions)
+            function updateFromSupabase() {
+                // mimic fetching from supabase: doctors, receptionists, subs, usage
+                document.getElementById('statDoctors').innerText = '16';
+                document.getElementById('statRecep').innerText = '9';
+                document.getElementById('statSubs').innerText = '145';
+                document.getElementById('statUsage').innerText = '2.8k';
+                // (in real app these would come from supabase js client)
+            }
+            // call once to simulate attached data
+            updateFromSupabase();
+
+            // analyst chart (simple)
+            const ctx = document.getElementById('analystChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+                    datasets: [{
+                        label: 'visits',
+                        data: [220, 290, 340, 375, 410, 290],
+                        borderColor: '#3b82f6',
+                        backgroundColor: 'rgba(59,130,246,0.05)',
+                        tension: 0.2,
+                        pointBackgroundColor: '#1e3a8a',
+                        borderWidth: 3,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: { y: { beginAtZero: true, grid: { color: '#e8eef6' } } }
+                }
+            });
+
+            // additional simulation: system usage mini interaction (just ui flair)
+            const refresh = document.getElementById('refreshSim');
+            if (refresh) {
+                refresh.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    // simulate supabase refetch
+                    const usageEl = document.getElementById('statUsage');
+                    if (usageEl) {
+                        let val = parseInt(usageEl.innerText) || 2800;
+                        val = Math.floor(val * (1 + (Math.random()*0.06 - 0.02)));
+                        usageEl.innerText = (val/1000).toFixed(1) + 'k';
+                    }
+                    // subtle animation
+                    refresh.style.transform = 'rotate(180deg)';
+                    setTimeout(() => refresh.style.transform = 'rotate(0deg)', 200);
+                });
+            }
+
+            // you can also simulate subscription fetch etc.
+            console.log('Supabase admin panel attached · all modules ready');
+        })();
+    </script>
+
+    <!-- optional hover effect (no real functionality, but UI matches) -->
+</body>
+</html>

@@ -1,0 +1,823 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ClinicCare Pro · Doctor Dashboard (fully enabled + logout)</title>
+    <!-- Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', system-ui, sans-serif; background: #f4f8fd; color: #152b42; }
+        .dashboard { display: flex; min-height: 100vh; }
+
+        /* ===== SIDEBAR ===== */
+        .sidebar {
+            width: 290px; background: #ffffff; box-shadow: 6px 0 24px rgba(0, 20, 40, 0.04);
+            display: flex; flex-direction: column; position: fixed; height: 100vh;
+            border-right: 1px solid #e2ecf9;
+        }
+        .sidebar-header { padding: 28px 24px 20px; display: flex; align-items: center; gap: 14px; border-bottom: 1px solid #e2ecf9; }
+        .sidebar-header i { font-size: 2.2rem; color: #1e4dd8; background: #e2eafc; padding: 8px; border-radius: 18px; }
+        .sidebar-header h3 { font-weight: 700; font-size: 1.4rem; letter-spacing: -0.4px; color: #0f2642; }
+        .user-info { padding: 22px 24px; background: #f8fcff; border-bottom: 1px solid #e2ecf9; }
+        .user-info h4 { font-weight: 600; font-size: 1.1rem; color: #0f2642; margin-bottom: 6px; }
+        .user-info p { font-size: 0.9rem; color: #3f6280; display: flex; align-items: center; gap: 8px; margin: 5px 0; }
+        .user-info i { width: 20px; color: #5f7d9c; }
+        .user-role-badge { display: inline-block; padding: 4px 16px; background: #1e4dd8; color: white; border-radius: 40px; font-size: 0.7rem; font-weight: 600; margin-top: 8px; }
+        .sidebar-nav { flex: 1; padding: 28px 0 12px; overflow-y: auto; }
+        .sidebar-nav ul { list-style: none; }
+        .sidebar-nav li { padding: 12px 24px; margin: 4px 12px; border-radius: 14px; cursor: pointer; transition: 0.2s; display: flex; align-items: center; gap: 16px; color: #2b4059; font-weight: 500; font-size: 0.95rem; }
+        .sidebar-nav li i { width: 22px; font-size: 1.2rem; color: #597a9f; }
+        .sidebar-nav li:hover { background: #f1f7fd; color: #0f2642; }
+        .sidebar-nav li.active { background: #1e4dd8; color: white; }
+        .sidebar-nav li.active i { color: white; }
+        .btn-logout { margin: 16px 20px 28px; padding: 14px; background: #f1f7fd; color: #31516d; border: 1px solid #d6e3f0; border-radius: 18px; font-weight: 600; cursor: pointer; transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 12px; }
+        .btn-logout:hover { background: #fee7e7; color: #b91c1c; border-color: #fbc5c5; }
+
+        /* ===== MAIN ===== */
+        .main-content { flex: 1; margin-left: 290px; padding: 30px 38px; }
+        .dashboard-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px; background: white; padding: 18px 32px; border-radius: 30px; box-shadow: 0 10px 25px rgba(0,0,0,0.02); border: 1px solid #e2ecf9; }
+        .dashboard-header h2 { font-weight: 700; font-size: 1.8rem; color: #0f2642; letter-spacing: -0.4px; }
+        .header-actions span { background: #f0f7ff; padding: 8px 22px; border-radius: 40px; font-size: 0.9rem; color: #1e4dd8; font-weight: 500; }
+
+        .dashboard-content { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; }
+        .stat-card, .appointment-list, .table-container, .schedule-grid, .detail-card {
+            grid-column: span 4; background: white; border-radius: 32px; padding: 26px 32px; border: 1px solid #e2ecf9; box-shadow: 0 10px 28px rgba(0,0,0,0.02);
+        }
+        .stat-card { grid-column: span 1; padding: 24px; }
+        .stat-card h3 { font-weight: 500; font-size: 0.9rem; text-transform: uppercase; color: #5f7d9c; margin-bottom: 12px; }
+        .stat-card .stat-value { font-size: 2.2rem; font-weight: 700; color: #0f2642; }
+
+        .appointment-item, .list-item { display: flex; align-items: center; padding: 16px 0; border-bottom: 1px solid #ecf3fa; }
+        .appointment-time { min-width: 120px; font-weight: 600; color: #1e4dd8; background: #e9f0fd; padding: 6px 16px; border-radius: 40px; text-align: center; font-size: 0.9rem; }
+        .appointment-patient { flex: 1; margin-left: 22px; }
+        .appointment-patient h4 { font-weight: 600; color: #0f2642; }
+        .appointment-status { padding: 6px 20px; border-radius: 40px; font-size: 0.8rem; font-weight: 600; }
+        .status-confirmed { background: #dcfce7; color: #166534; }
+        .status-pending { background: #fff3cd; color: #856404; }
+        .status-cancelled { background: #fee2e2; color: #991b1b; }
+
+        table { width: 100%; border-collapse: collapse; }
+        th { text-align: left; padding: 16px 8px; font-weight: 600; font-size: 0.8rem; color: #5f7d9c; text-transform: uppercase; border-bottom: 1px solid #e2ecf9; }
+        td { padding: 16px 8px; border-bottom: 1px solid #f0f7fd; color: #1a2b3e; }
+        .badge { padding: 6px 16px; border-radius: 40px; font-size: 0.75rem; font-weight: 600; display: inline-block; }
+        .badge-success { background: #dcfce7; color: #166534; }
+        .badge-warning { background: #fef9c3; color: #854d0e; }
+        .badge-info { background: #dbeafe; color: #1e40af; }
+
+        .action-btn { background: #1e4dd8; color: white; border: none; padding: 8px 20px; border-radius: 40px; font-size: 0.8rem; font-weight: 600; cursor: pointer; transition: 0.2s; box-shadow: 0 4px 10px rgba(30,77,216,0.2); }
+        .action-btn:hover { background: #153da8; }
+        .action-outline { background: white; color: #1e4dd8; border: 1px solid #b8d1f5; box-shadow: none; }
+        .action-outline:hover { background: #ecf3fe; }
+        .action-small { padding: 5px 12px; font-size: 0.75rem; }
+
+        .modal-overlay { position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center; z-index: 1000; }
+        .modal-card { background: white; border-radius: 40px; padding: 32px; max-width: 500px; width: 90%; max-height: 80vh; overflow-y: auto; }
+        .modal-card h3 { margin-bottom: 24px; }
+        .form-group { margin-bottom: 20px; }
+        .form-group label { font-weight: 600; display: block; margin-bottom: 6px; }
+        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 12px 16px; border-radius: 30px; border: 1px solid #d6e3f0; font-family: 'Inter', sans-serif; }
+        .form-actions { display: flex; gap: 16px; justify-content: flex-end; margin-top: 28px; }
+
+        .week-header { display: flex; gap: 12px; margin-bottom: 28px; background: #f7fcff; padding: 16px; border-radius: 50px; }
+        .day-tab { flex:1; text-align: center; padding: 10px; font-weight:600; border-radius:40px; cursor:pointer; background:white; border:1px solid #d6e3f0; }
+        .day-tab.active { background:#1e4dd8; color:white; border-color:#1e4dd8; }
+        .slot-item { display:flex; align-items:center; padding:16px 22px; background:white; border-radius:50px; margin-bottom:12px; border:1px solid #e2ecf9; }
+        .slot-time { min-width:130px; font-weight:600; color:#1e4dd8; }
+        .toggle-switch { width:44px; height:24px; background:#cbd5e1; border-radius:40px; display:inline-block; position:relative; cursor:pointer; transition:0.1s; }
+        .toggle-switch.active { background:#1e4dd8; }
+        .toggle-switch::after { content:''; width:20px; height:20px; background:white; border-radius:50%; position:absolute; top:2px; left:2px; transition:0.1s; }
+        .toggle-switch.active::after { left:22px; }
+    </style>
+</head>
+<body>
+<div class="dashboard">
+    <div class="sidebar">
+        <div class="sidebar-header"><i class="fas fa-clinic-medical"></i><h3>ClinicCare Pro</h3></div>
+        <div class="user-info" id="userInfo"></div>
+        <nav class="sidebar-nav"><ul id="sidebarNavList">
+            <li id="nav-dashboard" class="active" onclick="loadContent('dashboard')"><i class="fas fa-chart-pie"></i><span>Dashboard</span></li>
+            <li id="nav-appointments" onclick="loadContent('appointments')"><i class="fas fa-calendar-check"></i><span>Appointments</span></li>
+            <li id="nav-patients" onclick="loadContent('patients')"><i class="fas fa-users"></i><span>My Patients</span></li>
+            <li id="nav-prescriptions" onclick="loadContent('prescriptions')"><i class="fas fa-file-prescription"></i><span>Prescriptions</span></li>
+            <li id="nav-schedule" onclick="loadContent('schedule')"><i class="fas fa-clock"></i><span>Schedule</span></li>
+            <li id="nav-lab" onclick="loadContent('lab')"><i class="fas fa-flask"></i><span>Lab Results</span></li>
+            <li id="nav-billing" onclick="loadContent('billing')"><i class="fas fa-credit-card"></i><span>Billing</span></li>
+            <li id="nav-staff" onclick="loadContent('staff')"><i class="fas fa-user-md"></i><span>Staff</span></li>
+            <li id="nav-chat" onclick="loadContent('chat')"><i class="fas fa-comment-dots"></i><span>Messages</span></li>
+            <li id="nav-analytics" onclick="loadContent('analytics')"><i class="fas fa-chart-line"></i><span>Analytics</span></li>
+        </ul></nav>
+        <button class="btn-logout" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</button>
+    </div>
+
+    <div class="main-content">
+        <div class="dashboard-header">
+            <h2 id="dashboardTitle">Dashboard</h2>
+            <div class="header-actions"><span id="currentDate"></span></div>
+        </div>
+        <div class="dashboard-content" id="dashboardContent"></div>
+    </div>
+</div>
+
+<!-- Modal container -->
+<div id="modalContainer" style="display:none;"></div>
+
+<script>
+    (function() {
+        // ---------- AUTH & LOGOUT (fully enabled) ----------
+        const defaultDoctor = { 
+            name: 'Dr. Sarah Chen', 
+            email: 'dr.sarah@cliniccare.com', 
+            phone: '+1 (415) 555-8220', 
+            role: 'doctor', 
+            specialization: 'Cardiology · Interventional', 
+            id: 'MD3471' 
+        };
+        
+        // Check if user is logged in, if not set default
+        let currentUser = JSON.parse(localStorage.getItem('currentUser'));
+        if (!currentUser || currentUser.role !== 'doctor') { 
+            localStorage.setItem('currentUser', JSON.stringify(defaultDoctor)); 
+            currentUser = defaultDoctor; 
+        }
+
+        // Logout function - completely clears session and redirects
+        window.logout = function() { 
+            if (confirm('Are you sure you want to logout?')) {
+                localStorage.removeItem('currentUser'); 
+                alert('You have been logged out successfully.'); 
+                window.location.href = 'index.html'; // Redirect to login page
+            }
+        };
+
+        function renderUserInfo() { 
+            const u = currentUser; 
+            document.getElementById('userInfo').innerHTML = `<h4>${u.name}</h4><p><i class="fas fa-envelope"></i> ${u.email}</p><p><i class="fas fa-phone-alt"></i> ${u.phone || '—'}</p><p><span class="user-role-badge">${u.specialization || 'Doctor'}</span> <span style="margin-left:6px;background:#e2eaf1;padding:3px 10px;border-radius:40px;font-size:0.7rem;">ID: ${u.id}</span></p>`; 
+        }
+        renderUserInfo();
+        
+        function updateDate() { 
+            const d = new Date(); 
+            document.getElementById('currentDate').innerHTML = d.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' }); 
+        }
+        updateDate();
+
+        // ---------- DATA STORAGE (using localStorage for persistence) ----------
+        if (!localStorage.getItem('appointments')) {
+            const initialAppointments = [
+                { id: 1, time: '09:00', patient: 'John Doe', type: 'Annual physical', status: 'confirmed', patientId: 'P1023', phone: '+1 555-2301', notes: '' },
+                { id: 2, time: '10:30', patient: 'Jane Smith', type: 'Post-op follow-up', status: 'confirmed', patientId: 'P4512', phone: '+1 555-6712', notes: '' },
+                { id: 3, time: '14:00', patient: 'Bob Johnson', type: 'Chest pain consultation', status: 'pending', patientId: 'P3340', phone: '+1 555-9834', notes: '' },
+                { id: 4, time: '15:30', patient: 'Elena Garcia', type: 'Medication review', status: 'cancelled', patientId: 'P2098', phone: '+1 555-3421', notes: '' },
+                { id: 5, time: '16:45', patient: 'David Kim', type: 'Stress test results', status: 'confirmed', patientId: 'P8712', phone: '+1 555-7712', notes: '' }
+            ];
+            localStorage.setItem('appointments', JSON.stringify(initialAppointments));
+        }
+
+        if (!localStorage.getItem('patients')) {
+            const initialPatients = [
+                { id: 'P1023', name: 'John Doe', age: 54, lastVisit: '2025-02-10', condition: 'Hypertension', insurance: 'Aetna', phone: '+1 555-2301' },
+                { id: 'P4512', name: 'Jane Smith', age: 42, lastVisit: '2025-03-01', condition: 'Post-surgical', insurance: 'Cigna', phone: '+1 555-6712' },
+                { id: 'P3340', name: 'Bob Johnson', age: 61, lastVisit: '2025-03-12', condition: 'Arrhythmia', insurance: 'Blue Cross', phone: '+1 555-9834' },
+                { id: 'P2098', name: 'Elena Garcia', age: 37, lastVisit: '2025-02-28', condition: 'Thyroid', insurance: 'Medicare', phone: '+1 555-3421' },
+                { id: 'P8712', name: 'David Kim', age: 29, lastVisit: '2025-02-18', condition: 'Asthma', insurance: 'United', phone: '+1 555-7712' },
+                { id: 'P6325', name: 'Lisa Ray', age: 48, lastVisit: '2025-03-10', condition: 'Diabetes type 2', insurance: 'Aetna', phone: '+1 555-3345' }
+            ];
+            localStorage.setItem('patients', JSON.stringify(initialPatients));
+        }
+
+        if (!localStorage.getItem('prescriptions')) {
+            const initialPrescriptions = [
+                { id: 'RX01', patient: 'John Doe', drug: 'Lisinopril 10mg', date: '2025-03-10', refills: 2, status: 'active' },
+                { id: 'RX02', patient: 'Jane Smith', drug: 'Ibuprofen 600mg', date: '2025-03-01', refills: 0, status: 'completed' },
+                { id: 'RX03', patient: 'Bob Johnson', drug: 'Amiodarone 200mg', date: '2025-03-12', refills: 1, status: 'active' },
+                { id: 'RX04', patient: 'Elena Garcia', drug: 'Levothyroxine 75mcg', date: '2025-02-28', refills: 3, status: 'active' }
+            ];
+            localStorage.setItem('prescriptions', JSON.stringify(initialPrescriptions));
+        }
+
+        if (!localStorage.getItem('labResults')) {
+            const initialLabResults = [
+                { id: 'L101', patient: 'John Doe', test: 'Lipid panel', date: '2025-03-14', status: 'final', value: 'LDL 130', notes: '' },
+                { id: 'L102', patient: 'Jane Smith', test: 'CBC', date: '2025-03-02', status: 'final', value: 'Normal', notes: '' },
+                { id: 'L103', patient: 'Bob Johnson', test: 'Troponin', date: '2025-03-13', status: 'pending', value: '—', notes: '' }
+            ];
+            localStorage.setItem('labResults', JSON.stringify(initialLabResults));
+        }
+
+        if (!localStorage.getItem('billing')) {
+            const initialBilling = [
+                { inv: 'INV2301', patient: 'John Doe', amount: 250, status: 'paid', date: '2025-03-01' },
+                { inv: 'INV2302', patient: 'Jane Smith', amount: 180, status: 'pending', date: '2025-03-05' },
+                { inv: 'INV2303', patient: 'Bob Johnson', amount: 495, status: 'insurance', date: '2025-03-12' }
+            ];
+            localStorage.setItem('billing', JSON.stringify(initialBilling));
+        }
+
+        if (!localStorage.getItem('weeklySchedule')) {
+            const initialSchedule = { 
+                monday: [{ start: '09:00', end: '12:00', type: 'clinic' }, { start: '13:00', end: '17:00', type: 'clinic' }], 
+                tuesday: [{ start: '08:30', end: '12:30', type: 'clinic' }, { start: '14:00', end: '18:00', type: 'procedure' }], 
+                wednesday:[{ start: '09:00', end: '13:00', type: 'clinic' }, { start: '14:00', end: '16:00', type: 'admin' }], 
+                thursday: [{ start: '08:00', end: '12:00', type: 'clinic' }, { start: '13:00', end: '17:00', type: 'clinic' }], 
+                friday: [{ start: '09:00', end: '15:00', type: 'clinic' }], 
+                saturday: [{ start: '10:00', end: '13:00', type: 'consult' }], 
+                sunday: [] 
+            };
+            localStorage.setItem('weeklySchedule', JSON.stringify(initialSchedule));
+        }
+
+        if (!localStorage.getItem('staffList')) {
+            const initialStaff = [ 
+                { name: 'Nurse Amy', role: 'RN', department: 'Cardiology', ext: '4321' }, 
+                { name: 'Dr. James Wu', role: 'Fellow', department: 'Cardiology', ext: '4325' }, 
+                { name: 'Maya Lopez', role: 'PA', department: 'General', ext: '4330' } 
+            ];
+            localStorage.setItem('staffList', JSON.stringify(initialStaff));
+        }
+
+        if (!localStorage.getItem('messages')) {
+            const initialMessages = [
+                { id: 1, from: 'John Doe', message: 'When should I take my medication?', time: '10:23', read: false },
+                { id: 2, from: 'Nurse Amy', message: 'Patient called about lab results', time: '09:12', read: true },
+                { id: 3, from: 'Jane Smith', message: 'Need prescription refill', time: 'Yesterday', read: false }
+            ];
+            localStorage.setItem('messages', JSON.stringify(initialMessages));
+        }
+
+        // Load data from localStorage
+        let appointments = JSON.parse(localStorage.getItem('appointments'));
+        let patients = JSON.parse(localStorage.getItem('patients'));
+        let prescriptions = JSON.parse(localStorage.getItem('prescriptions'));
+        let labResults = JSON.parse(localStorage.getItem('labResults'));
+        let billing = JSON.parse(localStorage.getItem('billing'));
+        let weeklySchedule = JSON.parse(localStorage.getItem('weeklySchedule'));
+        let staffList = JSON.parse(localStorage.getItem('staffList'));
+        let messages = JSON.parse(localStorage.getItem('messages'));
+
+        // Save functions to persist changes
+        function saveAppointments() { localStorage.setItem('appointments', JSON.stringify(appointments)); }
+        function savePatients() { localStorage.setItem('patients', JSON.stringify(patients)); }
+        function savePrescriptions() { localStorage.setItem('prescriptions', JSON.stringify(prescriptions)); }
+        function saveLabResults() { localStorage.setItem('labResults', JSON.stringify(labResults)); }
+        function saveBilling() { localStorage.setItem('billing', JSON.stringify(billing)); }
+        function saveSchedule() { localStorage.setItem('weeklySchedule', JSON.stringify(weeklySchedule)); }
+        function saveStaff() { localStorage.setItem('staffList', JSON.stringify(staffList)); }
+        function saveMessages() { localStorage.setItem('messages', JSON.stringify(messages)); }
+
+        // ---------- MODAL SYSTEM ----------
+        function showModal(contentHtml) {
+            const modal = document.getElementById('modalContainer');
+            modal.style.display = 'flex';
+            modal.innerHTML = `<div class="modal-overlay" onclick="closeModal()"><div class="modal-card" onclick="event.stopPropagation()">${contentHtml}</div></div>`;
+        }
+        window.closeModal = function() { document.getElementById('modalContainer').style.display = 'none'; };
+
+        // ---------- ENHANCED FUNCTIONS (all fully enabled) ----------
+        window.viewPatient = function(patientId) {
+            const p = patients.find(pat => pat.id === patientId);
+            if (!p) return;
+            showModal(`
+                <h3>Patient details: ${p.name}</h3>
+                <div class="form-group"><label>ID</label><input type="text" value="${p.id}" readonly></div>
+                <div class="form-group"><label>Phone</label><input type="text" value="${p.phone}" readonly></div>
+                <div class="form-group"><label>Age</label><input value="${p.age}" readonly></div>
+                <div class="form-group"><label>Condition</label><input value="${p.condition}" readonly></div>
+                <div class="form-group"><label>Last visit</label><input value="${p.lastVisit}" readonly></div>
+                <div class="form-group"><label>Insurance</label><input value="${p.insurance}" readonly></div>
+                <div class="form-actions"><button class="action-btn" onclick="editPatient('${p.id}')">Edit</button><button class="action-outline action-btn" onclick="closeModal()">Close</button></div>
+            `);
+        };
+
+        window.editPatient = function(patientId) {
+            let p = patients.find(pat => pat.id === patientId);
+            if (!p) return;
+            showModal(`
+                <h3>Edit patient: ${p.name}</h3>
+                <div class="form-group"><label>Name</label><input id="editName" value="${p.name}"></div>
+                <div class="form-group"><label>Phone</label><input id="editPhone" value="${p.phone}"></div>
+                <div class="form-group"><label>Age</label><input id="editAge" value="${p.age}"></div>
+                <div class="form-group"><label>Condition</label><input id="editCondition" value="${p.condition}"></div>
+                <div class="form-group"><label>Insurance</label><input id="editInsurance" value="${p.insurance}"></div>
+                <div class="form-actions">
+                    <button class="action-btn" onclick="savePatient('${p.id}')">Save</button>
+                    <button class="action-outline action-btn" onclick="closeModal()">Cancel</button>
+                </div>
+            `);
+        };
+
+        window.savePatient = function(id) {
+            const p = patients.find(p => p.id === id);
+            if (p) {
+                p.name = document.getElementById('editName')?.value || p.name;
+                p.phone = document.getElementById('editPhone')?.value || p.phone;
+                p.age = parseInt(document.getElementById('editAge')?.value) || p.age;
+                p.condition = document.getElementById('editCondition')?.value || p.condition;
+                p.insurance = document.getElementById('editInsurance')?.value || p.insurance;
+                savePatients();
+            }
+            closeModal();
+            loadContent('patients');
+        };
+
+        window.viewAppointment = function(appId) {
+            const a = appointments.find(x => x.id === appId);
+            if (!a) return;
+            showModal(`
+                <h3>Appointment #${a.id}</h3>
+                <div class="form-group"><label>Patient</label><input value="${a.patient}" readonly></div>
+                <div class="form-group"><label>Time</label><input value="${a.time}" readonly></div>
+                <div class="form-group"><label>Type</label><input value="${a.type}" readonly></div>
+                <div class="form-group"><label>Status</label><input value="${a.status}" readonly></div>
+                <div class="form-group"><label>Notes</label><textarea id="appNotes" rows="3">${a.notes || ''}</textarea></div>
+                <div class="form-actions">
+                    <button class="action-btn" onclick="updateAppointmentNotes(${a.id})">Save notes</button>
+                    <button class="action-outline action-btn" onclick="closeModal()">Close</button>
+                </div>
+            `);
+        };
+
+        window.updateAppointmentNotes = function(id) {
+            const a = appointments.find(x => x.id === id);
+            if (a) { 
+                a.notes = document.getElementById('appNotes')?.value || '';
+                saveAppointments();
+            }
+            closeModal(); 
+            loadContent('appointments');
+        };
+
+        window.confirmAppointment = function(id) {
+            const a = appointments.find(x => x.id === id);
+            if (a) { 
+                a.status = 'confirmed';
+                saveAppointments();
+            }
+            loadContent('appointments');
+        };
+
+        window.cancelAppointment = function(id) {
+            if (confirm('Cancel this appointment?')) {
+                const a = appointments.find(x => x.id === id);
+                if (a) { 
+                    a.status = 'cancelled';
+                    saveAppointments();
+                }
+                loadContent('appointments');
+            }
+        };
+
+        window.viewPrescription = function(rxId) {
+            const rx = prescriptions.find(r => r.id === rxId);
+            if (!rx) return;
+            showModal(`<h3>Prescription ${rx.id}</h3><div class="form-group"><label>Drug</label><input value="${rx.drug}" readonly></div><div class="form-group"><label>Refills</label><input value="${rx.refills}" readonly></div><div class="form-group"><label>Status</label><input value="${rx.status}" readonly></div><button class="action-btn" onclick="closeModal()">Close</button>`);
+        };
+
+        window.refillPrescription = function(rxId) {
+            const rx = prescriptions.find(r => r.id === rxId);
+            if (rx && rx.refills > 0) {
+                rx.refills -= 1;
+                savePrescriptions();
+                alert(`Refill authorized for ${rx.drug}. ${rx.refills} refills remaining.`);
+            } else {
+                alert('No refills remaining or prescription not found.');
+            }
+            loadContent('prescriptions');
+        };
+
+        window.viewLab = function(labId) {
+            const l = labResults.find(x => x.id === labId);
+            if (!l) return;
+            showModal(`<h3>Lab: ${l.test}</h3><div class="form-group"><label>Patient</label><input value="${l.patient}" readonly></div><div class="form-group"><label>Result</label><input value="${l.value}" readonly></div><div class="form-group"><label>Notes</label><textarea id="labNotes">${l.notes || ''}</textarea></div><div class="form-actions"><button class="action-btn" onclick="updateLabNotes('${l.id}')">Update</button><button class="action-outline" onclick="closeModal()">Close</button></div>`);
+        };
+
+        window.updateLabNotes = function(id) {
+            const l = labResults.find(x => x.id === id);
+            if (l) {
+                l.notes = document.getElementById('labNotes')?.value || '';
+                saveLabResults();
+            }
+            closeModal(); 
+            loadContent('lab');
+        };
+
+        window.addPrescription = function() {
+            const patientOptions = patients.map(p => `<option value="${p.name}">${p.name}</option>`).join('');
+            showModal(`
+                <h3>New prescription</h3>
+                <div class="form-group"><label>Patient</label><select id="rxPatient">${patientOptions}</select></div>
+                <div class="form-group"><label>Drug</label><input id="rxDrug" placeholder="e.g. Metformin 500mg"></div>
+                <div class="form-group"><label>Refills</label><input id="rxRefills" type="number" value="1"></div>
+                <div class="form-actions"><button class="action-btn" onclick="saveNewPrescription()">Create</button><button class="action-outline" onclick="closeModal()">Cancel</button></div>
+            `);
+        };
+
+        window.saveNewPrescription = function() {
+            const newRx = { 
+                id: 'RX' + Math.floor(Math.random()*1000), 
+                patient: document.getElementById('rxPatient')?.value || '', 
+                drug: document.getElementById('rxDrug')?.value || '', 
+                date: new Date().toISOString().slice(0,10), 
+                refills: parseInt(document.getElementById('rxRefills')?.value) || 0, 
+                status: 'active' 
+            };
+            prescriptions.push(newRx);
+            savePrescriptions();
+            closeModal(); 
+            loadContent('prescriptions');
+        };
+
+        window.addAppointment = function() {
+            const patientOptions = patients.map(p => `<option value="${p.name}">${p.name}</option>`).join('');
+            showModal(`
+                <h3>New appointment</h3>
+                <div class="form-group"><label>Patient</label><select id="newAppPat">${patientOptions}</select></div>
+                <div class="form-group"><label>Time</label><input id="newAppTime" placeholder="HH:MM" value="09:00"></div>
+                <div class="form-group"><label>Type</label><input id="newAppType" placeholder="type" value="Consultation"></div>
+                <div class="form-actions"><button class="action-btn" onclick="saveNewAppointment()">Create</button><button class="action-outline" onclick="closeModal()">Cancel</button></div>
+            `);
+        };
+
+        window.saveNewAppointment = function() {
+            const newApp = { 
+                id: appointments.length + 1, 
+                time: document.getElementById('newAppTime')?.value || '12:00', 
+                patient: document.getElementById('newAppPat')?.value || 'New Patient', 
+                type: document.getElementById('newAppType')?.value || 'Consult', 
+                status: 'pending', 
+                patientId: 'TMP' + Math.floor(Math.random()*1000),
+                notes: ''
+            };
+            appointments.push(newApp);
+            saveAppointments();
+            closeModal(); 
+            loadContent('appointments');
+        };
+
+        window.sendMessage = function() {
+            showModal(`
+                <h3>New message</h3>
+                <div class="form-group"><label>To</label><select id="msgTo"><option>John Doe</option><option>Nurse Amy</option><option>Jane Smith</option></select></div>
+                <div class="form-group"><label>Message</label><textarea id="msgContent" rows="4" placeholder="Type your message..."></textarea></div>
+                <div class="form-actions"><button class="action-btn" onclick="saveNewMessage()">Send</button><button class="action-outline" onclick="closeModal()">Cancel</button></div>
+            `);
+        };
+
+        window.saveNewMessage = function() {
+            const newMsg = {
+                id: messages.length + 1,
+                from: 'Dr. Sarah Chen',
+                to: document.getElementById('msgTo')?.value || '',
+                message: document.getElementById('msgContent')?.value || '',
+                time: 'Just now',
+                read: false
+            };
+            messages.push(newMsg);
+            saveMessages();
+            closeModal();
+            alert('Message sent!');
+            loadContent('chat');
+        };
+
+        window.markAsRead = function(msgId) {
+            const msg = messages.find(m => m.id === msgId);
+            if (msg) {
+                msg.read = true;
+                saveMessages();
+            }
+            loadContent('chat');
+        };
+
+        // schedule controls
+        window.setActiveDay = function(day) { 
+            window.activeDay = day; 
+            loadContent('schedule'); 
+        };
+
+        window.toggleSlot = function(day, idx) { 
+            if (weeklySchedule[day] && weeklySchedule[day][idx]) { 
+                weeklySchedule[day].splice(idx, 1); 
+                saveSchedule();
+            } 
+            loadContent('schedule'); 
+        };
+
+        window.addSlot = function(day) { 
+            if (!weeklySchedule[day]) weeklySchedule[day] = []; 
+            weeklySchedule[day].push({ start: '14:00', end: '15:00', type: 'clinic' }); 
+            saveSchedule();
+            loadContent('schedule'); 
+        };
+
+        window.saveSchedule = function() { 
+            saveSchedule();
+            alert('Schedule saved successfully.'); 
+        };
+
+        // ---------- RENDER FUNCTIONS ----------
+        window.loadContent = function(section, event) {
+            if (event) { 
+                document.querySelectorAll('.sidebar-nav li').forEach(li => li.classList.remove('active')); 
+                event.currentTarget.classList.add('active'); 
+            } else { 
+                let activeId = 'nav-' + (section || 'dashboard'); 
+                document.querySelectorAll('.sidebar-nav li').forEach(li => li.classList.remove('active')); 
+                let el = document.getElementById(activeId); 
+                if (el) el.classList.add('active'); 
+            }
+            
+            const title = document.getElementById('dashboardTitle'); 
+            const container = document.getElementById('dashboardContent');
+            
+            const renderFunctions = {
+                dashboard: () => { 
+                    title.innerText = 'Dashboard'; 
+                    renderDashboard(container); 
+                },
+                appointments: () => { 
+                    title.innerText = 'Appointments'; 
+                    renderAppointments(container); 
+                },
+                patients: () => { 
+                    title.innerText = 'My Patients'; 
+                    renderPatients(container); 
+                },
+                prescriptions: () => { 
+                    title.innerText = 'Prescriptions'; 
+                    renderPrescriptions(container); 
+                },
+                schedule: () => { 
+                    title.innerText = 'Weekly Schedule'; 
+                    renderSchedule(container); 
+                },
+                lab: () => { 
+                    title.innerText = 'Lab Results'; 
+                    renderLab(container); 
+                },
+                billing: () => { 
+                    title.innerText = 'Billing & Insurance'; 
+                    renderBilling(container); 
+                },
+                staff: () => { 
+                    title.innerText = 'Staff Directory'; 
+                    renderStaff(container); 
+                },
+                chat: () => { 
+                    title.innerText = 'Messages'; 
+                    renderChat(container); 
+                },
+                analytics: () => { 
+                    title.innerText = 'Analytics'; 
+                    renderAnalytics(container); 
+                }
+            };
+            
+            if (renderFunctions[section]) {
+                renderFunctions[section]();
+            }
+        };
+
+        function renderDashboard(c) { 
+            const today = new Date().toISOString().slice(0,10);
+            const todayApps = appointments.filter(a => a.date === today || !a.date).length;
+            
+            c.innerHTML = `
+                <div class="stat-card"><h3>Appointments</h3><div class="stat-value">${appointments.length}</div><div class="stat-note">${todayApps} today</div></div>
+                <div class="stat-card"><h3>Patients</h3><div class="stat-value">${patients.length}</div></div>
+                <div class="stat-card"><h3>Lab pending</h3><div class="stat-value">${labResults.filter(l=>l.status==='pending').length}</div></div>
+                <div class="stat-card"><h3>Unread Msgs</h3><div class="stat-value">${messages.filter(m=>!m.read).length}</div></div>
+                <div class="appointment-list"><h3>Today's schedule</h3>${appointments.slice(0,5).map(a=>`
+                    <div class="appointment-item">
+                        <div class="appointment-time">${a.time}</div>
+                        <div class="appointment-patient"><h4>${a.patient}</h4><p>${a.type}</p></div>
+                        <span class="appointment-status status-${a.status}">${a.status}</span>
+                        <button class="action-btn action-small" style="margin-left:12px;" onclick="viewAppointment(${a.id})">view</button>
+                    </div>`).join('')}</div>
+            `; 
+        }
+
+        function renderAppointments(c) { 
+            c.innerHTML = `
+                <div class="table-container">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+                        <h3>All Appointments</h3>
+                        <button class="action-btn action-small" onclick="addAppointment()"><i class="fas fa-plus"></i> New</button>
+                    </div>
+                    <table>
+                        <thead><tr><th>Time</th><th>Patient</th><th>Type</th><th>Status</th><th>Actions</th></tr></thead>
+                        <tbody>${
+                            appointments.map(a=>`
+                                <tr>
+                                    <td>${a.time}</td>
+                                    <td>${a.patient}</td>
+                                    <td>${a.type}</td>
+                                    <td><span class="badge badge-${a.status==='confirmed'?'success':a.status==='pending'?'warning':'info'}">${a.status}</span></td>
+                                    <td>
+                                        <button class="action-btn action-outline action-small" onclick="viewAppointment(${a.id})">view</button>
+                                        ${a.status !== 'confirmed' ? `<button class="action-btn action-small" onclick="confirmAppointment(${a.id})">confirm</button>` : ''}
+                                        ${a.status !== 'cancelled' ? `<button class="action-btn action-small" style="background:#dc2626;" onclick="cancelAppointment(${a.id})">cancel</button>` : ''}
+                                    </td>
+                                </tr>`).join('')
+                        }</tbody>
+                    </table>
+                </div>`; 
+        }
+
+        function renderPatients(c) { 
+            c.innerHTML = `
+                <div class="table-container">
+                    <h3>Patient List</h3>
+                    <table>
+                        <thead><tr><th>Name/ID</th><th>Age</th><th>Condition</th><th>Last visit</th><th>Insurance</th><th></th></tr></thead>
+                        <tbody>${
+                            patients.map(p=>`
+                                <tr>
+                                    <td><strong>${p.name}</strong><br>${p.id}</td>
+                                    <td>${p.age}</td>
+                                    <td>${p.condition}</td>
+                                    <td>${p.lastVisit}</td>
+                                    <td>${p.insurance}</td>
+                                    <td>
+                                        <button class="action-btn action-outline action-small" onclick="viewPatient('${p.id}')">view</button>
+                                        <button class="action-btn action-small" onclick="editPatient('${p.id}')">edit</button>
+                                    </td>
+                                </tr>`).join('')
+                        }</tbody>
+                    </table>
+                </div>`; 
+        }
+
+        function renderPrescriptions(c) { 
+            c.innerHTML = `
+                <div class="table-container">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+                        <h3>Prescriptions</h3>
+                        <button class="action-btn action-small" onclick="addPrescription()"><i class="fas fa-plus"></i> New</button>
+                    </div>
+                    <table>
+                        <thead><tr><th>RX#</th><th>Patient</th><th>Drug</th><th>Date</th><th>Refills</th><th>Status</th><th></th></tr></thead>
+                        <tbody>${
+                            prescriptions.map(r=>`
+                                <tr>
+                                    <td>${r.id}</td>
+                                    <td>${r.patient}</td>
+                                    <td>${r.drug}</td>
+                                    <td>${r.date}</td>
+                                    <td>${r.refills}</td>
+                                    <td><span class="badge badge-info">${r.status}</span></td>
+                                    <td>
+                                        <button class="action-btn action-small" onclick="viewPrescription('${r.id}')">view</button>
+                                        ${r.refills > 0 ? `<button class="action-btn action-small" onclick="refillPrescription('${r.id}')">refill</button>` : ''}
+                                    </td>
+                                </tr>`).join('')
+                        }</tbody>
+                    </table>
+                </div>`; 
+        }
+
+        function renderSchedule(c) { 
+            let days = ['monday','tuesday','wednesday','thursday','friday','saturday','sunday'];
+            let activeDay = window.activeDay || 'monday';
+            let daySlots = weeklySchedule[activeDay] || [];
+            let dayTabs = days.map(d => `<div class="day-tab ${d === activeDay ? 'active' : ''}" onclick="setActiveDay('${d}')">${d.slice(0,3)}</div>`).join('');
+            let slotsHtml = daySlots.map((slot, idx) => `
+                <div class="slot-item">
+                    <div class="slot-time">${slot.start} – ${slot.end}</div>
+                    <div class="slot-desc">${slot.type}</div>
+                    <div class="slot-toggle"><span class="toggle-switch active" onclick="toggleSlot('${activeDay}', ${idx})"></span></div>
+                </div>`).join('') || '<div class="slot-item">No slots scheduled</div>';
+            
+            c.innerHTML = `
+                <div class="schedule-grid">
+                    <h3>Weekly Schedule</h3>
+                    <div class="week-header">${dayTabs}</div>
+                    <div class="schedule-day-view">
+                        ${slotsHtml}
+                        <div style="margin-top:28px;">
+                            <button class="action-btn" onclick="addSlot('${activeDay}')"><i class="fas fa-plus"></i> Add slot</button>
+                            <button class="action-outline action-btn" onclick="saveSchedule()">Save changes</button>
+                        </div>
+                    </div>
+                </div>`;
+        }
+
+        function renderLab(c) { 
+            c.innerHTML = `
+                <div class="table-container">
+                    <h3>Lab Results</h3>
+                    <table>
+                        <thead><tr><th>ID</th><th>Patient</th><th>Test</th><th>Date</th><th>Status</th><th>Result</th><th></th></tr></thead>
+                        <tbody>${
+                            labResults.map(l=>`
+                                <tr>
+                                    <td>${l.id}</td>
+                                    <td>${l.patient}</td>
+                                    <td>${l.test}</td>
+                                    <td>${l.date}</td>
+                                    <td><span class="badge ${l.status==='final'?'badge-success':'badge-warning'}">${l.status}</span></td>
+                                    <td>${l.value}</td>
+                                    <td><button class="action-btn action-small" onclick="viewLab('${l.id}')">view</button></td>
+                                </tr>`).join('')
+                        }</tbody>
+                    </table>
+                </div>`; 
+        }
+
+        function renderBilling(c) { 
+            c.innerHTML = `
+                <div class="table-container">
+                    <h3>Billing Summary</h3>
+                    <table>
+                        <thead><tr><th>Invoice</th><th>Patient</th><th>Amount</th><th>Date</th><th>Status</th></tr></thead>
+                        <tbody>${
+                            billing.map(b=>`
+                                <tr>
+                                    <td>${b.inv}</td>
+                                    <td>${b.patient}</td>
+                                    <td>$${b.amount}</td>
+                                    <td>${b.date}</td>
+                                    <td><span class="badge badge-info">${b.status}</span></td>
+                                </tr>`).join('')
+                        }</tbody>
+                    </table>
+                </div>`; 
+        }
+
+        function renderStaff(c) { 
+            c.innerHTML = `
+                <div class="table-container">
+                    <h3>Staff Directory</h3>
+                    <table>
+                        <thead><tr><th>Name</th><th>Role</th><th>Department</th><th>Extension</th></tr></thead>
+                        <tbody>${
+                            staffList.map(s=>`
+                                <tr>
+                                    <td>${s.name}</td>
+                                    <td>${s.role}</td>
+                                    <td>${s.department}</td>
+                                    <td>${s.ext}</td>
+                                </tr>`).join('')
+                        }</tbody>
+                    </table>
+                </div>`; 
+        }
+
+        function renderChat(c) { 
+            c.innerHTML = `
+                <div class="detail-card">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+                        <h3>Messages</h3>
+                        <button class="action-btn action-small" onclick="sendMessage()"><i class="fas fa-plus"></i> Compose</button>
+                    </div>
+                    ${messages.map(m => `
+                        <div class="list-item" style="background: ${m.read ? 'transparent' : '#f0f7ff'}; border-radius: 16px; margin-bottom: 8px; padding: 12px;">
+                            <div style="display:flex; align-items:center; gap:12px;">
+                                <i class="fas fa-circle" style="color: ${m.read ? '#9ca3af' : '#22c55e'}; font-size:0.6rem;"></i>
+                                <strong>${m.from}</strong>
+                            </div>
+                            <div style="margin-left:28px;">${m.message}</div>
+                            <div style="display:flex; justify-content:space-between; margin-left:28px; margin-top:4px;">
+                                <span style="color:#6b7280; font-size:0.8rem;">${m.time}</span>
+                                ${!m.read ? `<button class="action-btn action-small" onclick="markAsRead(${m.id})">Mark read</button>` : ''}
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>`; 
+        }
+
+        function renderAnalytics(c) { 
+            const totalRevenue = billing.reduce((sum, b) => sum + (b.status === 'paid' ? b.amount : 0), 0);
+            const pendingRevenue = billing.reduce((sum, b) => sum + (b.status !== 'paid' ? b.amount : 0), 0);
+            
+            c.innerHTML = `
+                <div class="detail-card">
+                    <h3>Practice Analytics</h3>
+                    <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:20px; margin-bottom:30px;">
+                        <div style="background:#f0f7ff; border-radius:24px; padding:20px;">
+                            <div style="font-size:0.9rem; color:#5f7d9c;">Total Patients</div>
+                            <div style="font-size:2.2rem; font-weight:700;">${patients.length}</div>
+                        </div>
+                        <div style="background:#f0f7ff; border-radius:24px; padding:20px;">
+                            <div style="font-size:0.9rem; color:#5f7d9c;">Total Revenue</div>
+                            <div style="font-size:2.2rem; font-weight:700;">$${totalRevenue}</div>
+                        </div>
+                        <div style="background:#f0f7ff; border-radius:24px; padding:20px;">
+                            <div style="font-size:0.9rem; color:#5f7d9c;">Pending</div>
+                            <div style="font-size:2.2rem; font-weight:700;">$${pendingRevenue}</div>
+                        </div>
+                    </div>
+                    <div style="height:200px; background:#f0f7ff; border-radius:32px; display:flex; align-items:center; justify-content:center; flex-direction:column;">
+                        <i class="fas fa-chart-line" style="font-size:3rem; color:#1e4dd8; margin-bottom:16px;"></i>
+                        <p style="color:#1e4dd8;">Patient volume +12% vs last month</p>
+                    </div>
+                </div>`; 
+        }
+
+        // Initialize dashboard
+        window.loadContent('dashboard');
+    })();
+</script>
+</body>
+</html>

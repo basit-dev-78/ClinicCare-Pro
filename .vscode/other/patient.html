@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ClinicCare Pro | Patient Portal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Poppins', sans-serif; background: #f8fafc; min-height: 100vh; }
+        
+        .dashboard { display: flex; min-height: 100vh; background: #f8fafc; }
+        .sidebar { width: 290px; background: white; box-shadow: 8px 0 24px rgba(0,0,0,0.05); display: flex; flex-direction: column; position: fixed; height: 100vh; z-index: 50; }
+        .sidebar-header { padding: 24px 20px; border-bottom: 1px solid #eef2f6; display: flex; align-items: center; gap: 10px; }
+        .sidebar-header i { font-size: 2.2rem; color: #4f46e5; }
+        .sidebar-header h3 { font-size: 1.3rem; color: #0f172a; }
+        .user-info { padding: 22px 20px; background: #f1f5f9; border-bottom: 1px solid #dee5ed; }
+        .user-info h4 { font-size: 1.2rem; color: #0f172a; margin-bottom: 4px; }
+        .user-info p { color: #334155; font-size: 0.9rem; margin: 5px 0; display: flex; align-items: center; gap: 6px; }
+        .sidebar-nav { flex:1; padding: 20px 0; overflow-y: auto; }
+        .sidebar-nav ul { list-style: none; }
+        .sidebar-nav li { padding: 14px 24px; margin: 4px 12px; border-radius: 14px; cursor: pointer; transition: all 0.15s; display: flex; align-items: center; gap: 14px; color: #1e293b; font-weight: 500; }
+        .sidebar-nav li:hover { background: #eef2ff; color: #4f46e5; }
+        .sidebar-nav li.active { background: #4f46e5; color: white; box-shadow: 0 8px 14px -6px #a5b4fc; }
+        .sidebar-nav li i { width: 24px; font-size: 1.2rem; }
+        .btn-logout { margin: 20px 18px; padding: 14px; background: #ef4444; color: white; border: none; border-radius: 18px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: 0.2s; }
+        .btn-logout:hover { background: #dc2626; transform: translateY(-2px); }
+        .main-content { flex:1; margin-left: 290px; padding: 30px 35px; }
+        .dashboard-header { background: white; border-radius: 24px; padding: 20px 30px; margin-bottom: 30px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 12px rgba(0,0,0,0.02); }
+        .dashboard-header h2 { color: #0f172a; font-weight: 600; }
+        .header-actions span { background: #eef2ff; padding: 8px 18px; border-radius: 40px; color: #1e293b; }
+
+        .dashboard-content { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px,1fr)); gap: 26px; }
+        .dashboard-card { background: white; border-radius: 28px; padding: 1.8rem 1.8rem; box-shadow: 0 6px 18px rgba(0,0,0,0.02); transition: 0.2s; border: 1px solid #f0f4f9; }
+        .dashboard-card:hover { box-shadow: 0 18px 30px -10px #cbd5e1; transform: translateY(-4px); }
+        .dashboard-card h3 { color: #1e293b; font-size: 1.2rem; margin-bottom: 12px; }
+        .dashboard-card p { color: #475569; font-size: 1rem; }
+        .stat-large { font-size: 2.2rem; font-weight: 700; color: #4f46e5; }
+
+        .admin-table { background: white; border-radius: 28px; padding: 1.8rem; grid-column: 1/-1; }
+        .table { width: 100%; border-collapse: collapse; }
+        .table th { text-align: left; padding: 14px 8px; color: #475569; font-weight: 500; border-bottom: 2px solid #eef2f6; }
+        .table td { padding: 12px 8px; border-bottom: 1px solid #f1f5f9; vertical-align: middle; }
+        .badge { padding: 6px 12px; border-radius: 40px; font-size: 0.8rem; font-weight: 500; display: inline-block; }
+        .badge-success { background: #dcfce7; color: #166534; }
+        .badge-warning { background: #fef9c3; color: #854d0e; }
+        .action-btn { background: none; border: none; color: #4f46e5; cursor: pointer; margin: 0 6px; font-size: 1rem; }
+        .modal-overlay { position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; z-index: 1000; }
+        .modal-content { background: white; border-radius: 32px; max-width: 500px; width: 90%; padding: 2rem; }
+        .flex-row { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+        .btn-primary { padding: 14px; background: #4f46e5; color: white; border: none; border-radius: 40px; font-weight: 600; cursor: pointer; }
+        .btn-primary:hover { background: #4338ca; }
+        .btn-secondary { background: #e2e8f0; color: #1e293b; padding: 10px 20px; border: none; border-radius: 40px; font-weight: 500; cursor: pointer; }
+        .login-container { max-width: 400px; margin: 100px auto; background: white; border-radius: 24px; padding: 2rem; box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
+        .login-header { text-align: center; margin-bottom: 2rem; }
+        .login-header i { font-size: 3rem; color: #4f46e5; }
+        .form-group { margin-bottom: 1.25rem; }
+        .form-group label { display: block; margin-bottom: 6px; font-weight: 500; color: #1e293b; }
+        .form-group input, .form-group select { width: 100%; padding: 12px 18px; border: 2px solid #e2e8f0; border-radius: 16px; }
+        .hidden { display: none !important; }
+    </style>
+</head>
+<body>
+    <!-- Login Page -->
+    <div id="loginContainer" class="login-container">
+        <div class="login-header">
+            <i class="fas fa-user"></i>
+            <h2>Patient Login</h2>
+            <p>Access your health portal</p>
+        </div>
+        <form id="loginForm">
+            <div class="form-group">
+                <label>Email</label>
+                <input type="email" id="email" value="patient@demo.com" required>
+            </div>
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" id="password" value="pat123" required>
+            </div>
+            <button type="submit" class="btn-primary">Login</button>
+        </form>
+        <p style="text-align: center; margin-top: 1rem;">
+            <a href="index.html">Back to Home</a>
+        </p>
+    </div>
+
+    <!-- Dashboard -->
+    <div class="dashboard hidden" id="dashboard">
+        <div class="sidebar">
+            <div class="sidebar-header"><i class="fas fa-clinic-medical"></i><h3>ClinicCare Pro</h3></div>
+            <div class="user-info" id="userInfo"></div>
+            <nav class="sidebar-nav" id="sidebarNav"></nav>
+            <button class="btn-logout" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</button>
+        </div>
+        <div class="main-content">
+            <div class="dashboard-header">
+                <h2 id="dashboardTitle">Patient Portal</h2>
+                <div class="header-actions"><span id="currentDate"></span></div>
+            </div>
+            <div class="dashboard-content" id="dashboardContent"></div>
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            let users = JSON.parse(localStorage.getItem('users')) || [];
+            let appointments = JSON.parse(localStorage.getItem('appointments')) || [];
+            let prescriptions = JSON.parse(localStorage.getItem('prescriptions')) || [];
+            let payments = JSON.parse(localStorage.getItem('payments')) || [];
+
+            if (users.length === 0) {
+                users = [
+                    { id: '2', name: 'John Miller', email: 'patient@demo.com', password: 'pat123', role: 'patient', phone: '5551002' }
+                ];
+                localStorage.setItem('users', JSON.stringify(users));
+            }
+
+            let currentUser = null;
+
+            document.getElementById('loginForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                const email = document.getElementById('email').value;
+                const password = document.getElementById('password').value;
+                const user = users.find(u => u.email === email && u.password === password && u.role === 'patient');
+                
+                if (user) {
+                    currentUser = user;
+                    document.getElementById('loginContainer').classList.add('hidden');
+                    document.getElementById('dashboard').classList.remove('hidden');
+                    updateUserInfo();
+                    updateSidebarNavigation();
+                    updateCurrentDate();
+                    loadPatientDashboard();
+                } else {
+                    alert('Invalid patient credentials');
+                }
+            });
+
+            function updateUserInfo() {
+                document.getElementById('userInfo').innerHTML = `
+                    <h4>${currentUser.name}</h4>
+                    <p><i class="fas fa-envelope"></i> ${currentUser.email}</p>
+                    <p><i class="fas fa-phone"></i> ${currentUser.phone || 'N/A'}</p>
+                `;
+            }
+
+            function updateSidebarNavigation() {
+                const items = [
+                    { text: 'Dashboard', icon: 'fa-chart-line' },
+                    { text: 'Book Appointment', icon: 'fa-calendar-plus' },
+                    { text: 'My Appointments', icon: 'fa-calendar-check' },
+                    { text: 'Medical History', icon: 'fa-file-medical' },
+                    { text: 'Prescriptions', icon: 'fa-prescription' },
+                    { text: 'Billing', icon: 'fa-credit-card' }
+                ];
+                
+                let html = '<ul>';
+                items.forEach(item => {
+                    html += `<li onclick="handleNavigation('${item.text}')"><i class="fas ${item.icon}"></i><span>${item.text}</span></li>`;
+                });
+                html += '</ul>';
+                document.getElementById('sidebarNav').innerHTML = html;
+                document.querySelector('#sidebarNav li').classList.add('active');
+            }
+
+            window.handleNavigation = function(item) {
+                document.querySelectorAll('.sidebar-nav li').forEach(li => li.classList.remove('active'));
+                event.currentTarget.classList.add('active');
+                
+                if (item === 'Dashboard') loadPatientDashboard();
+                else if (item === 'Book Appointment') showBookAppointment();
+                else if (item === 'My Appointments') showMyAppointments();
+                else if (item === 'Medical History') showMedicalHistory();
+                else if (item === 'Prescriptions') showMyPrescriptions();
+                else if (item === 'Billing') showMyBills();
+            };
+
+            function loadPatientDashboard() {
+                const myApps = appointments.filter(a => a.patientId === currentUser.id);
+                const nextApp = myApps.find(a => a.status === 'confirmed' && a.date >= new Date().toISOString().split('T')[0]);
+                const myPresc = prescriptions.filter(p => p.patientId === currentUser.id);
+                
+                document.getElementById('dashboardContent').innerHTML = `
+                    <div class="dashboard-card"><h3>📅 Next Appointment</h3><p>${nextApp ? nextApp.date + ' ' + nextApp.time : 'None scheduled'}</p></div>
+                    <div class="dashboard-card"><h3>💊 Active Prescriptions</h3><p class="stat-large">${myPresc.length}</p></div>
+                    <div class="dashboard-card"><h3>📋 Total Appointments</h3><p class="stat-large">${myApps.length}</p></div>
+                    <div class="dashboard-card"><h3>💰 Outstanding Balance</h3><p class="stat-large">$${payments.filter(p => p.patientId === currentUser.id && p.status === 'pending').reduce((s, p) => s + p.amount, 0)}</p></div>
+                `;
+            }
+
+            window.showBookAppointment = function() {
+                const doctors = users.filter(u => u.role === 'doctor').map(d => `<option value="${d.name}">${d.name} (${d.specialization || 'General'})</option>`).join('');
+                
+                const modalHtml = `
+                    <div class="modal-overlay" id="bookModal">
+                        <div class="modal-content">
+                            <h3>Book Appointment</h3>
+                            <select id="appDoctor" style="width:100%; padding:12px; margin-bottom:12px;">${doctors}</select>
+                            <input type="date" id="appDate" style="width:100%; padding:12px; margin-bottom:12px;">
+                            <select id="appTime" style="width:100%; padding:12px; margin-bottom:12px;">
+                                <option value="09:00">9:00 AM</option><option value="10:00">10:00 AM</option>
+                                <option value="11:00">11:00 AM</option><option value="14:00">2:00 PM</option>
+                                <option value="15:00">3:00 PM</option>
+                            </select>
+                            <select id="appType" style="width:100%; padding:12px; margin-bottom:12px;">
+                                <option value="check-up">Check-up</option><option value="follow-up">Follow-up</option>
+                                <option value="consultation">Consultation</option>
+                            </select>
+                            <div class="flex-row">
+                                <button class="btn-primary" onclick="savePatientAppointment()">Book</button>
+                                <button class="btn-secondary" onclick="closeModal()">Cancel</button>
+                            </div>
+                        </div>
+                    </div>`;
+                document.body.insertAdjacentHTML('beforeend', modalHtml);
+            };
+
+            window.savePatientAppointment = function() {
+                appointments.push({
+                    id: 'a' + Date.now(),
+                    patient: currentUser.name,
+                    patientId: currentUser.id,
+                    doctor: document.getElementById('appDoctor').value,
+                    date: document.getElementById('appDate').value,
+                    time: document.getElementById('appTime').value,
+                    type: document.getElementById('appType').value,
+                    status: 'pending'
+                });
+                localStorage.setItem('appointments', JSON.stringify(appointments));
+                closeModal();
+                alert('Appointment requested successfully!');
+            };
+
+            window.showMyAppointments = function() {
+                const myApps = appointments.filter(a => a.patientId === currentUser.id);
+                let rows = myApps.map(a => `
+                    <tr>
+                        <td>${a.doctor}</td><td>${a.date}</td><td>${a.time}</td>
+                        <td><span class="badge ${a.status === 'confirmed' ? 'badge-success' : 'badge-warning'}">${a.status}</span></td>
+                        <td><button class="action-btn" onclick="cancelAppointment('${a.id}')"><i class="fas fa-times"></i></button></td>
+                    </tr>`).join('');
+                
+                document.getElementById('dashboardContent').innerHTML = `
+                    <div class="admin-table">
+                        <h3>📅 My Appointments</h3>
+                        <table class="table">
+                            <thead><tr><th>Doctor</th><th>Date</th><th>Time</th><th>Status</th><th></th></tr></thead>
+                            <tbody>${rows}</tbody>
+                        </table>
+                    </div>`;
+            };
+
+            window.cancelAppointment = function(id) {
+                appointments = appointments.filter(a => a.id !== id);
+                localStorage.setItem('appointments', JSON.stringify(appointments));
+                showMyAppointments();
+            };
+
+            window.showMedicalHistory = function() {
+                const myPresc = prescriptions.filter(p => p.patientId === currentUser.id);
+                const myApps = appointments.filter(a => a.patientId === currentUser.id);
+                
+                document.getElementById('dashboardContent').innerHTML = `
+                    <div class="admin-table">
+                        <h3>📋 Medical History</h3>
+                        <h4>Past Appointments: ${myApps.length}</h4>
+                        <h4>Prescriptions: ${myPresc.length}</h4>
+                        <p>Complete medical records available on request.</p>
+                    </div>`;
+            };
+
+            window.showMyPrescriptions = function() {
+                const myPresc = prescriptions.filter(p => p.patientId === currentUser.id);
+                let rows = myPresc.map(p => `
+                    <tr><td>${p.date}</td><td>${p.doctor}</td><td>${p.medication}</td><td>${p.instructions}</td></tr>`).join('');
+                
+                document.getElementById('dashboardContent').innerHTML = `
+                    <div class="admin-table">
+                        <h3>💊 My Prescriptions</h3>
+                        <table class="table">
+                            <thead><tr><th>Date</th><th>Doctor</th><th>Medication</th><th>Instructions</th></tr></thead>
+                            <tbody>${rows}</tbody>
+                        </table>
+                    </div>`;
+            };
+
+            window.showMyBills = function() {
+                const myBills = payments.filter(p => p.patientId === currentUser.id);
+                let rows = myBills.map(p => `
+                    <tr>
+                        <td>${p.date}</td><td>$${p.amount}</td><td>${p.method}</td>
+                        <td><span class="badge ${p.status === 'paid' ? 'badge-success' : 'badge-warning'}">${p.status}</span></td>
+                    </tr>`).join('');
+                
+                document.getElementById('dashboardContent').innerHTML = `
+                    <div class="admin-table">
+                        <h3>💰 Billing History</h3>
+                        <table class="table">
+                            <thead><tr><th>Date</th><th>Amount</th><th>Method</th><th>Status</th></tr></thead>
+                            <tbody>${rows}</tbody>
+                        </table>
+                    </div>`;
+            };
+
+            window.closeModal = function() { 
+                const modal = document.querySelector('.modal-overlay'); 
+                if (modal) modal.remove(); 
+            };
+
+            function updateCurrentDate() { 
+                document.getElementById('currentDate').innerText = new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }); 
+            }
+
+            window.logout = function() { 
+                currentUser = null; 
+                document.getElementById('dashboard').classList.add('hidden');
+                document.getElementById('loginContainer').classList.remove('hidden');
+            };
+        })();
+    </script>
+</body>
+</html>

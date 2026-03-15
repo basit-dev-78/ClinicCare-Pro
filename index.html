@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ClinicCare Pro | Complete Clinic Management System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* Landing Page Styles */
+        .landing-page {
+            min-height: 100vh;
+        }
+
+        .navbar {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 1rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #4a5568;
+        }
+
+        .logo i {
+            color: #667eea;
+            font-size: 2rem;
+        }
+
+        .nav-buttons button {
+            padding: 10px 24px;
+            margin-left: 15px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-login {
+            background: transparent;
+            border: 2px solid #667eea !important;
+            color: #667eea;
+        }
+
+        .btn-login:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-signup {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-signup:hover {
+            background: #5a67d8;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .hero-section {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: calc(100vh - 80px);
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .hero-content {
+            text-align: center;
+            color: white;
+            max-width: 1200px;
+            padding: 2rem;
+        }
+
+        .hero-content h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .hero-content p {
+            font-size: 1.2rem;
+            margin-bottom: 3rem;
+            opacity: 0.9;
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+
+        .feature {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 2rem;
+            border-radius: 15px;
+            backdrop-filter: blur(5px);
+            transition: transform 0.3s ease;
+        }
+
+        .feature:hover {
+            transform: translateY(-10px);
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .feature i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: #fff;
+        }
+
+        .feature h3 {
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .feature p {
+            font-size: 0.9rem;
+            margin-bottom: 0;
+        }
+
+        .btn-get-started {
+            background: white;
+            color: #667eea;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 2rem;
+        }
+
+        .btn-get-started:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Signup Form Styles */
+        .auth-page {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .auth-container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            width: 90%;
+            max-width: 450px;
+            animation: slideUp 0.5s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .auth-box {
+            padding: 40px;
+        }
+
+        .auth-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .auth-header i {
+            font-size: 3rem;
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+
+        .auth-header h2 {
+            color: #2d3748;
+            margin-bottom: 5px;
+        }
+
+        .auth-header p {
+            color: #718096;
+            font-size: 0.9rem;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #4a5568;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .btn-auth {
+            width: 100%;
+            padding: 14px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .btn-auth:hover {
+            background: #5a67d8;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .auth-link {
+            text-align: center;
+            margin-top: 20px;
+            color: #718096;
+            font-size: 0.9rem;
+        }
+
+        .auth-link a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .auth-link a:hover {
+            text-decoration: underline;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .features {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero-content h1 {
+                font-size: 2.5rem;
+            }
+            
+            .features {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Landing Page -->
+    <div class="landing-page" id="landingPage">
+        <nav class="navbar">
+            <div class="logo">
+                <i class="fas fa-clinic-medical"></i>
+                <span>ClinicCare Pro</span>
+            </div>
+            <div class="nav-buttons">
+                <button class="btn-login" onclick="showSignupPage()">Sign In</button>
+                <button class="btn-signup" onclick="showSignupPage()">Create Account</button>
+            </div>
+        </nav>
+
+        <div class="hero-section">
+            <div class="hero-content">
+                <h1>Welcome to ClinicCare Pro</h1>
+                <p>Complete Healthcare Management Solution</p>
+                <div class="features">
+                    <div class="feature">
+                        <i class="fas fa-user-md"></i>
+                        <h3>For Doctors</h3>
+                        <p>Manage appointments, prescriptions, and patient records</p>
+                    </div>
+                    <div class="feature">
+                        <i class="fas fa-user"></i>
+                        <h3>For Patients</h3>
+                        <p>Book appointments, view medical history, and more</p>
+                    </div>
+                    <div class="feature">
+                        <i class="fas fa-user-tie"></i>
+                        <h3>For Admins</h3>
+                        <p>Complete clinic management and analytics</p>
+                    </div>
+                    <div class="feature">
+                        <i class="fas fa-user-nurse"></i>
+                        <h3>For Receptionists</h3>
+                        <p>Manage appointments and patient check-ins</p>
+                    </div>
+                </div>
+                <button class="btn-get-started" onclick="showSignupPage()">Get Started Today</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Signup Page (Combined Sign In & Sign Up) -->
+    <div class="auth-page hidden" id="signupPage">
+        <div class="auth-container">
+            <div class="auth-box">
+                <div class="auth-header">
+                    <i class="fas fa-clinic-medical"></i>
+                    <h2 id="formTitle">Create Account</h2>
+                    <p id="formSubtitle">Join ClinicCare Pro today</p>
+                </div>
+                
+                <!-- Toggle Buttons -->
+                <div style="display: flex; gap: 10px; margin-bottom: 20px;">
+                    <button onclick="toggleForm('signup')" id="signupTabBtn" style="flex: 1; padding: 10px; border: none; border-radius: 5px; background: #667eea; color: white; cursor: pointer;">Sign Up</button>
+                    <button onclick="toggleForm('signin')" id="signinTabBtn" style="flex: 1; padding: 10px; border: none; border-radius: 5px; background: #e2e8f0; color: #4a5568; cursor: pointer;">Sign In</button>
+                </div>
+
+                <!-- Sign Up Form -->
+                <form id="signupForm" onsubmit="handleSignup(event)">
+                    <div class="form-group">
+                        <label for="signupName">Full Name</label>
+                        <input type="text" id="signupName" required placeholder="Enter your full name">
+                    </div>
+                    <div class="form-group">
+                        <label for="signupEmail">Email</label>
+                        <input type="email" id="signupEmail" required placeholder="Enter your email">
+                    </div>
+                    <div class="form-group">
+                        <label for="signupPassword">Password</label>
+                        <input type="password" id="signupPassword" required placeholder="Create a password">
+                    </div>
+                    <div class="form-group">
+                        <label for="signupRole">I am a</label>
+                        <select id="signupRole" required onchange="toggleSpecialization()">
+                            <option value="">Select role</option>
+                            <option value="admin">Admin</option>
+                            <option value="doctor">Doctor</option>
+                            <option value="patient">Patient</option>
+                            <option value="receptionist">Receptionist</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="signupPhone">Phone Number</label>
+                        <input type="tel" id="signupPhone" required placeholder="Enter your phone number">
+                    </div>
+                    <div class="form-group" id="specializationGroup" style="display: none;">
+                        <label for="signupSpecialization">Specialization</label>
+                        <input type="text" id="signupSpecialization" placeholder="e.g., Cardiologist">
+                    </div>
+                    <button type="submit" class="btn-auth">Create Account</button>
+                </form>
+
+                <!-- Sign In Form (Hidden by default) -->
+                <form id="signinForm" onsubmit="handleSignin(event)" style="display: none;">
+                    <div class="form-group">
+                        <label for="signinEmail">Email</label>
+                        <input type="email" id="signinEmail" required placeholder="Enter your email">
+                    </div>
+                    <div class="form-group">
+                        <label for="signinPassword">Password</label>
+                        <input type="password" id="signinPassword" required placeholder="Enter your password">
+                    </div>
+                    <button type="submit" class="btn-auth">Sign In</button>
+                </form>
+
+                <p class="auth-link">
+                    <a href="#" onclick="hideSignupPage()">Back to Home</a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Store users in localStorage
+        let users = JSON.parse(localStorage.getItem('users')) || [];
+
+        // Initialize with demo users if no users exist
+        if (users.length === 0) {
+            users = [
+                {
+                    id: '1',
+                    name: 'Dr. John Smith',
+                    email: 'doctor@example.com',
+                    password: 'doctor123',
+                    role: 'doctor',
+                    phone: '1234567890',
+                    specialization: 'Cardiologist'
+                },
+                {
+                    id: '2',
+                    name: 'Jane Doe',
+                    email: 'patient@example.com',
+                    password: 'patient123',
+                    role: 'patient',
+                    phone: '0987654321'
+                },
+                {
+                    id: '3',
+                    name: 'Admin User',
+                    email: 'admin@example.com',
+                    password: 'admin123',
+                    role: 'admin',
+                    phone: '1122334455'
+                },
+                {
+                    id: '4',
+                    name: 'Sarah Wilson',
+                    email: 'receptionist@example.com',
+                    password: 'receptionist123',
+                    role: 'receptionist',
+                    phone: '5566778899'
+                }
+            ];
+            localStorage.setItem('users', JSON.stringify(users));
+        }
+
+        // Navigation functions
+        window.showSignupPage = function() {
+            document.getElementById('landingPage').classList.add('hidden');
+            document.getElementById('signupPage').classList.remove('hidden');
+        }
+
+        window.hideSignupPage = function() {
+            document.getElementById('landingPage').classList.remove('hidden');
+            document.getElementById('signupPage').classList.add('hidden');
+        }
+
+        // Toggle between Sign Up and Sign In forms
+        window.toggleForm = function(type) {
+            const signupForm = document.getElementById('signupForm');
+            const signinForm = document.getElementById('signinForm');
+            const signupTabBtn = document.getElementById('signupTabBtn');
+            const signinTabBtn = document.getElementById('signinTabBtn');
+            const formTitle = document.getElementById('formTitle');
+            const formSubtitle = document.getElementById('formSubtitle');
+
+            if (type === 'signup') {
+                signupForm.style.display = 'block';
+                signinForm.style.display = 'none';
+                signupTabBtn.style.background = '#667eea';
+                signupTabBtn.style.color = 'white';
+                signinTabBtn.style.background = '#e2e8f0';
+                signinTabBtn.style.color = '#4a5568';
+                formTitle.textContent = 'Create Account';
+                formSubtitle.textContent = 'Join ClinicCare Pro today';
+            } else {
+                signupForm.style.display = 'none';
+                signinForm.style.display = 'block';
+                signinTabBtn.style.background = '#667eea';
+                signinTabBtn.style.color = 'white';
+                signupTabBtn.style.background = '#e2e8f0';
+                signupTabBtn.style.color = '#4a5568';
+                formTitle.textContent = 'Welcome Back';
+                formSubtitle.textContent = 'Sign in to your account';
+            }
+        }
+
+        // Toggle specialization field for doctors
+        window.toggleSpecialization = function() {
+            const role = document.getElementById('signupRole').value;
+            const specializationGroup = document.getElementById('specializationGroup');
+            specializationGroup.style.display = role === 'doctor' ? 'block' : 'none';
+        }
+
+        // Handle Sign Up
+        window.handleSignup = function(event) {
+            event.preventDefault();
+            
+            const name = document.getElementById('signupName').value;
+            const email = document.getElementById('signupEmail').value;
+            const password = document.getElementById('signupPassword').value;
+            const role = document.getElementById('signupRole').value;
+            const phone = document.getElementById('signupPhone').value;
+            const specialization = document.getElementById('signupSpecialization').value;
+
+            // Check if user already exists
+            if (users.find(u => u.email === email)) {
+                alert('User with this email already exists!');
+                return;
+            }
+
+            // Create new user
+            const newUser = {
+                id: Date.now().toString(),
+                name,
+                email,
+                password,
+                role,
+                phone,
+                ...(role === 'doctor' && { specialization })
+            };
+
+            users.push(newUser);
+            localStorage.setItem('users', JSON.stringify(users));
+            
+            // Set current user and redirect to appropriate dashboard
+            localStorage.setItem('currentUser', JSON.stringify(newUser));
+            
+            // Redirect based on role
+            window.location.href = `${role}-dashboard.html`;
+        }
+
+        // Handle Sign In
+        window.handleSignin = function(event) {
+            event.preventDefault();
+            
+            const email = document.getElementById('signinEmail').value;
+            const password = document.getElementById('signinPassword').value;
+
+            // Find user
+            const user = users.find(u => u.email === email && u.password === password);
+
+            if (user) {
+                localStorage.setItem('currentUser', JSON.stringify(user));
+                window.location.href = `${user.role}-dashboard.html`;
+            } else {
+                alert('Invalid email or password!');
+            }
+        }
+
+        // Check if user is already logged in
+        const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+        if (currentUser) {
+            window.location.href = `${currentUser.role}-dashboard.html`;
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,1014 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clinic Management System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* Landing Page Styles */
+        .landing-page {
+            min-height: 100vh;
+        }
+
+        .navbar {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 1rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #4a5568;
+        }
+
+        .logo i {
+            color: #667eea;
+            font-size: 2rem;
+        }
+
+        .nav-buttons button {
+            padding: 10px 24px;
+            margin-left: 15px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-login {
+            background: transparent;
+            border: 2px solid #667eea !important;
+            color: #667eea;
+        }
+
+        .btn-login:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-signup {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-signup:hover {
+            background: #5a67d8;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .hero-section {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: calc(100vh - 80px);
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .hero-content {
+            text-align: center;
+            color: white;
+            max-width: 1200px;
+            padding: 2rem;
+        }
+
+        .hero-content h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .hero-content p {
+            font-size: 1.2rem;
+            margin-bottom: 3rem;
+            opacity: 0.9;
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+
+        .feature {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 2rem;
+            border-radius: 15px;
+            backdrop-filter: blur(5px);
+            transition: transform 0.3s ease;
+        }
+
+        .feature:hover {
+            transform: translateY(-10px);
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .feature i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: #fff;
+        }
+
+        .feature h3 {
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .feature p {
+            font-size: 0.9rem;
+            margin-bottom: 0;
+        }
+
+        .btn-get-started {
+            background: white;
+            color: #667eea;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 2rem;
+        }
+
+        .btn-get-started:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Auth Pages Styles */
+        .auth-page {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .auth-container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            width: 90%;
+            max-width: 450px;
+            animation: slideUp 0.5s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .auth-box {
+            padding: 40px;
+        }
+
+        .auth-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .auth-header i {
+            font-size: 3rem;
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+
+        .auth-header h2 {
+            color: #2d3748;
+            margin-bottom: 5px;
+        }
+
+        .auth-header p {
+            color: #718096;
+            font-size: 0.9rem;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #4a5568;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .btn-auth {
+            width: 100%;
+            padding: 14px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .btn-auth:hover {
+            background: #5a67d8;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .auth-link {
+            text-align: center;
+            margin-top: 20px;
+            color: #718096;
+            font-size: 0.9rem;
+        }
+
+        .auth-link a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .auth-link a:hover {
+            text-decoration: underline;
+        }
+
+        /* Dashboard Styles */
+        .dashboard {
+            display: flex;
+            min-height: 100vh;
+            background: #f7fafc;
+        }
+
+        .sidebar {
+            width: 280px;
+            background: white;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            height: 100vh;
+        }
+
+        .sidebar-header {
+            padding: 25px;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .sidebar-header i {
+            font-size: 2rem;
+            color: #667eea;
+        }
+
+        .sidebar-header h3 {
+            color: #2d3748;
+            font-size: 1.2rem;
+        }
+
+        .user-info {
+            padding: 20px;
+            border-bottom: 1px solid #e2e8f0;
+            background: #f8fafc;
+        }
+
+        .user-info h4 {
+            color: #2d3748;
+            margin-bottom: 5px;
+        }
+
+        .user-info p {
+            color: #718096;
+            font-size: 0.9rem;
+            margin: 5px 0;
+        }
+
+        .sidebar-nav {
+            flex: 1;
+            padding: 20px 0;
+        }
+
+        .sidebar-nav ul {
+            list-style: none;
+        }
+
+        .sidebar-nav li {
+            padding: 12px 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #4a5568;
+        }
+
+        .sidebar-nav li:hover {
+            background: #f7fafc;
+            color: #667eea;
+        }
+
+        .sidebar-nav li.active {
+            background: #667eea;
+            color: white;
+            border-left: 4px solid #5a67d8;
+        }
+
+        .sidebar-nav li i {
+            width: 20px;
+        }
+
+        .btn-logout {
+            margin: 20px;
+            padding: 12px;
+            background: #f56565;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .btn-logout:hover {
+            background: #e53e3e;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(229, 62, 62, 0.3);
+        }
+
+        .main-content {
+            flex: 1;
+            margin-left: 280px;
+            padding: 30px;
+        }
+
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .dashboard-header h2 {
+            color: #2d3748;
+        }
+
+        .header-actions span {
+            color: #718096;
+        }
+
+        .dashboard-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .dashboard-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .dashboard-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .dashboard-card h3 {
+            color: #2d3748;
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+
+        .dashboard-card p {
+            color: #718096;
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .features {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero-content h1 {
+                font-size: 2.5rem;
+            }
+            
+            .features {
+                grid-template-columns: 1fr;
+            }
+            
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+            
+            .dashboard {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Landing Page -->
+    <div class="landing-page" id="landingPage">
+        <nav class="navbar">
+            <div class="logo">
+                <i class="fas fa-clinic-medical"></i>
+                <span>ClinicCare Pro</span>
+            </div>
+            <div class="nav-buttons">
+                <button class="btn-login" onclick="showLoginPage()">Login</button>
+                <button class="btn-signup" onclick="showSignupPage()">Create Account</button>
+            </div>
+        </nav>
+
+        <div class="hero-section">
+            <div class="hero-content">
+                <h1>Welcome to ClinicCare Pro</h1>
+                <p>Complete Healthcare Management Solution</p>
+                <div class="features">
+                    <div class="feature">
+                        <i class="fas fa-user-md"></i>
+                        <h3>For Doctors</h3>
+                        <p>Manage appointments, prescriptions, and patient records</p>
+                    </div>
+                    <div class="feature">
+                        <i class="fas fa-user"></i>
+                        <h3>For Patients</h3>
+                        <p>Book appointments, view medical history, and more</p>
+                    </div>
+                    <div class="feature">
+                        <i class="fas fa-user-tie"></i>
+                        <h3>For Admins</h3>
+                        <p>Complete clinic management and analytics</p>
+                    </div>
+                    <div class="feature">
+                        <i class="fas fa-user-nurse"></i>
+                        <h3>For Receptionists</h3>
+                        <p>Manage appointments and patient check-ins</p>
+                    </div>
+                </div>
+                <button class="btn-get-started" onclick="showSignupPage()">Get Started Today</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Login Page (Initially Hidden) -->
+    <div class="auth-page hidden" id="loginPage">
+        <div class="auth-container">
+            <div class="auth-box">
+                <div class="auth-header">
+                    <i class="fas fa-clinic-medical"></i>
+                    <h2>Welcome Back</h2>
+                    <p>Login to your account</p>
+                </div>
+                <form id="loginForm" onsubmit="handleLogin(event)">
+                    <div class="form-group">
+                        <label for="loginEmail">Email</label>
+                        <input type="email" id="loginEmail" required placeholder="Enter your email">
+                    </div>
+                    <div class="form-group">
+                        <label for="loginPassword">Password</label>
+                        <input type="password" id="loginPassword" required placeholder="Enter your password">
+                    </div>
+                    <div class="form-group">
+                        <label for="loginRole">Login as</label>
+                        <select id="loginRole" required>
+                            <option value="">Select role</option>
+                            <option value="doctor">Doctor</option>
+                            <option value="patient">Patient</option>
+                            <option value="admin">Admin</option>
+                            <option value="receptionist">Receptionist</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn-auth">Login</button>
+                </form>
+                <p class="auth-link">
+                    Don't have an account? <a href="#" onclick="showSignupPage()">Sign up</a>
+                </p>
+                <p class="auth-link">
+                    <a href="#" onclick="showLandingPage()">Back to Home</a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Signup Page (Initially Hidden) -->
+    <div class="auth-page hidden" id="signupPage">
+        <div class="auth-container">
+            <div class="auth-box">
+                <div class="auth-header">
+                    <i class="fas fa-clinic-medical"></i>
+                    <h2>Create Account</h2>
+                    <p>Join ClinicCare Pro today</p>
+                </div>
+                <form id="signupForm" onsubmit="handleSignup(event)">
+                    <div class="form-group">
+                        <label for="signupName">Full Name</label>
+                        <input type="text" id="signupName" required placeholder="Enter your full name">
+                    </div>
+                    <div class="form-group">
+                        <label for="signupEmail">Email</label>
+                        <input type="email" id="signupEmail" required placeholder="Enter your email">
+                    </div>
+                    <div class="form-group">
+                        <label for="signupPassword">Password</label>
+                        <input type="password" id="signupPassword" required placeholder="Create a password">
+                    </div>
+                    <div class="form-group">
+                        <label for="signupRole">I am a</label>
+                        <select id="signupRole" required>
+                            <option value="">Select role</option>
+                            <option value="doctor">Doctor</option>
+                            <option value="patient">Patient</option>
+                            <option value="admin">Admin</option>
+                            <option value="receptionist">Receptionist</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="signupPhone">Phone Number</label>
+                        <input type="tel" id="signupPhone" required placeholder="Enter your phone number">
+                    </div>
+                    <div class="form-group">
+                        <label for="signupSpecialization">Specialization (For Doctors)</label>
+                        <input type="text" id="signupSpecialization" placeholder="e.g., Cardiologist">
+                    </div>
+                    <button type="submit" class="btn-auth">Create Account</button>
+                </form>
+                <p class="auth-link">
+                    Already have an account? <a href="#" onclick="showLoginPage()">Login</a>
+                </p>
+                <p class="auth-link">
+                    <a href="#" onclick="showLandingPage()">Back to Home</a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dashboard (Initially Hidden) -->
+    <div class="dashboard hidden" id="dashboard">
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <i class="fas fa-clinic-medical"></i>
+                <h3>ClinicCare Pro</h3>
+            </div>
+            <div class="user-info" id="userInfo">
+                <!-- User info will be populated here -->
+            </div>
+            <nav class="sidebar-nav" id="sidebarNav">
+                <!-- Navigation will be populated based on role -->
+            </nav>
+            <button class="btn-logout" onclick="logout()">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </button>
+        </div>
+        <div class="main-content">
+            <div class="dashboard-header">
+                <h2 id="dashboardTitle">Dashboard</h2>
+                <div class="header-actions">
+                    <span id="currentDate"></span>
+                </div>
+            </div>
+            <div class="dashboard-content" id="dashboardContent">
+                <!-- Dashboard content will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Store users in localStorage
+        let users = JSON.parse(localStorage.getItem('users')) || [];
+
+        // Initialize with demo users if no users exist
+        if (users.length === 0) {
+            users = [
+                {
+                    id: '1',
+                    name: 'Dr. John Smith',
+                    email: 'doctor@example.com',
+                    password: 'doctor123',
+                    role: 'doctor',
+                    phone: '1234567890',
+                    specialization: 'Cardiologist'
+                },
+                {
+                    id: '2',
+                    name: 'Jane Doe',
+                    email: 'patient@example.com',
+                    password: 'patient123',
+                    role: 'patient',
+                    phone: '0987654321'
+                },
+                {
+                    id: '3',
+                    name: 'Admin User',
+                    email: 'admin@example.com',
+                    password: 'admin123',
+                    role: 'admin',
+                    phone: '1122334455'
+                },
+                {
+                    id: '4',
+                    name: 'Sarah Wilson',
+                    email: 'receptionist@example.com',
+                    password: 'receptionist123',
+                    role: 'receptionist',
+                    phone: '5566778899'
+                }
+            ];
+            localStorage.setItem('users', JSON.stringify(users));
+        }
+
+        let currentUser = null;
+
+        // Navigation functions
+        window.showLandingPage = function() {
+            document.getElementById('landingPage').classList.remove('hidden');
+            document.getElementById('loginPage').classList.add('hidden');
+            document.getElementById('signupPage').classList.add('hidden');
+            document.getElementById('dashboard').classList.add('hidden');
+        }
+
+        window.showLoginPage = function() {
+            document.getElementById('landingPage').classList.add('hidden');
+            document.getElementById('loginPage').classList.remove('hidden');
+            document.getElementById('signupPage').classList.add('hidden');
+            document.getElementById('dashboard').classList.add('hidden');
+        }
+
+        window.showSignupPage = function() {
+            document.getElementById('landingPage').classList.add('hidden');
+            document.getElementById('loginPage').classList.add('hidden');
+            document.getElementById('signupPage').classList.remove('hidden');
+            document.getElementById('dashboard').classList.add('hidden');
+        }
+
+        // Handle Signup
+        window.handleSignup = function(event) {
+            event.preventDefault();
+            
+            const name = document.getElementById('signupName').value;
+            const email = document.getElementById('signupEmail').value;
+            const password = document.getElementById('signupPassword').value;
+            const role = document.getElementById('signupRole').value;
+            const phone = document.getElementById('signupPhone').value;
+            const specialization = document.getElementById('signupSpecialization').value;
+
+            // Check if user already exists
+            if (users.find(u => u.email === email)) {
+                alert('User with this email already exists!');
+                return;
+            }
+
+            // Create new user
+            const newUser = {
+                id: Date.now().toString(),
+                name,
+                email,
+                password,
+                role,
+                phone,
+                ...(role === 'doctor' && { specialization })
+            };
+
+            users.push(newUser);
+            localStorage.setItem('users', JSON.stringify(users));
+            
+            alert('Account created successfully! Please login.');
+            showLoginPage();
+        }
+
+        // Handle Login
+        window.handleLogin = function(event) {
+            event.preventDefault();
+            
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            const role = document.getElementById('loginRole').value;
+
+            // Find user
+            const user = users.find(u => u.email === email && u.password === password && u.role === role);
+
+            if (user) {
+                currentUser = user;
+                showDashboard();
+                updateDashboardContent();
+            } else {
+                alert('Invalid credentials or role!');
+            }
+        }
+
+        // Show Dashboard
+        function showDashboard() {
+            document.getElementById('landingPage').classList.add('hidden');
+            document.getElementById('loginPage').classList.add('hidden');
+            document.getElementById('signupPage').classList.add('hidden');
+            document.getElementById('dashboard').classList.remove('hidden');
+            
+            // Update user info in sidebar
+            updateUserInfo();
+            
+            // Update navigation based on role
+            updateSidebarNavigation();
+            
+            // Update date
+            updateCurrentDate();
+        }
+
+        // Update user info in sidebar
+        function updateUserInfo() {
+            const userInfo = document.getElementById('userInfo');
+            userInfo.innerHTML = `
+                <h4>${currentUser.name}</h4>
+                <p><i class="fas fa-envelope"></i> ${currentUser.email}</p>
+                <p><i class="fas fa-user-tag"></i> ${currentUser.role.charAt(0).toUpperCase() + currentUser.role.slice(1)}</p>
+                ${currentUser.specialization ? `<p><i class="fas fa-stethoscope"></i> ${currentUser.specialization}</p>` : ''}
+            `;
+        }
+
+        // Update sidebar navigation based on role
+        function updateSidebarNavigation() {
+            const sidebarNav = document.getElementById('sidebarNav');
+            let navItems = [];
+
+            switch(currentUser.role) {
+                case 'doctor':
+                    navItems = [
+                        { icon: 'fa-chart-line', text: 'Dashboard' },
+                        { icon: 'fa-calendar-check', text: 'Appointments' },
+                        { icon: 'fa-users', text: 'My Patients' },
+                        { icon: 'fa-file-prescription', text: 'Prescriptions' },
+                        { icon: 'fa-clock', text: 'Schedule' },
+                        { icon: 'fa-chart-bar', text: 'Reports' }
+                    ];
+                    document.getElementById('dashboardTitle').textContent = "Doctor's Dashboard";
+                    break;
+                    
+                case 'patient':
+                    navItems = [
+                        { icon: 'fa-chart-line', text: 'Dashboard' },
+                        { icon: 'fa-calendar-plus', text: 'Book Appointment' },
+                        { icon: 'fa-calendar-check', text: 'My Appointments' },
+                        { icon: 'fa-file-medical', text: 'Medical History' },
+                        { icon: 'fa-prescription', text: 'Prescriptions' },
+                        { icon: 'fa-credit-card', text: 'Payments' }
+                    ];
+                    document.getElementById('dashboardTitle').textContent = "Patient Dashboard";
+                    break;
+                    
+                case 'admin':
+                    navItems = [
+                        { icon: 'fa-chart-line', text: 'Dashboard' },
+                        { icon: 'fa-users', text: 'Manage Users' },
+                        { icon: 'fa-user-md', text: 'Manage Doctors' },
+                        { icon: 'fa-calendar-alt', text: 'Appointments' },
+                        { icon: 'fa-chart-pie', text: 'Analytics' },
+                        { icon: 'fa-cog', text: 'Settings' }
+                    ];
+                    document.getElementById('dashboardTitle').textContent = "Admin Dashboard";
+                    break;
+                    
+                case 'receptionist':
+                    navItems = [
+                        { icon: 'fa-chart-line', text: 'Dashboard' },
+                        { icon: 'fa-calendar-check', text: 'Manage Appointments' },
+                        { icon: 'fa-user-plus', text: 'Register Patient' },
+                        { icon: 'fa-clock', text: 'Check-ins' },
+                        { icon: 'fa-phone-alt', text: 'Calls' },
+                        { icon: 'fa-file-invoice', text: 'Billing' }
+                    ];
+                    document.getElementById('dashboardTitle').textContent = "Receptionist Dashboard";
+                    break;
+            }
+
+            // Create navigation HTML
+            let navHTML = '<ul>';
+            navItems.forEach(item => {
+                navHTML += `
+                    <li onclick="handleNavigation('${item.text}')">
+                        <i class="fas ${item.icon}"></i>
+                        <span>${item.text}</span>
+                    </li>
+                `;
+            });
+            navHTML += '</ul>';
+            
+            sidebarNav.innerHTML = navHTML;
+            
+            // Load initial dashboard content
+            loadDashboardContent();
+        }
+
+        // Handle navigation clicks
+        window.handleNavigation = function(item) {
+            // Update active state
+            const navItems = document.querySelectorAll('.sidebar-nav li');
+            navItems.forEach(li => li.classList.remove('active'));
+            event.currentTarget.classList.add('active');
+            
+            // Load content based on navigation item
+            loadContent(item);
+        }
+
+        // Load dashboard content
+        function loadDashboardContent() {
+            const dashboardContent = document.getElementById('dashboardContent');
+            
+            switch(currentUser.role) {
+                case 'doctor':
+                    dashboardContent.innerHTML = `
+                        <div class="dashboard-card">
+                            <h3>Today's Appointments</h3>
+                            <p>You have 5 appointments today</p>
+                        </div>
+                        <div class="dashboard-card">
+                            <h3>Total Patients</h3>
+                            <p>You have 150 patients</p>
+                        </div>
+                        <div class="dashboard-card">
+                            <h3>Pending Reports</h3>
+                            <p>3 reports pending</p>
+                        </div>
+                        <div class="dashboard-card">
+                            <h3>Upcoming Surgeries</h3>
+                            <p>2 surgeries scheduled</p>
+                        </div>
+                    `;
+                    break;
+                    
+                case 'patient':
+                    dashboardContent.innerHTML = `
+                        <div class="dashboard-card">
+                            <h3>Next Appointment</h3>
+                            <p>Tomorrow at 10:00 AM with Dr. Smith</p>
+                        </div>
+                        <div class="dashboard-card">
+                            <h3>Recent Prescriptions</h3>
+                            <p>2 new prescriptions</p>
+                        </div>
+                        <div class="dashboard-card">
+                            <h3>Medical Records</h3>
+                            <p>View your medical history</p>
+                        </div>
+                        <div class="dashboard-card">
+                            <h3>Upcoming Bills</h3>
+                            <p>$150 due next week</p>
+                        </div>
+                    `;
+                    break;
+                    
+                case 'admin':
+                    dashboardContent.innerHTML = `
+                        <div class="dashboard-card">
+                            <h3>Total Users</h3>
+                            <p>${users.length} registered users</p>
+                        </div>
+                        <div class="dashboard-card">
+                            <h3>Today's Appointments</h3>
+                            <p>25 appointments scheduled</p>
+                        </div>
+                        <div class="dashboard-card">
+                            <h3>Revenue</h3>
+                            <p>$15,000 this month</p>
+                        </div>
+                        <div class="dashboard-card">
+                            <h3>System Status</h3>
+                            <p>All systems operational</p>
+                        </div>
+                    `;
+                    break;
+                    
+                case 'receptionist':
+                    dashboardContent.innerHTML = `
+                        <div class="dashboard-card">
+                            <h3>Today's Check-ins</h3>
+                            <p>12 patients checked in</p>
+                        </div>
+                        <div class="dashboard-card">
+                            <h3>Pending Appointments</h3>
+                            <p>8 appointments pending</p>
+                        </div>
+                        <div class="dashboard-card">
+                            <h3>New Registrations</h3>
+                            <p>3 new patients today</p>
+                        </div>
+                        <div class="dashboard-card">
+                            <h3>Walk-ins</h3>
+                            <p>4 walk-in patients</p>
+                        </div>
+                    `;
+                    break;
+            }
+        }
+
+        // Load content based on navigation
+        function loadContent(item) {
+            const dashboardContent = document.getElementById('dashboardContent');
+            dashboardContent.innerHTML = `
+                <div class="dashboard-card" style="grid-column: 1/-1; text-align: center;">
+                    <h2>${item} Section</h2>
+                    <p>This section is under development. Check back soon!</p>
+                    <i class="fas fa-tools" style="font-size: 3rem; color: #667eea; margin-top: 20px;"></i>
+                </div>
+            `;
+        }
+
+        // Update current date
+        function updateCurrentDate() {
+            const dateElement = document.getElementById('currentDate');
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            dateElement.textContent = new Date().toLocaleDateString('en-US', options);
+        }
+
+        // Logout function
+        window.logout = function() {
+            currentUser = null;
+            showLandingPage();
+        }
+
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', function() {
+            showLandingPage();
+        });
+    </script>
+</body>
+</html>
