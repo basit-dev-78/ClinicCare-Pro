@@ -2,294 +2,636 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes">
-    <title>ClinicCare · patient panel (responsive)</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz@14..32&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <title>ClinicCare · Patient Portal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
             font-family: 'Inter', sans-serif;
-            background: #f2f7ff; color: #0a1e3c; overflow-x: hidden;
-            font-size: 15px;
+            background: #f5f9ff;
+            color: #0a2540;
+            overflow-x: hidden;
+            font-size: 14px;
         }
-        ::-webkit-scrollbar { width: 4px; height: 4px; }
-        ::-webkit-scrollbar-track { background: #eef4fe; }
-        ::-webkit-scrollbar-thumb { background: #2563eb; border-radius: 20px; }
 
-        .dashboard { display: flex; min-height: 100vh; width: 100%; }
+        /* Mobile-first - off-canvas sidebar */
+        .dashboard {
+            display: flex;
+            min-height: 100vh;
+            position: relative;
+        }
 
-        /* ===== SIDEBAR (fully responsive) ===== */
+        /* Sidebar - off-canvas on mobile */
         .sidebar {
-            width: 240px; background: #0a1a33; border-right: 1px solid rgba(255,255,255,0.05);
-            box-shadow: 15px 0 25px -15px rgba(0,0,0,0.3);
-            display: flex; flex-direction: column; position: fixed; height: 100vh;
-            color: white; z-index: 100; transition: width 0.25s ease;
+            position: fixed;
+            top: 0;
+            left: -280px;
+            width: 280px;
+            height: 100vh;
+            background: linear-gradient(180deg, #0a2b3f 0%, #0a1f2e 100%);
+            z-index: 1000;
+            transition: left 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            display: flex;
+            flex-direction: column;
+            box-shadow: 4px 0 20px rgba(0,0,0,0.3);
         }
+
+        .sidebar.open {
+            left: 0;
+        }
+
+        /* Overlay */
+        .sidebar-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            backdrop-filter: blur(3px);
+            z-index: 999;
+            display: none;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+        .sidebar-overlay.active {
+            display: block;
+            opacity: 1;
+        }
+
+        /* Desktop styles */
+        @media (min-width: 1024px) {
+            .sidebar {
+                position: fixed;
+                left: 0;
+                width: 260px;
+            }
+            .sidebar-overlay {
+                display: none !important;
+            }
+            .menu-toggle {
+                display: none !important;
+            }
+            .main-panel {
+                margin-left: 260px;
+            }
+        }
+
         .sidebar-header {
-            padding: 20px 16px 12px; display: flex; align-items: center; gap: 10px;
-            border-bottom: 1px solid rgba(255,255,255,0.04);
+            padding: 24px 20px 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
         }
         .brand-icon {
-            width: 38px; height: 38px; background: linear-gradient(145deg,#3b8f6c,#1e5f47);
-            border-radius: 12px; display: flex; align-items: center; justify-content: center;
-            font-size: 20px; box-shadow: 0 8px 14px -6px #1e5f47; flex-shrink: 0;
+            width: 44px;
+            height: 44px;
+            background: linear-gradient(135deg, #3b8f6c, #1e5f47);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            color: white;
+            flex-shrink: 0;
         }
         .sidebar-header h2 {
-            font-weight: 700; font-size: 1.1rem; background: linear-gradient(to right,#fff,#b3f0d9);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+            font-weight: 700;
+            font-size: 1rem;
+            background: linear-gradient(120deg, #ffffff, #b3f0d9);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
+
         .profile-card {
-            background: rgba(255,255,255,0.02); margin: 12px 12px 14px; padding: 14px;
-            border-radius: 20px; border: 1px solid #ffffff0a; font-size: 0.8rem;
+            background: rgba(255,255,255,0.06);
+            margin: 20px 16px 16px;
+            padding: 14px 16px;
+            border-radius: 24px;
+            border: 1px solid rgba(255,255,255,0.1);
         }
         .profile-name {
-            font-weight: 600; display: flex; align-items: center; gap: 6px;
-            margin-bottom: 6px; font-size: 0.85rem; white-space: nowrap;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+            font-size: 0.85rem;
+            color: #f0fcff;
         }
-        .profile-name i { color: #5fd9a5; background: #ffffff0a; padding: 5px; border-radius: 10px; }
         .profile-detail {
-            display: flex; align-items: center; gap: 8px; margin: 4px 0;
-            color: #b1c9f0; font-size: 0.7rem; white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin: 6px 0;
+            color: #b8d0e9;
+            font-size: 0.7rem;
+            word-break: break-all;
         }
-        .profile-detail i { width: 16px; flex-shrink: 0; }
-        .profile-detail span { overflow: hidden; text-overflow: ellipsis; }
+        .profile-detail i {
+            flex-shrink: 0;
+            width: 16px;
+        }
         .role-tag {
-            background: linear-gradient(145deg,#3b8f6c,#1e5f47); padding: 3px 12px;
-            border-radius: 40px; font-size: 0.6rem; font-weight: 600; display: inline-block;
+            background: #3b8f6ccc;
+            padding: 4px 12px;
+            border-radius: 40px;
+            font-size: 0.65rem;
+            font-weight: 600;
+            display: inline-block;
+            margin-top: 6px;
         }
 
-        .nav-menu { flex: 1; padding: 0 6px; overflow-y: auto; }
+        .nav-menu {
+            flex: 1;
+            padding: 8px 12px;
+            overflow-y: auto;
+        }
         .nav-item {
-            display: flex; align-items: center; gap: 12px; padding: 8px 14px;
-            margin: 3px 0; border-radius: 14px; color: #b0c7f0; font-weight: 500;
-            font-size: 0.8rem; transition: 0.2s; cursor: pointer; white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 12px 16px;
+            margin: 4px 0;
+            border-radius: 20px;
+            color: #cbdff2;
+            font-weight: 500;
+            font-size: 0.85rem;
+            transition: all 0.2s;
+            cursor: pointer;
         }
-        .nav-item i { width: 18px; font-size: 0.95rem; color: #7b98cf; flex-shrink: 0; }
-        .nav-item span { overflow: hidden; text-overflow: ellipsis; }
-        .nav-item:hover { background: #1e3a8a30; color: white; transform: translateX(3px); }
+        .nav-item i {
+            width: 22px;
+            font-size: 1.1rem;
+            color: #86b3d4;
+            flex-shrink: 0;
+        }
+        .nav-item span {
+            flex: 1;
+        }
+        .nav-item:hover {
+            background: #1f4e6e;
+            color: white;
+        }
         .nav-item.active {
-            background: linear-gradient(95deg,#3b8f6c,#1e5f47); color: white;
-            box-shadow: 0 5px 12px -4px #1e5f47; border-left: 3px solid #ffb347;
+            background: linear-gradient(95deg, #3b8f6c, #1e5f47);
+            color: white;
         }
-        .nav-item.active i { color: white; }
+        .nav-item.active i {
+            color: white;
+        }
 
         .logout-button {
-            margin: 8px 12px 18px; padding: 10px 16px; background: #ef444415;
-            border: 1px solid #ef444430; border-radius: 28px; color: #ffb3b3;
-            font-weight: 600; display: flex; align-items: center; gap: 12px;
-            cursor: pointer; font-size: 0.8rem; white-space: nowrap;
+            margin: 12px 16px 24px;
+            padding: 12px 16px;
+            background: rgba(239, 68, 68, 0.15);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            border-radius: 40px;
+            color: #ffbcbc;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            transition: 0.2s;
         }
-        .logout-button i { flex-shrink: 0; }
-        .logout-button:hover { background: #ef4444; color: white; }
+        .logout-button:hover {
+            background: #ef4444;
+            color: white;
+        }
 
-        /* ===== MAIN PANEL (fluid) ===== */
+        /* Main Panel */
         .main-panel {
-            flex: 1; margin-left: 240px; padding: 16px 20px; background: #f5f9ff;
-            width: calc(100% - 240px); transition: margin-left 0.25s ease, width 0.25s ease;
-        }
-        .header-bar {
-            background: white; padding: 10px 20px; border-radius: 50px;
-            box-shadow: 0 4px 12px rgba(0,20,50,0.02); margin-bottom: 20px;
-            border: 1px solid #e2edff; display: flex; justify-content: space-between;
-            align-items: center; flex-wrap: wrap; gap: 10px;
-        }
-        .page-title {
-            font-weight: 700; font-size: 1.3rem; background: linear-gradient(145deg,#142b54,#1e40af);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-        }
-        .live-clock {
-            background: #ecf2ff; padding: 5px 18px; border-radius: 40px;
-            font-weight: 500; font-size: 0.75rem; color: #1e3a8a; white-space: nowrap;
+            flex: 1;
+            width: 100%;
+            padding: 16px;
+            background: #f5f9ff;
+            transition: margin-left 0.2s;
         }
 
-        /* responsive grid */
+        /* Mobile Header */
+        .mobile-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: white;
+            padding: 12px 16px;
+            border-radius: 28px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+            border: 1px solid #e6edf8;
+        }
+        .menu-toggle {
+            background: linear-gradient(135deg, #3b8f6c, #1e5f47);
+            border: none;
+            width: 42px;
+            height: 42px;
+            border-radius: 30px;
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: 0.2s;
+            flex-shrink: 0;
+        }
+        .menu-toggle:active {
+            transform: scale(0.95);
+        }
+        .page-title-mobile {
+            font-weight: 800;
+            font-size: 1.1rem;
+            background: linear-gradient(145deg, #1c4e6e, #2563eb);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-align: center;
+            flex: 1;
+        }
+        .live-clock-mobile {
+            background: #eaf2ff;
+            padding: 6px 12px;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 0.65rem;
+            color: #1e4a76;
+            font-family: monospace;
+            flex-shrink: 0;
+        }
+
+        /* Desktop Header */
+        .desktop-header {
+            display: none;
+            background: white;
+            padding: 12px 24px;
+            border-radius: 48px;
+            margin-bottom: 24px;
+            border: 1px solid #e6edf8;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .desktop-header .page-title {
+            font-weight: 800;
+            font-size: 1.3rem;
+            background: linear-gradient(145deg, #1c4e6e, #2563eb);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .live-clock-desktop {
+            background: #eaf2ff;
+            padding: 6px 20px;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 0.75rem;
+            color: #1e4a76;
+            font-family: monospace;
+        }
+        @media (min-width: 1024px) {
+            .mobile-header {
+                display: none;
+            }
+            .desktop-header {
+                display: flex;
+            }
+            .main-panel {
+                padding: 20px 24px;
+            }
+        }
+
+        /* Stats Grid - responsive */
         .stat-grid {
-            display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 20px;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        @media (min-width: 640px) {
+            .stat-grid {
+                grid-template-columns: repeat(4, 1fr);
+                gap: 16px;
+            }
         }
         .stat-block {
-            background: white; padding: 12px 14px; border-radius: 28px; border: 1px solid #e2edff;
-            display: flex; align-items: center; gap: 12px; box-shadow: 0 8px 16px -12px #1e40af20;
-            min-width: 0; /* prevent overflow */
+            background: white;
+            padding: 12px 14px;
+            border-radius: 24px;
+            border: 1px solid #e2edfc;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.02);
         }
         .stat-icon {
-            width: 46px; height: 46px; background: linear-gradient(145deg,#dbeafe,#ede9fe);
-            border-radius: 20px; display: flex; align-items: center; justify-content: center;
-            font-size: 1.6rem; color: #2563eb; flex-shrink: 0;
+            width: 44px;
+            height: 44px;
+            background: linear-gradient(135deg, #eef4ff, #e1eafe);
+            border-radius: 22px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            color: #3b8f6c;
+            flex-shrink: 0;
         }
-        .stat-info { overflow: hidden; }
-        .stat-info h4 { font-weight: 500; color: #61758f; font-size: 0.7rem; white-space: nowrap; }
+        .stat-info {
+            flex: 1;
+            min-width: 0;
+        }
+        .stat-info h4 {
+            font-weight: 500;
+            color: #5a6e8c;
+            font-size: 0.65rem;
+            letter-spacing: 0.3px;
+            white-space: nowrap;
+        }
         .stat-info .figure {
-            font-weight: 800; font-size: 1.6rem; color: #0a2540; line-height: 1.2;
-            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+            font-weight: 800;
+            font-size: 1.4rem;
+            color: #0a2b44;
+            line-height: 1.2;
+            word-break: break-word;
         }
 
+        /* Cards */
         .content-card {
-            background: white; border-radius: 32px; padding: 18px 22px; border: 1px solid #e2edff;
-            box-shadow: 0 12px 24px -16px rgba(0,30,70,0.06); margin-bottom: 20px;
-            overflow-x: auto; /* allows horizontal scroll on very small screens for tables */
+            background: white;
+            border-radius: 28px;
+            padding: 16px 18px;
+            border: 1px solid #e6edfc;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.02);
+            margin-bottom: 20px;
+            overflow-x: auto;
         }
         .card-header {
-            display: flex; justify-content: space-between; align-items: center;
-            margin-bottom: 14px; flex-wrap: wrap; gap: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 16px;
         }
-        .card-header h3 { font-weight: 700; font-size: 1.1rem; color: #0a2540; }
+        .card-header h3 {
+            font-weight: 700;
+            font-size: 1rem;
+            color: #1e3a5f;
+        }
 
-        /* table responsive: allow scroll on x-axis if needed */
-        .table-responsive { overflow-x: auto; margin: 0 -2px; }
+        /* Tables */
+        .table-wrapper {
+            overflow-x: auto;
+            border-radius: 20px;
+            -webkit-overflow-scrolling: touch;
+        }
         table {
-            width: 100%; border-collapse: collapse; font-size: 0.75rem;
-            min-width: 500px; /* ensures table doesn't squish below this */
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.75rem;
+            min-width: 480px;
         }
         th {
-            text-align: left; padding: 8px 5px; font-weight: 600; color: #5f7396;
-            text-transform: uppercase; font-size: 0.6rem; border-bottom: 2px solid #e2edff;
+            text-align: left;
+            padding: 10px 8px;
+            font-weight: 700;
+            color: #4f6f8f;
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            border-bottom: 2px solid #eaf0fa;
         }
-        td { padding: 10px 5px; border-bottom: 1px solid #eef4ff; color: #1a2f52; }
+        td {
+            padding: 10px 8px;
+            border-bottom: 1px solid #f0f4fc;
+            color: #1f3b5c;
+            vertical-align: middle;
+        }
 
-        /* status badges */
+        /* Badges */
         .status-badge {
-            padding: 3px 12px; border-radius: 30px; font-size: 0.6rem;
-            font-weight: 600; display: inline-block; white-space: nowrap;
+            padding: 3px 10px;
+            border-radius: 30px;
+            font-size: 0.65rem;
+            font-weight: 600;
+            display: inline-block;
+            white-space: nowrap;
         }
-        .badge-active { background: #e2f7e7; color: #0b6e41; }
-        .badge-pending { background: #fff2d8; color: #a76000; }
-        .badge-cancelled { background: #ffe2e2; color: #b91c1c; }
-        .badge-role { background: #e5eeff; color: #1d4ed8; }
+        .badge-active { background: #e1f7ea; color: #0a7143; }
+        .badge-pending { background: #fff0db; color: #b45500; }
+        .badge-cancelled { background: #ffe7e7; color: #c24141; }
+        .badge-completed { background: #d9effa; color: #1a6d8f; }
 
-        /* buttons */
-        .btn-primary, .btn-secondary, .btn-danger {
-            border: none; font-weight: 600; cursor: pointer; display: inline-flex;
-            align-items: center; gap: 6px; white-space: nowrap; transition: 0.2s;
-        }
+        /* Buttons */
         .btn-primary {
-            background: linear-gradient(145deg,#2563eb,#4f46e5); color: white;
-            padding: 6px 16px; border-radius: 26px; font-size: 0.7rem;
-            box-shadow: 0 5px 14px -4px #2563eb;
+            background: linear-gradient(105deg, #3b8f6c, #1e5f47);
+            color: white;
+            border: none;
+            padding: 7px 16px;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 0.7rem;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: 0.2s;
+            white-space: nowrap;
         }
-        .btn-primary:hover { transform: scale(1.02); }
+        .btn-primary:active { transform: scale(0.97); }
         .btn-secondary {
-            background: white; border: 1px solid #c7dfff; color: #1e3a8a;
-            padding: 6px 14px; border-radius: 24px; font-size: 0.7rem;
+            background: white;
+            border: 1px solid #cfe2ff;
+            color: #1e5a88;
+            padding: 5px 12px;
+            border-radius: 30px;
+            font-size: 0.65rem;
+            cursor: pointer;
+            white-space: nowrap;
         }
-        .btn-secondary:hover { background: #ecf2ff; }
         .btn-danger {
-            background: #ef4444; color: white; padding: 4px 12px;
-            border-radius: 20px; font-size: 0.65rem;
+            background: #ef4444;
+            color: white;
+            border: none;
+            padding: 5px 12px;
+            border-radius: 30px;
+            font-size: 0.65rem;
+            cursor: pointer;
         }
         .icon-action {
-            background: transparent; border: none; font-size: 0.8rem;
-            color: #6e85b0; padding: 4px 6px; border-radius: 8px; cursor: pointer;
+            background: transparent;
+            border: none;
+            font-size: 0.85rem;
+            color: #6f8eb3;
+            padding: 5px 6px;
+            border-radius: 20px;
+            cursor: pointer;
+            margin: 0 2px;
         }
-        .icon-action:hover { background: #e5eeff; color: #2563eb; }
+        .icon-action:active { background: #eef3ff; }
 
-        /* modal (responsive) */
+        /* Medical record card */
+        .record-card {
+            background: #f5f9ff;
+            padding: 16px;
+            border-radius: 24px;
+            margin-bottom: 16px;
+            border-left: 4px solid #3b8f6c;
+        }
+        .record-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        /* Modal */
         .modal-overlay {
-            position: fixed; inset: 0; background: rgba(0,0,0,0.3); backdrop-filter: blur(6px);
-            display: flex; align-items: center; justify-content: center; z-index: 1000;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1100;
             padding: 16px;
         }
         .modal-window {
-            background: white; border-radius: 44px; padding: 24px; max-width: 500px;
-            width: 100%; max-height: 85vh; overflow-y: auto;
+            background: white;
+            border-radius: 36px;
+            padding: 24px;
+            max-width: 480px;
+            width: 100%;
+            max-height: 85vh;
+            overflow-y: auto;
         }
-        .form-field { margin-bottom: 14px; }
+        .form-field {
+            margin-bottom: 16px;
+        }
         .form-field label {
-            font-weight: 600; font-size: 0.75rem; margin-bottom: 4px; display: block;
+            font-weight: 600;
+            font-size: 0.75rem;
+            margin-bottom: 5px;
+            display: block;
+            color: #2c5270;
         }
-        .form-input, .form-textarea {
-            width: 100%; padding: 10px 16px; border: 2px solid #e2edff;
-            border-radius: 36px; font-size: 0.8rem; font-family: 'Inter', sans-serif;
+        .form-input, .form-field select, .form-textarea {
+            width: 100%;
+            padding: 10px 16px;
+            border: 1.5px solid #e2eaff;
+            border-radius: 40px;
+            font-size: 0.85rem;
+            font-family: inherit;
+            background: white;
         }
-        .form-textarea { border-radius: 24px; min-height: 80px; }
-        .form-input:focus, .form-textarea:focus { border-color: #2563eb; outline: none; }
+        .form-textarea {
+            border-radius: 24px;
+            min-height: 80px;
+            resize: vertical;
+        }
         .modal-actions {
-            display: flex; gap: 12px; margin-top: 20px; flex-wrap: wrap;
+            display: flex;
+            gap: 12px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        .row-fields {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .row-fields .form-field {
+            flex: 1;
         }
 
+        /* Toast */
         .toast-notification {
-            position: fixed; bottom: 20px; right: 20px; background: white;
-            border-radius: 40px; padding: 10px 22px; box-shadow: 0 15px 30px rgba(0,0,0,0.1);
-            display: flex; align-items: center; gap: 10px; transform: translateX(420px);
-            transition: transform 0.3s; z-index: 1200; border-left: 4px solid;
-            font-size: 0.8rem; max-width: 90vw;
+            position: fixed;
+            bottom: 20px;
+            left: 16px;
+            right: 16px;
+            background: #1e2f3c;
+            color: white;
+            border-radius: 60px;
+            padding: 12px 20px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transform: translateY(100px);
+            transition: transform 0.25s ease;
+            z-index: 1200;
+            border-left: 4px solid;
+            font-size: 0.8rem;
+            backdrop-filter: blur(8px);
         }
-        .toast-notification.show { transform: translateX(0); }
-        .toast-success { border-left-color: #10b981; }
-        .toast-error { border-left-color: #ef4444; }
+        @media (min-width: 640px) {
+            .toast-notification {
+                left: auto;
+                right: 24px;
+                bottom: 24px;
+                min-width: 280px;
+            }
+        }
+        .toast-notification.show { transform: translateY(0); }
+        .toast-success { border-left-color: #2dd4bf; }
+        .toast-error { border-left-color: #f87171; }
 
-        /* ===== RESPONSIVE BREAKPOINTS ===== */
-        @media screen and (max-width: 1000px) {
-            .stat-grid { grid-template-columns: repeat(2, 1fr); }
-        }
-        @media screen and (max-width: 768px) {
-            .sidebar { width: 70px; }
-            .sidebar-header h2, .profile-detail span, .nav-item span,
-            .logout-button span, .profile-name span { display: none; }
-            .profile-name { justify-content: center; }
-            .profile-name i { margin-right: 0; }
-            .profile-detail { justify-content: center; }
-            .role-tag { display: none; }
-            .nav-item { justify-content: center; padding: 8px 0; }
-            .nav-item i { margin: 0; }
-            .logout-button { justify-content: center; padding: 10px 0; }
-            .logout-button i { margin: 0; }
-            .main-panel { margin-left: 70px; width: calc(100% - 70px); }
-        }
-        @media screen and (max-width: 600px) {
-            .stat-grid { grid-template-columns: 1fr; }
-            .header-bar { flex-direction: column; align-items: flex-start; }
-            .live-clock { align-self: flex-end; }
-            .card-header { flex-direction: column; align-items: flex-start; }
-        }
-        @media screen and (max-width: 480px) {
-            .main-panel { padding: 12px; }
-            .content-card { padding: 16px; }
-            .modal-window { padding: 18px; }
-        }
+        /* Utility */
+        button { cursor: pointer; background: none; border: none; }
+        .flex-wrap { flex-wrap: wrap; }
+        .gap-2 { gap: 8px; }
     </style>
 </head>
 <body>
 <div class="dashboard">
-    <!-- SIDEBAR patient -->
-    <div class="sidebar">
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    
+    <div class="sidebar" id="sidebar">
         <div class="sidebar-header">
             <div class="brand-icon"><i class="fas fa-user-heart"></i></div>
-            <h2>ClinicCare · patient</h2>
+            <h2>ClinicCare · Patient</h2>
         </div>
         <div class="profile-card" id="profileCard"></div>
         <nav class="nav-menu">
             <div class="nav-item active" data-page="dashboard"><i class="fas fa-chart-pie"></i> <span>Dashboard</span></div>
             <div class="nav-item" data-page="appointments"><i class="fas fa-calendar-check"></i> <span>Appointments</span></div>
-            <div class="nav-item" data-page="records"><i class="fas fa-notes-medical"></i> <span>Medical records</span></div>
+            <div class="nav-item" data-page="records"><i class="fas fa-notes-medical"></i> <span>Medical Records</span></div>
             <div class="nav-item" data-page="prescriptions"><i class="fas fa-prescription"></i> <span>Prescriptions</span></div>
-            <div class="nav-item" data-page="billing"><i class="fas fa-file-invoice"></i> <span>Billing</span></div>
-            <div class="nav-item" data-page="profile"><i class="fas fa-id-card"></i> <span>My profile</span></div>
+            <div class="nav-item" data-page="billing"><i class="fas fa-file-invoice-dollar"></i> <span>Billing</span></div>
+            <div class="nav-item" data-page="profile"><i class="fas fa-id-card"></i> <span>My Profile</span></div>
         </nav>
-        <div class="logout-button" id="logoutBtn">
-            <i class="fas fa-sign-out-alt"></i> <span>Logout</span>
-        </div>
+        <div class="logout-button" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> <span>Sign out</span></div>
     </div>
 
-    <!-- MAIN PANEL -->
     <div class="main-panel">
-        <div class="header-bar">
-            <span class="page-title" id="headerTitle">Patient Dashboard</span>
-            <span class="live-clock" id="liveTime"></span>
+        <div class="mobile-header">
+            <button class="menu-toggle" id="menuToggle"><i class="fas fa-bars"></i></button>
+            <span class="page-title-mobile" id="mobileTitle">Dashboard</span>
+            <span class="live-clock-mobile" id="mobileClock"></span>
+        </div>
+        <div class="desktop-header">
+            <span class="page-title" id="desktopTitle">Patient Dashboard</span>
+            <span class="live-clock-desktop" id="desktopClock"></span>
         </div>
         <div class="content-area" id="contentArea"></div>
     </div>
 </div>
-
-<!-- modal root -->
 <div id="modalRoot" style="display:none;"></div>
 <div class="toast-notification" id="toastMsg"><i class="fas" id="toastIcon"></i><span id="toastText"></span></div>
 
 <script>
 (function(){
-    // ---------- CURRENT USER (patient) ----------
     let currentUser = {
         id:'P1', 
         name:'John Doe', 
@@ -303,432 +645,255 @@
     };
     localStorage.setItem('currentUser', JSON.stringify(currentUser));
 
-    // ---------- TOAST ----------
-    function showToast(msg, type='success'){
-        const t=document.getElementById('toastMsg');
-        document.getElementById('toastIcon').className='fas '+(type==='success'?'fa-check-circle':type==='error'?'fa-exclamation-circle':'fa-info-circle');
-        document.getElementById('toastText').innerText=msg;
-        t.className='toast-notification toast-'+type;
-        t.classList.add('show');
-        setTimeout(()=>t.classList.remove('show'),3200);
-    }
-    window.showToast=showToast;
+    // Mobile sidebar controls
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('sidebarOverlay');
+    const menuToggle = document.getElementById('menuToggle');
+    
+    function closeSidebar() { sidebar.classList.remove('open'); overlay.classList.remove('active'); }
+    function openSidebar() { sidebar.classList.add('open'); overlay.classList.add('active'); }
+    if (menuToggle) menuToggle.addEventListener('click', openSidebar);
+    overlay.addEventListener('click', closeSidebar);
+    document.querySelectorAll('.nav-item').forEach(item => {
+        item.addEventListener('click', () => { if (window.innerWidth < 1024) closeSidebar(); });
+    });
 
-    // ---------- INIT STORAGE (with patient data) ----------
-    if(!localStorage.getItem('users')){
-        localStorage.setItem('users',JSON.stringify([
-            {id:'P1',name:'John Doe',email:'john.doe@example.com',phone:'555-2301',role:'patient',status:'active',dob:'1985-06-15',gender:'Male',bloodType:'O+',allergies:'Penicillin'},
-            {id:'P2',name:'Jane Smith',email:'jane.smith@example.com',phone:'555-6712',role:'patient',status:'active',dob:'1990-09-22',gender:'Female',bloodType:'A+',allergies:'None'},
-            {id:'D1',name:'Dr. Sarah Chen',email:'sarah.chen@clinic.com',phone:'555-8234',role:'doctor',specialization:'Cardiology',status:'active'},
-            {id:'D2',name:'Dr. James Wilson',email:'wilson@clinic.com',phone:'555-9845',role:'doctor',specialization:'Neurology',status:'active'}
+    function showToast(msg, type = 'success') {
+        const toast = document.getElementById('toastMsg');
+        const icon = document.getElementById('toastIcon');
+        const text = document.getElementById('toastText');
+        icon.className = 'fas ' + (type === 'success' ? 'fa-check-circle' : type === 'error' ? 'fa-exclamation-triangle' : 'fa-info-circle');
+        text.innerText = msg;
+        toast.className = `toast-notification toast-${type}`;
+        toast.classList.add('show');
+        setTimeout(() => toast.classList.remove('show'), 2800);
+    }
+    window.showToast = showToast;
+
+    // Initialize data
+    if (!localStorage.getItem('users')) {
+        localStorage.setItem('users', JSON.stringify([
+            { id: 'P1', name: 'John Doe', email: 'john.doe@example.com', phone: '555-2301', role: 'patient', status: 'active', dob: '1985-06-15', gender: 'Male', bloodType: 'O+', allergies: 'Penicillin' },
+            { id: 'D1', name: 'Dr. Sarah Chen', email: 'sarah.chen@clinic.com', phone: '555-8234', role: 'doctor', specialization: 'Cardiology', status: 'active' },
+            { id: 'D2', name: 'Dr. James Wilson', email: 'wilson@clinic.com', phone: '555-9845', role: 'doctor', specialization: 'Neurology', status: 'active' }
         ]));
     }
-    
-    if(!localStorage.getItem('appointments')){
-        localStorage.setItem('appointments',JSON.stringify([
-            {id:'A101',patient:'John Doe',doctor:'Dr. Sarah Chen',date:'2025-04-15',time:'09:00',status:'confirmed',reason:'Annual checkup',notes:''},
-            {id:'A102',patient:'John Doe',doctor:'Dr. James Wilson',date:'2025-04-18',time:'14:30',status:'pending',reason:'Headache consultation',notes:''},
-            {id:'A103',patient:'Jane Smith',doctor:'Dr. Sarah Chen',date:'2025-04-16',time:'10:30',status:'confirmed',reason:'Heart palpitations',notes:''},
-            {id:'A104',patient:'John Doe',doctor:'Dr. Sarah Chen',date:'2025-03-10',time:'11:00',status:'completed',reason:'Chest pain',notes:'BP normal, stress related'},
-            {id:'A105',patient:'John Doe',doctor:'Dr. Sarah Chen',date:'2025-05-01',time:'15:00',status:'pending',reason:'Follow-up',notes:''}
+    if (!localStorage.getItem('appointments')) {
+        const today = new Date().toISOString().slice(0,10);
+        const nextWeek = new Date(Date.now() + 7*86400000).toISOString().slice(0,10);
+        localStorage.setItem('appointments', JSON.stringify([
+            { id: 'A101', patient: 'John Doe', doctor: 'Dr. Sarah Chen', date: today, time: '09:00', status: 'confirmed', reason: 'Annual checkup', notes: '' },
+            { id: 'A102', patient: 'John Doe', doctor: 'Dr. James Wilson', date: nextWeek, time: '14:30', status: 'pending', reason: 'Headache consultation', notes: '' },
+            { id: 'A103', patient: 'John Doe', doctor: 'Dr. Sarah Chen', date: '2025-03-10', time: '11:00', status: 'completed', reason: 'Chest pain', notes: '' }
         ]));
     }
-    
-    if(!localStorage.getItem('medicalRecords')){
-        localStorage.setItem('medicalRecords',JSON.stringify([
-            {id:'M1',patient:'John Doe',doctor:'Dr. Sarah Chen',date:'2025-03-10',diagnosis:'Hypertension - Stage 1',prescription:'Lisinopril 10mg',notes:'BP 138/88, start medication, follow up in 1 month'},
-            {id:'M2',patient:'John Doe',doctor:'Dr. Sarah Chen',date:'2024-12-05',diagnosis:'Seasonal allergies',prescription:'Cetirizine 10mg',notes:'Take as needed for allergy symptoms'},
-            {id:'M3',patient:'Jane Smith',doctor:'Dr. Sarah Chen',date:'2025-03-15',diagnosis:'Arrhythmia',prescription:'Metoprolol 25mg',notes:'Holter monitor scheduled'}
+    if (!localStorage.getItem('medicalRecords')) {
+        localStorage.setItem('medicalRecords', JSON.stringify([
+            { id: 'M1', patient: 'John Doe', doctor: 'Dr. Sarah Chen', date: '2025-03-10', diagnosis: 'Hypertension - Stage 1', prescription: 'Lisinopril 10mg', notes: 'BP 138/88, start medication, follow up in 1 month' }
         ]));
     }
-    
-    if(!localStorage.getItem('prescriptions')){
-        localStorage.setItem('prescriptions',JSON.stringify([
-            {id:'R1',patient:'John Doe',doctor:'Dr. Sarah Chen',date:'2025-03-10',medication:'Lisinopril 10mg',instructions:'Take once daily',refills:2,status:'active'},
-            {id:'R2',patient:'John Doe',doctor:'Dr. Sarah Chen',date:'2024-12-05',medication:'Cetirizine 10mg',instructions:'Take as needed for allergies',refills:3,status:'active'},
-            {id:'R3',patient:'Jane Smith',doctor:'Dr. Sarah Chen',date:'2025-03-15',medication:'Metoprolol 25mg',instructions:'Twice daily with food',refills:1,status:'active'}
+    if (!localStorage.getItem('prescriptions')) {
+        localStorage.setItem('prescriptions', JSON.stringify([
+            { id: 'R1', patient: 'John Doe', doctor: 'Dr. Sarah Chen', date: '2025-03-10', medication: 'Lisinopril 10mg', instructions: 'Take once daily', refills: 2, status: 'active' }
         ]));
     }
-    
-    if(!localStorage.getItem('billing')){
-        localStorage.setItem('billing',JSON.stringify([
-            {id:'B1',patient:'John Doe',date:'2025-03-10',description:'Office visit - Cardiology',amount:150,status:'paid',paidOn:'2025-03-10'},
-            {id:'B2',patient:'John Doe',date:'2025-03-10',description:'Lab work - Blood panel',amount:85,status:'paid',paidOn:'2025-03-12'},
-            {id:'B3',patient:'John Doe',date:'2025-04-15',description:'Upcoming appointment',amount:150,status:'pending',dueDate:'2025-04-15'}
+    if (!localStorage.getItem('billing')) {
+        localStorage.setItem('billing', JSON.stringify([
+            { id: 'B1', patient: 'John Doe', date: '2025-03-10', description: 'Office visit - Cardiology', amount: 150, status: 'paid', paidOn: '2025-03-10' },
+            { id: 'B2', patient: 'John Doe', date: new Date().toISOString().slice(0,10), description: 'Upcoming appointment', amount: 150, status: 'pending', dueDate: new Date().toISOString().slice(0,10) }
         ]));
     }
 
-    // profile render
-    function renderProfile(){
-        const u=currentUser;
-        document.getElementById('profileCard').innerHTML=`
-            <div class="profile-name"><i class="fas fa-user"></i> <span>${u.name.split(' ')[0]}</span></div>
+    function renderProfile() {
+        const u = currentUser;
+        document.getElementById('profileCard').innerHTML = `
+            <div class="profile-name"><i class="fas fa-user-circle"></i> <span>${u.name}</span></div>
             <div class="profile-detail"><i class="fas fa-envelope"></i> <span>${u.email}</span></div>
-            <div class="profile-detail"><i class="fas fa-phone-alt"></i> <span>${u.phone}</span></div>
-            <div><span class="role-tag"><i class="fas fa-id-badge"></i> Patient</span></div>
+            <div class="profile-detail"><i class="fas fa-phone"></i> <span>${u.phone}</span></div>
+            <div><span class="role-tag"><i class="fas fa-id-card"></i> Patient</span></div>
         `;
     }
     renderProfile();
 
-    // clock
-    function tick(){ 
-        let d=new Date(); 
-        document.getElementById('liveTime').innerText=d.toLocaleString('en-US',{hour:'2-digit',minute:'2-digit',second:'2-digit'}); 
+    function updateClocks() {
+        const now = new Date();
+        const timeStr = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second:'2-digit' });
+        const mobileClock = document.getElementById('mobileClock');
+        const desktopClock = document.getElementById('desktopClock');
+        if (mobileClock) mobileClock.innerText = timeStr;
+        if (desktopClock) desktopClock.innerText = timeStr;
     }
-    tick(); setInterval(tick,1000);
+    updateClocks(); setInterval(updateClocks, 1000);
 
-    // modal helpers
-    function openModal(html){
-        document.getElementById('modalRoot').style.display='flex';
-        document.getElementById('modalRoot').innerHTML=`<div class="modal-overlay" onclick="closeModal()"><div class="modal-window" onclick="event.stopPropagation()">${html}</div></div>`;
+    function closeModal() { document.getElementById('modalRoot').style.display = 'none'; }
+    window.closeModal = closeModal;
+    function openModal(html) {
+        document.getElementById('modalRoot').style.display = 'flex';
+        document.getElementById('modalRoot').innerHTML = `<div class="modal-overlay" onclick="closeModal()"><div class="modal-window" onclick="event.stopPropagation()">${html}</div></div>`;
     }
-    window.closeModal=function(){ document.getElementById('modalRoot').style.display='none'; };
+    window.openModal = openModal;
 
-    // navigation
-    const navItems=document.querySelectorAll('.nav-item');
-    navItems.forEach(item=>{
-        item.addEventListener('click',(e)=>{
-            navItems.forEach(n=>n.classList.remove('active'));
-            item.classList.add('active');
-            let page=item.dataset.page;
+    const navItems = document.querySelectorAll('.nav-item');
+    navItems.forEach(nav => {
+        nav.addEventListener('click', () => {
+            navItems.forEach(n => n.classList.remove('active'));
+            nav.classList.add('active');
+            const page = nav.dataset.page;
+            const title = nav.querySelector('span')?.innerText || 'Dashboard';
+            document.getElementById('mobileTitle').innerText = title;
+            const desktopTitle = document.getElementById('desktopTitle');
+            if (desktopTitle) desktopTitle.innerText = title;
             loadPage(page);
-            document.getElementById('headerTitle').innerText=item.querySelector('span').innerText;
         });
     });
 
-    window.loadPage=function(page){
-        const c=document.getElementById('contentArea');
-        if(page==='dashboard') renderDashboard(c);
-        else if(page==='appointments') renderAppointments(c);
-        else if(page==='records') renderRecords(c);
-        else if(page==='prescriptions') renderPrescriptions(c);
-        else if(page==='billing') renderBilling(c);
-        else if(page==='profile') renderProfilePage(c);
+    window.loadPage = function(page) {
+        const container = document.getElementById('contentArea');
+        if (page === 'dashboard') renderDashboard(container);
+        else if (page === 'appointments') renderAppointments(container);
+        else if (page === 'records') renderRecords(container);
+        else if (page === 'prescriptions') renderPrescriptions(container);
+        else if (page === 'billing') renderBilling(container);
+        else if (page === 'profile') renderProfilePage(container);
     };
 
-    // ---------- DASHBOARD (patient overview) ----------
-    function renderDashboard(con){
-        const apps=JSON.parse(localStorage.getItem('appointments'))||[];
-        const myApps=apps.filter(a=>a.patient===currentUser.name);
-        const today=new Date().toISOString().slice(0,10);
-        const upcomingApps=myApps.filter(a=>a.date>=today && a.status!=='cancelled' && a.status!=='completed').length;
-        const completedApps=myApps.filter(a=>a.status==='completed').length;
-        const pendingApps=myApps.filter(a=>a.status==='pending').length;
-        const nextAppt=myApps.filter(a=>a.date>=today).sort((a,b)=>a.date.localeCompare(b.date) || a.time.localeCompare(b.time))[0];
+    function getTodayStr() { return new Date().toISOString().slice(0,10); }
+
+    function renderDashboard(con) {
+        const apps = JSON.parse(localStorage.getItem('appointments')) || [];
+        const myApps = apps.filter(a => a.patient === currentUser.name);
+        const today = getTodayStr();
+        const upcomingApps = myApps.filter(a => a.date >= today && a.status !== 'cancelled' && a.status !== 'completed').length;
+        const completedApps = myApps.filter(a => a.status === 'completed').length;
+        const pendingApps = myApps.filter(a => a.status === 'pending').length;
+        const nextAppt = myApps.filter(a => a.date >= today && a.status !== 'cancelled').sort((a,b)=>a.date.localeCompare(b.date) || a.time.localeCompare(b.time))[0];
+        const bills = JSON.parse(localStorage.getItem('billing')) || [];
+        const pendingBills = bills.filter(b => b.patient === currentUser.name && b.status === 'pending').reduce((sum,b)=>sum+b.amount,0);
         
-        const bills=JSON.parse(localStorage.getItem('billing'))||[];
-        const pendingBills=bills.filter(b=>b.patient===currentUser.name && b.status==='pending').reduce((sum,b)=>sum+b.amount,0);
-        
-        con.innerHTML=`
+        con.innerHTML = `
             <div class="stat-grid">
-                <div class="stat-block"><div class="stat-icon"><i class="fas fa-calendar-check"></i></div><div class="stat-info"><h4>Upcoming</h4><div class="figure">${upcomingApps}</div></div></div>
-                <div class="stat-block"><div class="stat-icon"><i class="fas fa-clock"></i></div><div class="stat-info"><h4>Pending</h4><div class="figure">${pendingApps}</div></div></div>
-                <div class="stat-block"><div class="stat-icon"><i class="fas fa-check-circle"></i></div><div class="stat-info"><h4>Completed</h4><div class="figure">${completedApps}</div></div></div>
-                <div class="stat-block"><div class="stat-icon"><i class="fas fa-dollar-sign"></i></div><div class="stat-info"><h4>Due</h4><div class="figure">$${pendingBills}</div></div></div>
+                <div class="stat-block"><div class="stat-icon"><i class="fas fa-calendar-check"></i></div><div class="stat-info"><h4>UPCOMING</h4><div class="figure">${upcomingApps}</div></div></div>
+                <div class="stat-block"><div class="stat-icon"><i class="fas fa-clock"></i></div><div class="stat-info"><h4>PENDING</h4><div class="figure">${pendingApps}</div></div></div>
+                <div class="stat-block"><div class="stat-icon"><i class="fas fa-check-circle"></i></div><div class="stat-info"><h4>COMPLETED</h4><div class="figure">${completedApps}</div></div></div>
+                <div class="stat-block"><div class="stat-icon"><i class="fas fa-dollar-sign"></i></div><div class="stat-info"><h4>DUE</h4><div class="figure">$${pendingBills}</div></div></div>
             </div>
             <div class="content-card">
                 <div class="card-header"><h3>Next appointment</h3><button class="btn-primary" onclick="loadPage('appointments')">View all</button></div>
-                ${nextAppt?`
-                    <div class="table-responsive">
-                        <table>
+                ${nextAppt ? `
+                    <div class="table-wrapper">
+                        <table><tbody>
                             <tr><th>Date</th><td>${nextAppt.date}</td></tr>
                             <tr><th>Time</th><td>${nextAppt.time}</td></tr>
                             <tr><th>Doctor</th><td>${nextAppt.doctor}</td></tr>
-                            <tr><th>Reason</th><td>${nextAppt.reason||'—'}</td></tr>
+                            <tr><th>Reason</th><td>${nextAppt.reason || '—'}</td></tr>
                             <tr><th>Status</th><td><span class="status-badge ${nextAppt.status==='confirmed'?'badge-active':'badge-pending'}">${nextAppt.status}</span></td></tr>
-                        </table>
+                        </tbody></table>
                     </div>
                     <div style="margin-top:16px; display:flex; gap:12px; flex-wrap:wrap;">
                         <button class="btn-secondary" onclick="rescheduleAppt('${nextAppt.id}')">Reschedule</button>
                         <button class="btn-danger" onclick="cancelAppt('${nextAppt.id}')">Cancel</button>
                     </div>
-                `:'<p>No upcoming appointments. <button class="btn-primary" onclick="bookApptModal()">Book now</button></p>'}
+                ` : '<p>No upcoming appointments. <button class="btn-primary" onclick="bookApptModal()">Book now</button></p>'}
             </div>
             <div class="content-card">
-                <div class="card-header"><h3>Recent prescriptions</h3><button class="btn-secondary" onclick="loadPage('prescriptions')">View all</button></div>
-                <div class="table-responsive">
-                    <table>
-                        <thead><tr><th>Medication</th><th>Instructions</th><th>Refills</th></tr></thead>
-                        <tbody>
-                            ${JSON.parse(localStorage.getItem('prescriptions')).filter(p=>p.patient===currentUser.name).slice(0,3).map(p=>`
-                            <tr><td>${p.medication}</td><td>${p.instructions}</td><td>${p.refills}</td></tr>`).join('')}
-                        </tbody>
+                <div class="card-header"><h3>Active prescriptions</h3><button class="btn-secondary" onclick="loadPage('prescriptions')">View all</button></div>
+                <div class="table-wrapper">
+                    <table><thead><tr><th>Medication</th><th>Instructions</th><th>Refills</th></tr></thead>
+                    <tbody>${JSON.parse(localStorage.getItem('prescriptions')).filter(p=>p.patient===currentUser.name).slice(0,2).map(p=>`<tr><td>${p.medication}</td><td>${p.instructions}</td><td>${p.refills}</td></tr>`).join('')}</tbody>
                     </table>
                 </div>
             </div>
         `;
     }
 
-    // ---------- MY APPOINTMENTS ----------
-    function renderAppointments(con){
-        const apps=JSON.parse(localStorage.getItem('appointments'))||[];
-        const myApps=apps.filter(a=>a.patient===currentUser.name).sort((a,b)=>a.date.localeCompare(b.date) || a.time.localeCompare(b.time));
-        con.innerHTML=`
+    function renderAppointments(con) {
+        const apps = JSON.parse(localStorage.getItem('appointments')) || [];
+        const myApps = apps.filter(a => a.patient === currentUser.name).sort((a,b)=>a.date.localeCompare(b.date) || a.time.localeCompare(b.time));
+        con.innerHTML = `
             <div class="content-card">
                 <div class="card-header"><h3>My appointments</h3><button class="btn-primary" onclick="bookApptModal()"><i class="fas fa-plus"></i> Book new</button></div>
-                <div class="table-responsive">
-                    <table>
-                        <thead><tr><th>Date</th><th>Time</th><th>Doctor</th><th>Reason</th><th>Status</th><th>Actions</th></tr></thead>
-                        <tbody>
-                            ${myApps.map(a=>`
-                            <tr>
-                                <td>${a.date}</td><td>${a.time}</td><td>${a.doctor}</td><td>${a.reason||'—'}</td>
-                                <td><span class="status-badge ${a.status==='confirmed'||a.status==='completed'?'badge-active':a.status==='pending'?'badge-pending':'badge-cancelled'}">${a.status}</span></td>
-                                <td>
-                                    ${a.status!=='completed' && a.status!=='cancelled'?`
-                                        <button class="icon-action" onclick="rescheduleAppt('${a.id}')"><i class="fas fa-calendar-alt"></i></button>
-                                        <button class="icon-action delete" onclick="cancelAppt('${a.id}')"><i class="fas fa-times-circle"></i></button>
-                                    `:''}
-                                </td>
-                            </tr>`).join('')}
-                        </tbody>
-                    </table>
+                <div class="table-wrapper">
+                    <table><thead><tr><th>Date</th><th>Time</th><th>Doctor</th><th>Reason</th><th>Status</th><th>Actions</th></tr></thead>
+                    <tbody>${myApps.map(a => `<tr>
+                        <td>${a.date}</td><td>${a.time}</td><td>${a.doctor}</td><td>${a.reason||'—'}</td>
+                        <td><span class="status-badge ${a.status==='confirmed'?'badge-active':a.status==='completed'?'badge-completed':a.status==='pending'?'badge-pending':'badge-cancelled'}">${a.status}</span></td>
+                        <td>${a.status !== 'completed' && a.status !== 'cancelled' ? `<button class="icon-action" onclick="rescheduleAppt('${a.id}')"><i class="fas fa-calendar-alt"></i></button><button class="icon-action delete-btn" onclick="cancelAppt('${a.id}')"><i class="fas fa-times-circle"></i></button>` : ''}</td>
+                    </tr>`).join('')}</tbody></table>
                 </div>
             </div>
         `;
     }
 
-    // ---------- MEDICAL RECORDS ----------
-    function renderRecords(con){
-        const records=JSON.parse(localStorage.getItem('medicalRecords'))||[];
-        const myRecords=records.filter(r=>r.patient===currentUser.name).sort((a,b)=>b.date.localeCompare(a.date));
-        con.innerHTML=`
-            <div class="content-card">
-                <div class="card-header"><h3>Medical records</h3></div>
-                ${myRecords.length===0?'<p>No medical records found.</p>':myRecords.map(r=>`
-                    <div style="background:#f5f9ff; padding:16px; border-radius:24px; margin-bottom:16px; overflow-x:auto;">
-                        <div style="display:flex; justify-content:space-between; margin-bottom:8px; flex-wrap:wrap; gap:8px;">
-                            <strong>${r.date}</strong>
-                            <span class="status-badge badge-role">${r.doctor}</span>
-                        </div>
-                        <p><strong>Diagnosis:</strong> ${r.diagnosis}</p>
-                        <p><strong>Prescription:</strong> ${r.prescription}</p>
-                        <p><strong>Notes:</strong> ${r.notes}</p>
-                    </div>
-                `).join('')}
-            </div>
-        `;
+    function renderRecords(con) {
+        const records = JSON.parse(localStorage.getItem('medicalRecords')) || [];
+        const myRecords = records.filter(r => r.patient === currentUser.name).sort((a,b)=>b.date.localeCompare(a.date));
+        con.innerHTML = `<div class="content-card"><div class="card-header"><h3>Medical records</h3></div>${myRecords.length===0?'<p>No medical records found.</p>':myRecords.map(r => `
+            <div class="record-card"><div class="record-header"><strong>${r.date}</strong><span class="status-badge badge-active">${r.doctor}</span></div>
+            <p><strong>Diagnosis:</strong> ${r.diagnosis}</p><p><strong>Prescription:</strong> ${r.prescription}</p><p><strong>Notes:</strong> ${r.notes}</p></div>
+        `).join('')}</div>`;
     }
 
-    // ---------- PRESCRIPTIONS ----------
-    function renderPrescriptions(con){
-        const rx=JSON.parse(localStorage.getItem('prescriptions'))||[];
-        const myRx=rx.filter(r=>r.patient===currentUser.name).sort((a,b)=>b.date.localeCompare(a.date));
-        con.innerHTML=`
-            <div class="content-card">
-                <div class="card-header"><h3>Current prescriptions</h3><button class="btn-secondary" onclick="requestRefillModal()">Request refill</button></div>
-                <div class="table-responsive">
-                    <table>
-                        <thead><tr><th>Date</th><th>Medication</th><th>Instructions</th><th>Refills left</th><th>Status</th></tr></thead>
-                        <tbody>
-                            ${myRx.map(r=>`
-                            <tr><td>${r.date}</td><td>${r.medication}</td><td>${r.instructions}</td><td>${r.refills}</td>
-                            <td><span class="status-badge badge-active">${r.status||'active'}</span></td></tr>
-                            `).join('')}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        `;
+    function renderPrescriptions(con) {
+        const rx = JSON.parse(localStorage.getItem('prescriptions')) || [];
+        const myRx = rx.filter(r => r.patient === currentUser.name);
+        con.innerHTML = `<div class="content-card"><div class="card-header"><h3>Prescriptions</h3><button class="btn-secondary" onclick="requestRefillModal()">Request refill</button></div>
+        <div class="table-wrapper"><table><thead><tr><th>Date</th><th>Medication</th><th>Instructions</th><th>Refills</th><th>Status</th></tr></thead>
+        <tbody>${myRx.map(r => `<tr><td>${r.date}</td><td>${r.medication}</td><td>${r.instructions}</td><td>${r.refills}</td><td><span class="status-badge badge-active">${r.status}</span></td></tr>`).join('')}</tbody></table></div></div>`;
     }
 
-    // ---------- BILLING ----------
-    function renderBilling(con){
-        const bills=JSON.parse(localStorage.getItem('billing'))||[];
-        const myBills=bills.filter(b=>b.patient===currentUser.name).sort((a,b)=>b.date.localeCompare(a.date));
-        const totalDue=myBills.filter(b=>b.status==='pending').reduce((sum,b)=>sum+b.amount,0);
-        con.innerHTML=`
-            <div class="stat-grid" style="grid-template-columns:repeat(2,1fr);">
-                <div class="stat-block"><div class="stat-icon"><i class="fas fa-dollar-sign"></i></div><div class="stat-info"><h4>Total due</h4><div class="figure">$${totalDue}</div></div></div>
-                <div class="stat-block"><div class="stat-icon"><i class="fas fa-credit-card"></i></div><div class="stat-info"><h4>Last payment</h4><div class="figure">$${myBills.filter(b=>b.status==='paid').sort((a,b)=>b.paidOn?.localeCompare(a.paidOn))[0]?.amount||0}</div></div></div>
-            </div>
-            <div class="content-card">
-                <div class="card-header"><h3>Billing history</h3><button class="btn-primary" onclick="payBillModal()">Pay now</button></div>
-                <div class="table-responsive">
-                    <table>
-                        <thead><tr><th>Date</th><th>Description</th><th>Amount</th><th>Status</th><th></th></tr></thead>
-                        <tbody>
-                            ${myBills.map(b=>`
-                            <tr><td>${b.date}</td><td>${b.description}</td><td>$${b.amount}</td>
-                            <td><span class="status-badge ${b.status==='paid'?'badge-active':'badge-pending'}">${b.status}</span></td>
-                            <td>${b.status==='pending'?`<button class="btn-secondary" onclick="paySingleBill('${b.id}')">Pay</button>`:''}</td></tr>
-                            `).join('')}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        `;
+    function renderBilling(con) {
+        const bills = JSON.parse(localStorage.getItem('billing')) || [];
+        const myBills = bills.filter(b => b.patient === currentUser.name);
+        const totalDue = myBills.filter(b=>b.status==='pending').reduce((s,b)=>s+b.amount,0);
+        con.innerHTML = `<div class="stat-grid" style="grid-template-columns:repeat(2,1fr);"><div class="stat-block"><div class="stat-icon"><i class="fas fa-dollar-sign"></i></div><div class="stat-info"><h4>Total due</h4><div class="figure">$${totalDue}</div></div></div>
+        <div class="stat-block"><div class="stat-icon"><i class="fas fa-credit-card"></i></div><div class="stat-info"><h4>Last payment</h4><div class="figure">$${myBills.filter(b=>b.status==='paid')[0]?.amount||0}</div></div></div></div>
+        <div class="content-card"><div class="card-header"><h3>Billing history</h3><button class="btn-primary" onclick="payBillModal()">Pay now</button></div>
+        <div class="table-wrapper"><table><thead><tr><th>Date</th><th>Description</th><th>Amount</th><th>Status</th><th></th></tr></thead>
+        <tbody>${myBills.map(b => `<tr><td>${b.date}</td><td>${b.description}</td><td>$${b.amount}</td><td><span class="status-badge ${b.status==='paid'?'badge-active':'badge-pending'}">${b.status}</span></td>
+        <td>${b.status==='pending'?`<button class="btn-secondary" onclick="paySingleBill('${b.id}')">Pay</button>`:''}</td></tr>`).join('')}</tbody></table></div></div>`;
     }
 
-    // ---------- PROFILE ----------
-    function renderProfilePage(con){
-        const u=currentUser;
-        con.innerHTML=`
-            <div class="content-card">
-                <div class="card-header"><h3>My profile</h3><button class="btn-secondary" onclick="editProfileModal()">Edit</button></div>
-                <div class="table-responsive">
-                    <table style="width:100%;">
-                        <tr><th style="width:120px;">Full name</th><td>${u.name}</td></tr>
-                        <tr><th>Email</th><td>${u.email}</td></tr>
-                        <tr><th>Phone</th><td>${u.phone}</td></tr>
-                        <tr><th>Date of birth</th><td>${u.dob}</td></tr>
-                        <tr><th>Gender</th><td>${u.gender}</td></tr>
-                        <tr><th>Blood type</th><td>${u.bloodType||'—'}</td></tr>
-                        <tr><th>Allergies</th><td>${u.allergies||'None'}</td></tr>
-                    </table>
-                </div>
-            </div>
-        `;
+    function renderProfilePage(con) {
+        const u = currentUser;
+        con.innerHTML = `<div class="content-card"><div class="card-header"><h3>My profile</h3><button class="btn-secondary" onclick="editProfileModal()">Edit</button></div>
+        <div class="table-wrapper"><table><tbody>
+            <tr><th>Full name</th><td>${u.name}</td></tr><tr><th>Email</th><td>${u.email}</td></tr>
+            <tr><th>Phone</th><td>${u.phone}</td></tr><tr><th>Date of birth</th><td>${u.dob}</td></tr>
+            <tr><th>Gender</th><td>${u.gender}</td></tr><tr><th>Blood type</th><td>${u.bloodType||'—'}</td></tr>
+            <tr><th>Allergies</th><td>${u.allergies||'None'}</td></tr>
+        </tbody></table></div></div>`;
     }
 
-    // ========== MODAL FUNCTIONS (fully working) ==========
-    window.bookApptModal=function(){
-        const doctors=JSON.parse(localStorage.getItem('users')).filter(u=>u.role==='doctor');
-        openModal(`
-            <h3 style="margin-bottom:16px;">Book appointment</h3>
-            <div class="form-field"><label>Doctor</label><select class="form-input" id="bookDoctor">${doctors.map(d=>`<option value="${d.name}">${d.name} (${d.specialization})</option>`).join('')}</select></div>
-            <div class="row-fields" style="display:flex; gap:12px; flex-wrap:wrap;"><div class="form-field" style="flex:1 1 200px;"><label>Date</label><input class="form-input" type="date" id="bookDate" min="${new Date().toISOString().slice(0,10)}"></div>
-            <div class="form-field" style="flex:1 1 150px;"><label>Time</label><input class="form-input" type="time" id="bookTime" value="09:00"></div></div>
-            <div class="form-field"><label>Reason</label><input class="form-input" id="bookReason" placeholder="Brief description"></div>
-            <div class="modal-actions"><button class="btn-primary" onclick="saveBooking()">Book</button><button class="btn-secondary" onclick="closeModal()">Cancel</button></div>
-        `);
+    // Modal functions
+    window.bookApptModal = function() {
+        const doctors = JSON.parse(localStorage.getItem('users')).filter(u=>u.role==='doctor');
+        openModal(`<h3>Book appointment</h3><div class="form-field"><label>Doctor</label><select class="form-input" id="bookDoctor">${doctors.map(d=>`<option value="${d.name}">${d.name} (${d.specialization})</option>`).join('')}</select></div>
+        <div class="row-fields"><div class="form-field"><label>Date</label><input class="form-input" type="date" id="bookDate" min="${getTodayStr()}"></div>
+        <div class="form-field"><label>Time</label><input class="form-input" type="time" id="bookTime" value="10:00"></div></div>
+        <div class="form-field"><label>Reason</label><input class="form-input" id="bookReason"></div>
+        <div class="modal-actions"><button class="btn-primary" onclick="saveBooking()">Book</button><button class="btn-secondary" onclick="closeModal()">Cancel</button></div>`);
     };
-    window.saveBooking=function(){
-        const apps=JSON.parse(localStorage.getItem('appointments'))||[];
-        const newAppt={
-            id:'A'+Math.floor(Math.random()*900+100),
-            patient:currentUser.name,
-            doctor:document.getElementById('bookDoctor')?.value,
-            date:document.getElementById('bookDate')?.value,
-            time:document.getElementById('bookTime')?.value,
-            status:'pending',
-            reason:document.getElementById('bookReason')?.value||''
-        };
-        apps.push(newAppt);
-        localStorage.setItem('appointments',JSON.stringify(apps));
-        closeModal();
-        showToast('Appointment requested','success');
-        loadPage('appointments');
+    window.saveBooking = function() {
+        const apps = JSON.parse(localStorage.getItem('appointments')) || [];
+        apps.push({id:'A'+Date.now(), patient:currentUser.name, doctor:document.getElementById('bookDoctor')?.value, date:document.getElementById('bookDate')?.value, time:document.getElementById('bookTime')?.value, status:'pending', reason:document.getElementById('bookReason')?.value||''});
+        localStorage.setItem('appointments',JSON.stringify(apps)); closeModal(); showToast('Appointment requested','success'); loadPage('appointments');
     };
-
-    window.rescheduleAppt=function(id){
-        const apps=JSON.parse(localStorage.getItem('appointments'));
-        const appt=apps.find(a=>a.id===id);
-        openModal(`
-            <h3 style="margin-bottom:16px;">Reschedule appointment</h3>
-            <div class="form-field"><label>New date</label><input class="form-input" type="date" id="newDate" value="${appt.date}"></div>
-            <div class="form-field"><label>New time</label><input class="form-input" type="time" id="newTime" value="${appt.time}"></div>
-            <div class="modal-actions"><button class="btn-primary" onclick="updateReschedule('${id}')">Update</button><button class="btn-secondary" onclick="closeModal()">Cancel</button></div>
-        `);
+    window.rescheduleAppt = function(id) {
+        const apps = JSON.parse(localStorage.getItem('appointments')); const a = apps.find(x=>x.id===id);
+        openModal(`<h3>Reschedule</h3><div class="form-field"><label>Date</label><input class="form-input" id="newDate" value="${a.date}"></div><div class="form-field"><label>Time</label><input class="form-input" id="newTime" value="${a.time}"></div><div class="modal-actions"><button class="btn-primary" onclick="updateReschedule('${id}')">Update</button><button class="btn-secondary" onclick="closeModal()">Cancel</button></div>`);
     };
-    window.updateReschedule=function(id){
-        const apps=JSON.parse(localStorage.getItem('appointments'));
-        const appt=apps.find(a=>a.id===id);
-        if(appt){
-            appt.date=document.getElementById('newDate')?.value||appt.date;
-            appt.time=document.getElementById('newTime')?.value||appt.time;
-            appt.status='pending';
-        }
-        localStorage.setItem('appointments',JSON.stringify(apps));
-        closeModal();
-        showToast('Appointment rescheduled','success');
-        loadPage('appointments');
+    window.updateReschedule = function(id) {
+        const apps = JSON.parse(localStorage.getItem('appointments')); const a = apps.find(x=>x.id===id);
+        if(a){ a.date=document.getElementById('newDate')?.value||a.date; a.time=document.getElementById('newTime')?.value||a.time; a.status='pending'; localStorage.setItem('appointments',JSON.stringify(apps)); closeModal(); showToast('Rescheduled','success'); loadPage('appointments');}
     };
-
-    window.cancelAppt=function(id){
-        if(!confirm('Cancel this appointment?')) return;
-        const apps=JSON.parse(localStorage.getItem('appointments'));
-        const appt=apps.find(a=>a.id===id);
-        if(appt) appt.status='cancelled';
-        localStorage.setItem('appointments',JSON.stringify(apps));
-        showToast('Appointment cancelled','warning');
-        loadPage('appointments');
-    };
-
-    window.requestRefillModal=function(){
-        const rx=JSON.parse(localStorage.getItem('prescriptions'))||[];
-        const myRx=rx.filter(r=>r.patient===currentUser.name);
-        openModal(`
-            <h3 style="margin-bottom:16px;">Request prescription refill</h3>
-            <div class="form-field"><label>Select medication</label><select class="form-input" id="refillRx">${myRx.map(r=>`<option value="${r.medication}">${r.medication} (${r.refills} refills left)</option>`).join('')}</select></div>
-            <div class="form-field"><label>Additional notes</label><textarea class="form-textarea" id="refillNotes" placeholder="e.g., pharmacy name"></textarea></div>
-            <div class="modal-actions"><button class="btn-primary" onclick="sendRefillRequest()">Request</button><button class="btn-secondary" onclick="closeModal()">Cancel</button></div>
-        `);
-    };
-    window.sendRefillRequest=function(){
-        showToast('Refill request sent to pharmacy','success');
-        closeModal();
-    };
-
-    window.payBillModal=function(){
-        const bills=JSON.parse(localStorage.getItem('billing'))||[];
-        const pendingBills=bills.filter(b=>b.patient===currentUser.name && b.status==='pending');
-        openModal(`
-            <h3 style="margin-bottom:16px;">Make a payment</h3>
-            ${pendingBills.length===0?'<p>No pending bills.</p>':pendingBills.map(b=>`
-                <div style="display:flex; justify-content:space-between; align-items:center; background:#f5f9ff; padding:12px; border-radius:20px; margin-bottom:10px; flex-wrap:wrap; gap:10px;">
-                    <span>${b.description} - $${b.amount}</span>
-                    <button class="btn-primary" onclick="paySingleBill('${b.id}')">Pay</button>
-                </div>`).join('')}
-            <div class="modal-actions"><button class="btn-secondary" onclick="closeModal()">Close</button></div>
-        `);
-    };
-    window.paySingleBill=function(id){
-        const bills=JSON.parse(localStorage.getItem('billing'));
-        const bill=bills.find(b=>b.id===id);
-        if(bill){
-            bill.status='paid';
-            bill.paidOn=new Date().toISOString().slice(0,10);
-        }
-        localStorage.setItem('billing',JSON.stringify(bills));
-        closeModal();
-        showToast('Payment successful','success');
-        loadPage('billing');
-    };
-
-    window.editProfileModal=function(){
-        const u=currentUser;
-        openModal(`
-            <h3 style="margin-bottom:16px;">Edit profile</h3>
-            <div class="form-field"><label>Phone</label><input class="form-input" id="editPhone" value="${u.phone}"></div>
-            <div class="form-field"><label>Blood type</label><select class="form-input" id="editBlood">
-                <option value="A+" ${u.bloodType==='A+'?'selected':''}>A+</option>
-                <option value="A-" ${u.bloodType==='A-'?'selected':''}>A-</option>
-                <option value="B+" ${u.bloodType==='B+'?'selected':''}>B+</option>
-                <option value="B-" ${u.bloodType==='B-'?'selected':''}>B-</option>
-                <option value="O+" ${u.bloodType==='O+'?'selected':''}>O+</option>
-                <option value="O-" ${u.bloodType==='O-'?'selected':''}>O-</option>
-                <option value="AB+" ${u.bloodType==='AB+'?'selected':''}>AB+</option>
-                <option value="AB-" ${u.bloodType==='AB-'?'selected':''}>AB-</option>
-            </select></div>
-            <div class="form-field"><label>Allergies</label><input class="form-input" id="editAllergies" value="${u.allergies||''}"></div>
-            <div class="modal-actions"><button class="btn-primary" onclick="updateProfile()">Update</button><button class="btn-secondary" onclick="closeModal()">Cancel</button></div>
-        `);
-    };
-    window.updateProfile=function(){
-        currentUser.phone=document.getElementById('editPhone')?.value||currentUser.phone;
-        currentUser.bloodType=document.getElementById('editBlood')?.value||currentUser.bloodType;
-        currentUser.allergies=document.getElementById('editAllergies')?.value||currentUser.allergies;
-        localStorage.setItem('currentUser',JSON.stringify(currentUser));
-        
-        let users=JSON.parse(localStorage.getItem('users'))||[];
-        const userIndex=users.findIndex(u=>u.id===currentUser.id);
-        if(userIndex>=0) users[userIndex]=currentUser;
-        localStorage.setItem('users',JSON.stringify(users));
-        
-        closeModal();
-        renderProfile();
-        showToast('Profile updated','success');
-        loadPage('profile');
-    };
-
-    // logout
-    document.getElementById('logoutBtn').addEventListener('click',()=>{
-        showToast('Logging out...','info');
-        setTimeout(()=>{localStorage.removeItem('currentUser'); window.location.href='index.html';},1000);
-    });
-
-    // start
+    window.cancelAppt = function(id) { if(confirm('Cancel this appointment?')){ let apps = JSON.parse(localStorage.getItem('appointments')); let a = apps.find(x=>x.id===id); if(a) a.status='cancelled'; localStorage.setItem('appointments',JSON.stringify(apps)); showToast('Cancelled','info'); loadPage('appointments');}};
+    window.requestRefillModal = function() { openModal(`<h3>Refill request</h3><div class="form-field"><label>Medication</label><select class="form-input" id="refillMed">${JSON.parse(localStorage.getItem('prescriptions')).filter(p=>p.patient===currentUser.name).map(p=>`<option>${p.medication}</option>`).join('')}</select></div><div class="form-field"><label>Notes</label><textarea class="form-textarea" id="refillNotes"></textarea></div><div class="modal-actions"><button class="btn-primary" onclick="sendRefill()">Request</button><button class="btn-secondary" onclick="closeModal()">Cancel</button></div>`); };
+    window.sendRefill = function() { showToast('Refill request sent','success'); closeModal(); };
+    window.payBillModal = function() { const pending = JSON.parse(localStorage.getItem('billing')).filter(b=>b.patient===currentUser.name && b.status==='pending'); openModal(`<h3>Pay bills</h3>${pending.length===0?'<p>No pending bills.</p>':pending.map(b=>`<div style="display:flex; justify-content:space-between; background:#f5f9ff; padding:12px; border-radius:20px; margin-bottom:10px;"><span>${b.description} - $${b.amount}</span><button class="btn-primary" onclick="paySingleBill('${b.id}')">Pay</button></div>`).join('')}<div class="modal-actions"><button class="btn-secondary" onclick="closeModal()">Close</button></div>`); };
+    window.paySingleBill = function(id) { let bills = JSON.parse(localStorage.getItem('billing')); let b = bills.find(x=>x.id===id); if(b){ b.status='paid'; b.paidOn=getTodayStr(); localStorage.setItem('billing',JSON.stringify(bills)); closeModal(); showToast('Payment successful','success'); loadPage('billing');} };
+    window.editProfileModal = function() { const u=currentUser; openModal(`<h3>Edit profile</h3><div class="form-field"><label>Phone</label><input class="form-input" id="editPhone" value="${u.phone}"></div><div class="form-field"><label>Blood type</label><select class="form-input" id="editBlood"><option>O+</option><option>O-</option><option>A+</option><option>A-</option><option>B+</option><option>B-</option><option>AB+</option><option>AB-</option></select></div><div class="form-field"><label>Allergies</label><input class="form-input" id="editAllergies" value="${u.allergies||''}"></div><div class="modal-actions"><button class="btn-primary" onclick="updateProfile()">Update</button><button class="btn-secondary" onclick="closeModal()">Cancel</button></div>`); };
+    window.updateProfile = function() { currentUser.phone=document.getElementById('editPhone')?.value||currentUser.phone; currentUser.bloodType=document.getElementById('editBlood')?.value; currentUser.allergies=document.getElementById('editAllergies')?.value; localStorage.setItem('currentUser',JSON.stringify(currentUser)); let users=JSON.parse(localStorage.getItem('users')); let idx=users.findIndex(u=>u.id===currentUser.id); if(idx>=0) users[idx]=currentUser; localStorage.setItem('users',JSON.stringify(users)); closeModal(); renderProfile(); showToast('Profile updated','success'); loadPage('profile'); };
+    document.getElementById('logoutBtn').addEventListener('click',()=>{ showToast('Logging out...','info'); setTimeout(()=>{ localStorage.removeItem('currentUser'); alert('Logged out'); },800); });
     loadPage('dashboard');
 })();
 </script>
