@@ -40,6 +40,10 @@
             overflow-x: hidden;
         }
 
+        .hidden {
+            display: none !important;
+        }
+
         /* Custom Cursor */
         .cursor {
             width: 20px;
@@ -1015,6 +1019,231 @@
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
         }
 
+        /* ===== SIMPLE AUTH MODAL WITH TWO-COLUMN SIGNUP ===== */
+        .auth-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+        }
+
+        .auth-container {
+            width: 540px;
+            max-width: 94%;
+            background: white;
+            border-radius: 28px;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.3);
+            padding: 2.5rem 2rem;
+            position: relative;
+            animation: modalFadeIn 0.4s;
+        }
+
+        @keyframes modalFadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 1.2rem;
+            right: 1.5rem;
+            font-size: 1.8rem;
+            color: #94a3b8;
+            cursor: pointer;
+            background: none;
+            border: none;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.2s;
+        }
+
+        .close-btn:hover {
+            background: #f1f5f9;
+            color: #1a1f2b;
+        }
+
+        /* Simple header */
+        .auth-header-simple {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .auth-header-simple h2 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #1a1f2b;
+            margin-bottom: 0.5rem;
+        }
+
+        .auth-header-simple p {
+            color: #64748b;
+            font-size: 0.95rem;
+        }
+
+        /* Free forever note */
+        .free-note {
+            background: #f0f9ff;
+            padding: 0.8rem;
+            border-radius: 40px;
+            text-align: center;
+            font-size: 0.9rem;
+            color: #0369a1;
+            margin-bottom: 2rem;
+            border: 1px solid #bae6fd;
+        }
+
+        .free-note i {
+            margin-right: 6px;
+            color: #0284c7;
+        }
+
+        /* Two-column layout for signup */
+        .form-row {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-row .form-group-simple {
+            flex: 1;
+            margin-bottom: 0;
+        }
+
+        .form-group-simple {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group-simple label {
+            display: block;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #334155;
+            margin-bottom: 0.4rem;
+        }
+
+        .form-group-simple input,
+        .form-group-simple select {
+            width: 100%;
+            padding: 0.9rem 1.2rem;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 14px;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 0.95rem;
+            transition: all 0.2s;
+            background: white;
+        }
+
+        .form-group-simple input:focus,
+        .form-group-simple select:focus {
+            outline: none;
+            border-color: #4158D0;
+            box-shadow: 0 0 0 3px rgba(65, 88, 208, 0.1);
+        }
+
+        .btn-auth-simple {
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(90deg, #4158D0, #C850C0);
+            color: white;
+            border: none;
+            border-radius: 40px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin: 1.5rem 0 1.2rem;
+            box-shadow: 0 10px 20px -8px rgba(65, 88, 208, 0.4);
+        }
+
+        .btn-auth-simple:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 16px 24px -8px rgba(65, 88, 208, 0.5);
+        }
+
+        .btn-auth-simple:disabled {
+            opacity: 0.6;
+            transform: none;
+            box-shadow: none;
+            cursor: not-allowed;
+        }
+
+        .auth-link-simple {
+            text-align: center;
+            font-size: 0.95rem;
+            color: #64748b;
+        }
+
+        .auth-link-simple a {
+            color: #4158D0;
+            font-weight: 700;
+            text-decoration: none;
+            border-bottom: 1.5px solid transparent;
+            transition: border-color 0.2s;
+        }
+
+        .auth-link-simple a:hover {
+            border-bottom-color: #4158D0;
+        }
+
+        /* Hide original complex auth parts */
+        .auth-left, .auth-tabs, .auth-header {
+            display: none;
+        }
+
+        .auth-right {
+            padding: 0;
+            overflow: visible;
+            background: transparent;
+        }
+
+        /* Spinner */
+        .spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: white;
+            padding: 1.2rem 2rem;
+            border-radius: 60px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            transform: translateX(400px);
+            transition: transform 0.4s;
+            z-index: 10000;
+            border-left: 4px solid;
+        }
+        .toast.show { transform: translateX(0); }
+        .toast.success { border-left-color: #10b981; }
+        .toast.error { border-left-color: #ef4444; }
+        .toast i { font-size: 1.3rem; }
+        .toast.success i { color: #10b981; }
+        .toast.error i { color: #ef4444; }
+
         /* Footer */
         .footer {
             background: #1a1f2b;
@@ -1198,6 +1427,11 @@
                 bottom: 1rem;
                 left: 1rem;
             }
+            
+            .form-row {
+                flex-direction: column;
+                gap: 1.5rem;
+            }
         }
     </style>
 </head>
@@ -1228,8 +1462,8 @@
             <a href="#contact">Contact</a>
         </div>
         <div class="nav-buttons">
-            <button class="btn-login" onclick="openAuthPage('signin')">Sign In</button>
-            <button class="btn-signup" onclick="openAuthPage('signup')">Sign Up</button>
+            <button class="btn-login" onclick="showAuth('signin')">Sign In</button>
+            <button class="btn-signup" onclick="showAuth('signup')">Sign Up</button>
         </div>
     </nav>
 
@@ -1246,7 +1480,7 @@
             </h1>
             <p>Experience the most advanced AI-powered platform trusted by 500+ clinics worldwide. Streamline operations, enhance patient care, and boost revenue by up to 40%.</p>
             <div class="hero-buttons">
-                <button class="btn-primary" onclick="openAuthPage('signup')">
+                <button class="btn-primary" onclick="showAuth('signup')">
                     <i class="fas fa-rocket"></i>
                     Start Free Trial
                 </button>
@@ -1365,7 +1599,7 @@
                     <li><i class="fas fa-check-circle"></i> Clinical notes & templates</li>
                     <li><i class="fas fa-check-circle"></i> Lab results integration</li>
                 </ul>
-                <button class="btn-solution" onclick="openAuthPage('signup', 'doctor')">Learn More</button>
+                <button class="btn-solution" onclick="showAuth('signup', 'doctor')">Learn More</button>
             </div>
             <div class="solution-card" data-aos="fade-left">
                 <div class="solution-icon">
@@ -1380,7 +1614,7 @@
                     <li><i class="fas fa-check-circle"></i> Prescription refills</li>
                     <li><i class="fas fa-check-circle"></i> Telemedicine visits</li>
                 </ul>
-                <button class="btn-solution" onclick="openAuthPage('signup', 'patient')">Learn More</button>
+                <button class="btn-solution" onclick="showAuth('signup', 'patient')">Learn More</button>
             </div>
             <div class="solution-card" data-aos="fade-right" data-aos-delay="100">
                 <div class="solution-icon">
@@ -1395,7 +1629,7 @@
                     <li><i class="fas fa-check-circle"></i> Compliance monitoring</li>
                     <li><i class="fas fa-check-circle"></i> Revenue analytics</li>
                 </ul>
-                <button class="btn-solution" onclick="openAuthPage('signup', 'admin')">Learn More</button>
+                <button class="btn-solution" onclick="showAuth('signup', 'admin')">Learn More</button>
             </div>
             <div class="solution-card" data-aos="fade-left" data-aos-delay="100">
                 <div class="solution-icon">
@@ -1410,7 +1644,7 @@
                     <li><i class="fas fa-check-circle"></i> Payment collection</li>
                     <li><i class="fas fa-check-circle"></i> Patient communication</li>
                 </ul>
-                <button class="btn-solution" onclick="openAuthPage('signup', 'receptionist')">Learn More</button>
+                <button class="btn-solution" onclick="showAuth('signup', 'receptionist')">Learn More</button>
             </div>
         </div>
     </section>
@@ -1435,7 +1669,7 @@
                     <li><i class="fas fa-check"></i> Basic reporting</li>
                     <li><i class="fas fa-check"></i> 2 staff accounts</li>
                 </ul>
-                <button class="btn-pricing" onclick="openAuthPage('signup')">Get Started</button>
+                <button class="btn-pricing" onclick="showAuth('signup')">Get Started</button>
             </div>
             <div class="pricing-card popular" data-aos="fade-up" data-aos-delay="200">
                 <div class="popular-badge">Most Popular</div>
@@ -1453,7 +1687,7 @@
                     <li><i class="fas fa-check"></i> Advanced analytics</li>
                     <li><i class="fas fa-check"></i> API access</li>
                 </ul>
-                <button class="btn-pricing" onclick="openAuthPage('signup')">Get Started</button>
+                <button class="btn-pricing" onclick="showAuth('signup')">Get Started</button>
             </div>
             <div class="pricing-card" data-aos="fade-up" data-aos-delay="300">
                 <div class="pricing-header">
@@ -1470,7 +1704,7 @@
                     <li><i class="fas fa-check"></i> SLA guarantee</li>
                     <li><i class="fas fa-check"></i> On-premise option</li>
                 </ul>
-                <button class="btn-pricing" onclick="openAuthPage('signup')">Contact Sales</button>
+                <button class="btn-pricing" onclick="showAuth('signup')">Contact Sales</button>
             </div>
         </div>
     </section>
@@ -1584,12 +1818,84 @@
         <div class="cta-content" data-aos="zoom-in">
             <h2>Ready to Transform Your Practice?</h2>
             <p>Join thousands of healthcare providers who trust ClinicCare Pro. Start your free 14-day trial today. No credit card required.</p>
-            <button class="btn-cta" onclick="openAuthPage('signup')">
+            <button class="btn-cta" onclick="showAuth('signup')">
                 <i class="fas fa-rocket"></i>
                 Start Free Trial
             </button>
         </div>
     </section>
+
+    <!-- SIMPLE AUTH MODAL (as per attachment with two-column signup) -->
+    <div class="auth-modal hidden" id="authModal">
+        <div class="auth-container">
+            <button class="close-btn" onclick="hideAuth()">&times;</button>
+            
+            <!-- Simple Header -->
+            <div class="auth-header-simple">
+                <h2 id="modalTitle">Create Account</h2>
+                <p id="modalSubtitle">Get unlimited type of forms, questions and responses. Free forever.</p>
+            </div>
+
+            <!-- Free forever note -->
+            <div class="free-note">
+                <i class="fas fa-infinity"></i> Free forever – no credit card needed
+            </div>
+
+            <!-- Sign In Form (simple, unchanged) -->
+            <form id="signinFormSimple" onsubmit="handleSigninSimple(event)" style="display: none;">
+                <div class="form-group-simple">
+                    <label>E-mail</label>
+                    <input type="email" id="signinEmailSimple" placeholder="doctor@clinic.com" required>
+                </div>
+                <div class="form-group-simple">
+                    <label>Password</label>
+                    <input type="password" id="signinPasswordSimple" placeholder="••••••••" required>
+                </div>
+                <button type="submit" class="btn-auth-simple" id="signinBtnSimple">Sign In</button>
+                <p class="auth-link-simple">
+                    Don't have an account? <a href="#" onclick="switchSimple('signup'); return false;">Sign up</a>
+                </p>
+            </form>
+
+            <!-- Sign Up Form (with two-column layout) -->
+            <form id="signupFormSimple" onsubmit="handleSignupSimple(event)">
+                <!-- Row 1: Full Name + Email -->
+                <div class="form-row">
+                    <div class="form-group-simple">
+                        <label>Full Name</label>
+                        <input type="text" id="signupNameSimple" placeholder="John Smith" required>
+                    </div>
+                    <div class="form-group-simple">
+                        <label>E-mail</label>
+                        <input type="email" id="signupEmailSimple" placeholder="john@clinic.com" required>
+                    </div>
+                </div>
+                
+                <!-- Row 2: Password + Role -->
+                <div class="form-row">
+                    <div class="form-group-simple">
+                        <label>Password</label>
+                        <input type="password" id="signupPasswordSimple" placeholder="Min. 8 characters" required>
+                    </div>
+                    <div class="form-group-simple">
+                        <label>I am a</label>
+                        <select id="signupRoleSimple" required>
+                            <option value="">Select role</option>
+                            <option value="doctor">Doctor</option>
+                            <option value="patient">Patient</option>
+                            <option value="admin">Administrator</option>
+                            <option value="receptionist">Receptionist</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <button type="submit" class="btn-auth-simple" id="signupBtnSimple">Sign Up</button>
+                <p class="auth-link-simple">
+                    Already have an account? <a href="#" onclick="switchSimple('signin'); return false;">Login</a>
+                </p>
+            </form>
+        </div>
+    </div>
 
     <!-- Footer -->
     <footer class="footer">
@@ -1676,6 +1982,20 @@
             offset: 100
         });
 
+        // Store users in localStorage
+        let users = JSON.parse(localStorage.getItem('users')) || [];
+
+        // Initialize with demo users if no users exist
+        if (users.length === 0) {
+            users = [
+                { id: '1', name: 'Dr. John Smith', email: 'doctor@example.com', password: 'doctor123', role: 'doctor', phone: '1234567890', specialization: 'Cardiologist' },
+                { id: '2', name: 'Jane Doe', email: 'patient@example.com', password: 'patient123', role: 'patient', phone: '0987654321' },
+                { id: '3', name: 'Admin User', email: 'admin@example.com', password: 'admin123', role: 'admin', phone: '1122334455' },
+                { id: '4', name: 'Sarah Wilson', email: 'receptionist@example.com', password: 'receptionist123', role: 'receptionist', phone: '5566778899' }
+            ];
+            localStorage.setItem('users', JSON.stringify(users));
+        }
+
         // Custom Cursor
         const cursor = document.querySelector('.cursor');
         const cursorFollower = document.querySelector('.cursor-follower');
@@ -1725,16 +2045,120 @@
             }, 3000);
         }
 
-        // Open auth page in same tab
-        window.openAuthPage = function(tab, role = null) {
-            // Build URL with query parameters
-            let url = 'auth-modal.html?tab=' + tab;
-            if (role) {
-                url += '&role=' + role;
-            }
+        // Auth modal
+        window.showAuth = function(tab, role = null) {
+            document.getElementById('authModal').classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+            switchSimple(tab);
             
-            // Navigate to the auth page in the same tab
-            window.location.href = url;
+            if (role && tab === 'signup') {
+                setTimeout(() => {
+                    document.getElementById('signupRoleSimple').value = role;
+                }, 100);
+            }
+        };
+
+        window.hideAuth = function() {
+            document.getElementById('authModal').classList.add('hidden');
+            document.body.style.overflow = '';
+        };
+
+        // Switch between signin/signup simple forms
+        window.switchSimple = function(tab) {
+            const signinForm = document.getElementById('signinFormSimple');
+            const signupForm = document.getElementById('signupFormSimple');
+            const title = document.getElementById('modalTitle');
+            const subtitle = document.getElementById('modalSubtitle');
+            if (tab === 'signin') {
+                signinForm.style.display = 'block';
+                signupForm.style.display = 'none';
+                title.innerText = 'Welcome Back';
+                subtitle.innerText = 'Sign in to your account';
+            } else {
+                signinForm.style.display = 'none';
+                signupForm.style.display = 'block';
+                title.innerText = 'Create Account';
+                subtitle.innerText = 'Get unlimited type of forms, questions and responses. Free forever.';
+            }
+        };
+
+        // Handle sign in simple
+        window.handleSigninSimple = function(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('signinEmailSimple').value;
+            const password = document.getElementById('signinPasswordSimple').value;
+            const btn = document.getElementById('signinBtnSimple');
+
+            btn.innerHTML = '<span class="spinner"></span> Signing in...';
+            btn.disabled = true;
+
+            setTimeout(() => {
+                const user = users.find(u => u.email === email && u.password === password);
+
+                if (user) {
+                    localStorage.setItem('currentUser', JSON.stringify(user));
+                    showToast('Login successful! Redirecting...', 'success');
+                    
+                    setTimeout(() => {
+                        window.location.href = `${user.role}-dashboard.html`;
+                    }, 1500);
+                } else {
+                    showToast('Invalid email or password!', 'error');
+                    btn.innerHTML = 'Sign In';
+                    btn.disabled = false;
+                }
+            }, 1000);
+        };
+
+        // Handle sign up simple
+        window.handleSignupSimple = function(e) {
+            e.preventDefault();
+            
+            const name = document.getElementById('signupNameSimple').value;
+            const email = document.getElementById('signupEmailSimple').value;
+            const password = document.getElementById('signupPasswordSimple').value;
+            const role = document.getElementById('signupRoleSimple').value;
+            const btn = document.getElementById('signupBtnSimple');
+
+            // Validation
+            if (password.length < 6) {
+                showToast('Password must be at least 6 characters!', 'error');
+                return;
+            }
+
+            if (!role) {
+                showToast('Please select your role!', 'error');
+                return;
+            }
+
+            if (users.find(u => u.email === email)) {
+                showToast('Email already exists!', 'error');
+                return;
+            }
+
+            btn.innerHTML = '<span class="spinner"></span> Creating account...';
+            btn.disabled = true;
+
+            setTimeout(() => {
+                const newUser = {
+                    id: Date.now().toString(),
+                    name,
+                    email,
+                    password,
+                    role
+                };
+
+                users.push(newUser);
+                localStorage.setItem('users', JSON.stringify(users));
+                localStorage.setItem('currentUser', JSON.stringify(newUser));
+                
+                showToast('Account created successfully! Redirecting...', 'success');
+                
+                setTimeout(() => {
+                    window.location.href = `${role}-dashboard.html`;
+                }, 1500);
+            }, 1000);
         };
 
         // Handle contact form
@@ -1743,6 +2167,20 @@
             showToast('Thank you for your message! We\'ll respond within 24 hours.', 'success');
             event.target.reset();
         };
+
+        // Check if user is already logged in
+        const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+        if (currentUser) {
+            // Optionally redirect if on landing page
+            // window.location.href = `${currentUser.role}-dashboard.html`;
+        }
+
+        // Close modal on escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                hideAuth();
+            }
+        });
 
         // Smooth scrolling for navigation links
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {

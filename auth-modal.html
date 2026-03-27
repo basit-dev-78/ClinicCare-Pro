@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>ClinicCare Pro · secure access</title>
+    
+    <!-- Meta & assets -->
+    <meta name="description" content="Sign in or create account – ClinicCare Pro">
+    <meta name="theme-color" content="#4158D0">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    
+    <style>
+        *{margin:0; padding:0; box-sizing:border-box;}
+        body {
+            font-family:'Plus Jakarta Sans', sans-serif;
+            min-height:100vh;
+            background:linear-gradient(135deg, #4158D0 0%, #C850C0 50%, #FFCC70 100%);
+            position:relative;
+            overflow:hidden;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+        }
+
+        /* animated background (same premium feel) */
+        .background {
+            position:fixed; top:0; left:0; width:100%; height:100%; z-index:0;
+        }
+        .gradient-sphere {
+            position:absolute; filter:blur(80px); border-radius:50%; opacity:0.5;
+        }
+        .sphere1 { top:-20%; left:-10%; width:500px; height:500px; background:linear-gradient(135deg,#4158D0,#C850C0); animation:floatSphere 25s infinite; }
+        .sphere2 { bottom:-20%; right:-10%; width:600px; height:600px; background:linear-gradient(135deg,#C850C0,#FFCC70); animation:floatSphere 30s infinite reverse; }
+        .sphere3 { top:40%; left:30%; width:400px; height:400px; background:linear-gradient(135deg,#FFCC70,#4158D0); animation:floatSphere 20s infinite; opacity:0.3; }
+        @keyframes floatSphere {
+            0%,100%{ transform:translate(0,0) scale(1); }
+            25%{ transform:translate(100px,100px) scale(1.2); }
+            50%{ transform:translate(50px,-50px) scale(0.9); }
+            75%{ transform:translate(-100px,50px) scale(1.1); }
+        }
+        .grid-overlay {
+            position:absolute; inset:0;
+            background-image:linear-gradient(rgba(255,255,255,0.05) 1px,transparent 1px),
+                              linear-gradient(90deg,rgba(255,255,255,0.05) 1px,transparent 1px);
+            background-size:50px 50px;
+        }
+
+        /* main container */
+        .auth-wrapper {
+            width:100%; height:100vh; display:flex; align-items:center; justify-content:center;
+            padding:20px; position:relative; z-index:10;
+        }
+        .auth-container {
+            width:1000px; height:600px; max-width:100%;
+            background:rgba(255,255,255,0.98); backdrop-filter:blur(10px);
+            border-radius:50px; box-shadow:0 50px 100px rgba(0,0,0,0.3);
+            overflow:hidden; display:flex;
+            animation:slideIn 0.8s cubic-bezier(0.2,0.9,0.3,1);
+        }
+        @keyframes slideIn {
+            0%{ opacity:0; transform:scale(0.9) translateY(30px); }
+            100%{ opacity:1; transform:scale(1) translateY(0); }
+        }
+
+        /* left panel (unchanged) */
+        .auth-brand {
+            flex:1.2; background:linear-gradient(135deg,#4158D0,#C850C0,#FFCC70);
+            padding:50px; display:flex; flex-direction:column; justify-content:space-between;
+            position:relative; overflow:hidden;
+        }
+        .auth-brand::before {
+            content:''; position:absolute; inset:0;
+            background:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none"><path d="M0,0 L100,0 L100,100 L0,100 Z" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="0.5"/></svg>');
+            background-size:20px 20px; opacity:0.2; animation:moveGrid 20s linear infinite;
+        }
+        @keyframes moveGrid { 0%{ transform:translate(0,0); } 100%{ transform:translate(20px,20px); } }
+        .brand-content{ position:relative; z-index:2; color:white; }
+        .brand-icon {
+            width:80px; height:80px; background:rgba(255,255,255,0.2); backdrop-filter:blur(10px);
+            border-radius:25px; display:flex; align-items:center; justify-content:center;
+            margin-bottom:30px; font-size:2.8rem; color:white; border:1px solid rgba(255,255,255,0.3);
+            animation:glowPulse 3s infinite;
+        }
+        @keyframes glowPulse { 0%,100%{ box-shadow:0 0 0 0 rgba(255,255,255,0.5); } 50%{ box-shadow:0 0 30px 10px rgba(255,255,255,0.3); } }
+        .brand-content h2 { font-size:2.8rem; font-weight:800; margin-bottom:15px; line-height:1.2; text-shadow:0 5px 15px rgba(0,0,0,0.2); }
+        .brand-content p { font-size:1.1rem; opacity:0.9; margin-bottom:30px; line-height:1.6; }
+        .feature-list { list-style:none; margin-top:30px; }
+        .feature-list li { display:flex; align-items:center; gap:15px; margin-bottom:20px; font-size:1rem; animation:slideInRight 0.5s ease backwards; }
+        .feature-list li:nth-child(1){ animation-delay:0.1s; }
+        .feature-list li:nth-child(2){ animation-delay:0.2s; }
+        .feature-list li:nth-child(3){ animation-delay:0.3s; }
+        .feature-list li:nth-child(4){ animation-delay:0.4s; }
+        @keyframes slideInRight { 0%{ opacity:0; transform:translateX(-30px); } 100%{ opacity:1; transform:translateX(0); } }
+        .feature-list i { width:30px; height:30px; background:rgba(255,255,255,0.2); border-radius:50%; display:flex; align-items:center; justify-content:center; }
+        .testimonial {
+            background:rgba(255,255,255,0.1); backdrop-filter:blur(10px); border-radius:25px; padding:25px;
+            border:1px solid rgba(255,255,255,0.2); position:relative; z-index:2;
+        }
+        .testimonial p { font-style:italic; margin-bottom:15px; font-size:0.95rem; color:white; }
+        .testimonial-author { display:flex; align-items:center; gap:12px; }
+        .author-avatar { width:45px; height:45px; background:linear-gradient(135deg,#FFCC70,#FFA500); border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:700; color:#1a1f2b; }
+
+        /* right panel */
+        .auth-panel {
+            flex:0.8; padding:40px; background:white; display:flex; flex-direction:column;
+            height:100%; overflow:hidden;
+        }
+        .close-btn {
+            align-self:flex-end; width:40px; height:40px; background:#f1f5f9; border:none; border-radius:50%;
+            font-size:1.5rem; cursor:pointer; color:#64748b; transition:all 0.3s; margin-bottom:10px;
+            display:flex; align-items:center; justify-content:center;
+        }
+        .close-btn:hover { background:#4158D0; color:white; transform:rotate(90deg); }
+
+        /* tabs */
+        .auth-tabs {
+            display:flex; gap:10px; margin-bottom:25px; background:#f1f5f9; padding:5px; border-radius:60px;
+        }
+        .auth-tab {
+            flex:1; padding:12px; text-align:center; cursor:pointer; color:#64748b;
+            font-weight:700; border-radius:50px; transition:all 0.4s; font-size:0.95rem;
+        }
+        .auth-tab.active {
+            color:white; background:linear-gradient(90deg,#4158D0,#C850C0);
+            box-shadow:0 10px 20px rgba(65,88,208,0.3); transform:scale(1.02);
+        }
+
+        /* header */
+        .auth-header { text-align:center; margin-bottom:25px; }
+        .auth-header i { font-size:2.5rem; background:linear-gradient(135deg,#4158D0,#C850C0); -webkit-background-clip:text; -webkit-text-fill-color:transparent; margin-bottom:10px; }
+        .auth-header h2 { color:#1a1f2b; margin-bottom:5px; font-size:1.8rem; font-weight:800; }
+
+        /* forms container – scrollable only if needed, but hidden scrollbar */
+        .forms-container { flex:1; overflow-y:auto; padding-right:5px; scrollbar-width:thin; }
+        .forms-container::-webkit-scrollbar { width:4px; }
+        .forms-container::-webkit-scrollbar-track { background:#f1f5f9; border-radius:4px; }
+        .forms-container::-webkit-scrollbar-thumb { background:linear-gradient(135deg,#4158D0,#C850C0); border-radius:4px; }
+
+        .auth-form { height:100%; display:flex; flex-direction:column; }
+        .auth-form.hidden { display:none; }
+
+        /* form elements */
+        .form-group { margin-bottom:18px; position:relative; }
+        .form-group label { display:block; margin-bottom:6px; color:#1a1f2b; font-weight:600; font-size:0.85rem; }
+        .input-wrapper { position:relative; }
+        .input-wrapper i {
+            position:absolute; left:15px; top:50%; transform:translateY(-50%);
+            color:#94a3b8; font-size:1rem; transition:all 0.3s; z-index:1;
+        }
+        .input-wrapper input, .input-wrapper select {
+            width:100%; padding:12px 15px 12px 45px; border:2px solid #e2e8f0; border-radius:20px;
+            font-family:'Plus Jakarta Sans', sans-serif; font-size:0.95rem; transition:all 0.4s;
+            background:#f8fafc;
+        }
+        .input-wrapper input:focus, .input-wrapper select:focus {
+            outline:none; border-color:#4158D0; box-shadow:0 0 0 5px rgba(65,88,208,0.1);
+            background:white; transform:translateY(-1px);
+        }
+        .input-wrapper input:focus + i, .input-wrapper select:focus + i { color:#4158D0; }
+
+        /* 🔥 PERFECT & ATTRACTIVE BUTTONS – with micro-interactions and animations */
+        .btn-auth {
+            width:100%; padding:18px 20px; /* slightly adjusted height */
+            background:linear-gradient(145deg, #4158D0, #C850C0);
+            color:white; border:none; border-radius:40px; /* deeper radius */
+            font-size:1.1rem; font-weight:700; cursor:pointer;
+            position:relative; overflow:hidden; margin:15px 0 10px;
+            transition:all 0.3s ease; box-shadow:0 8px 20px rgba(65,88,208,0.3);
+            letter-spacing:0.3px;
+            display:flex; align-items:center; justify-content:center;
+            gap:8px; z-index:1;
+        }
+
+        .btn-auth::before {
+            content:''; position:absolute; top:0; left:-100%; width:100%; height:100%;
+            background:linear-gradient(145deg, #C850C0, #FF9A5A, #FFCC70); /* warmer gradient */
+            transition:left 0.5s ease; z-index:-1;
+        }
+        .btn-auth:hover::before { left:0; }
+        .btn-auth:hover {
+            transform:translateY(-4px) scale(1.02);
+            box-shadow:0 20px 30px rgba(65,88,208,0.5);
+        }
+        .btn-auth:active { transform:translateY(0) scale(0.98); box-shadow:0 5px 15px rgba(65,88,208,0.4); }
+
+        .btn-auth span { display:inline-flex; align-items:center; gap:6px; transition:transform 0.2s; }
+        .btn-auth:hover span { transform:scale(1.05); }
+
+        /* sign in/up icons inside button (optional) */
+        .btn-auth i { font-size:1.2rem; transition:transform 0.2s; }
+        .btn-auth:hover i { transform:rotate(10deg); }
+
+        /* spinner inside button (same style) */
+        .spinner { display:inline-block; width:20px; height:20px; border:3px solid rgba(255,255,255,0.3); border-radius:50%; border-top-color:white; animation:spin 1s linear infinite; }
+        @keyframes spin { to{ transform:rotate(360deg); } }
+
+        .auth-link { text-align:center; color:#64748b; font-size:0.85rem; }
+        .auth-link a { color:#4158D0; text-decoration:none; font-weight:700; transition:all 0.2s; }
+        .auth-link a:hover { text-decoration:underline; color:#C850C0; }
+
+        /* toast notification */
+        .toast {
+            position:fixed; bottom:30px; right:30px; background:white; padding:15px 25px;
+            border-radius:60px; box-shadow:0 20px 40px rgba(0,0,0,0.2); display:flex;
+            align-items:center; gap:12px; transform:translateX(400px); transition:transform 0.4s;
+            z-index:10000; border-left:4px solid;
+        }
+        .toast.show { transform:translateX(0); }
+        .toast.success { border-left-color:#10b981; }
+        .toast.error { border-left-color:#ef4444; }
+        .toast i { font-size:1.3rem; }
+        .toast.success i { color:#10b981; }
+        .toast.error i { color:#ef4444; }
+
+        @media (max-width:900px) {
+            .auth-container { height:auto; flex-direction:column; }
+            .auth-brand { display:none; }
+            .auth-panel { padding:30px; }
+        }
+        @media (max-width:480px) {
+            .auth-panel { padding:25px; }
+            .auth-tabs { flex-direction:column; }
+        }
+
+        /* small extra animation for tabs sliding */
+        .auth-tab { transition:all 0.3s cubic-bezier(0.2,0.9,0.3,1); }
+    </style>
+</head>
+<body>
+    <div class="background">
+        <div class="gradient-sphere sphere1"></div>
+        <div class="gradient-sphere sphere2"></div>
+        <div class="gradient-sphere sphere3"></div>
+        <div class="grid-overlay"></div>
+    </div>
+
+    <div class="auth-wrapper">
+        <div class="auth-container">
+            <!-- left panel unchanged -->
+            <div class="auth-brand">
+                <div class="brand-content">
+                    <div class="brand-icon animate__animated animate__bounceIn">
+                        <i class="fas fa-clinic-medical"></i>
+                    </div>
+                    <h2 class="animate__animated animate__fadeInUp">Welcome to<br>ClinicCare Pro</h2>
+                    <p class="animate__animated animate__fadeInUp animate__delay-1s">Join thousands of healthcare professionals who trust our platform</p>
+                    <ul class="feature-list animate__animated animate__fadeInUp animate__delay-2s">
+                        <li><i class="fas fa-check"></i> AI-powered scheduling system</li>
+                        <li><i class="fas fa-check"></i> Secure HIPAA-compliant EHR</li>
+                        <li><i class="fas fa-check"></i> Integrated telemedicine</li>
+                        <li><i class="fas fa-check"></i> 24/7 priority support</li>
+                    </ul>
+                </div>
+                <div class="testimonial animate__animated animate__fadeInUp animate__delay-3s">
+                    <p>"The most comprehensive healthcare management platform we've ever used. It's transformed our practice completely."</p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">DS</div>
+                        <div class="author-info">
+                            <h4 style="color:white;">Dr. Sarah Chen</h4>
+                            <p style="color:rgba(255,255,255,0.8);">Cardiologist, 15+ years</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- right panel -->
+            <div class="auth-panel">
+                <button class="close-btn" onclick="window.location.href='index.html'">&times;</button>
+                
+                <div class="auth-tabs">
+                    <div class="auth-tab active" id="signinTab" onclick="switchTab('signin')">Sign In</div>
+                    <div class="auth-tab" id="signupTab" onclick="switchTab('signup')">Sign Up</div>
+                </div>
+
+                <div class="forms-container">
+                    <!-- SIGN IN FORM (with perfect button) -->
+                    <form id="signinForm" class="auth-form" onsubmit="handleSignin(event)">
+                        <div class="auth-header">
+                            <i class="fas fa-clinic-medical"></i>
+                            <h2>Welcome Back</h2>
+                            <p>Sign in to access your dashboard</p>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Email Address</label>
+                            <div class="input-wrapper">
+                                <i class="fas fa-envelope"></i>
+                                <input type="email" id="signinEmail" required placeholder="doctor@clinic.com">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Password</label>
+                            <div class="input-wrapper">
+                                <i class="fas fa-lock"></i>
+                                <input type="password" id="signinPassword" required placeholder="••••••••">
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn-auth" id="signinBtn">
+                            <span><i class="fas fa-arrow-right-to-bracket"></i> Sign In</span>
+                        </button>
+
+                        <p class="auth-link">
+                            Don't have an account? <a href="#" onclick="switchTab('signup'); return false;">Create account</a>
+                        </p>
+                        <p class="auth-link">
+                            <a href="index.html">← Back to Home</a>
+                        </p>
+                    </form>
+
+                    <!-- SIGN UP FORM (with perfect button) -->
+                    <form id="signupForm" class="auth-form hidden" onsubmit="handleSignup(event)">
+                        <div class="auth-header">
+                            <i class="fas fa-clinic-medical"></i>
+                            <h2>Create Account</h2>
+                            <p>Join ClinicCare Pro today</p>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Full Name</label>
+                            <div class="input-wrapper">
+                                <i class="fas fa-user"></i>
+                                <input type="text" id="signupName" required placeholder="Dr. John Smith">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Email Address</label>
+                            <div class="input-wrapper">
+                                <i class="fas fa-envelope"></i>
+                                <input type="email" id="signupEmail" required placeholder="john@clinic.com">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Password</label>
+                            <div class="input-wrapper">
+                                <i class="fas fa-lock"></i>
+                                <input type="password" id="signupPassword" required placeholder="Min. 6 characters">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Confirm Password</label>
+                            <div class="input-wrapper">
+                                <i class="fas fa-lock"></i>
+                                <input type="password" id="signupConfirmPassword" required placeholder="Confirm password">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>I am a</label>
+                            <div class="input-wrapper">
+                                <i class="fas fa-user-tag"></i>
+                                <select id="signupRole" required onchange="toggleSpecialization()">
+                                    <option value="">Select your role</option>
+                                    <option value="admin">Administrator</option>
+                                    <option value="doctor">Doctor</option>
+                                    <option value="patient">Patient</option>
+                                    <option value="receptionist">Receptionist</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Phone Number</label>
+                            <div class="input-wrapper">
+                                <i class="fas fa-phone"></i>
+                                <input type="tel" id="signupPhone" required placeholder="+1 (555) 123-4567">
+                            </div>
+                        </div>
+
+                        <div class="form-group" id="specializationGroup" style="display: none;">
+                            <label>Specialization</label>
+                            <div class="input-wrapper">
+                                <i class="fas fa-stethoscope"></i>
+                                <input type="text" id="signupSpecialization" placeholder="e.g., Cardiology">
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn-auth" id="signupBtn">
+                            <span><i class="fas fa-user-plus"></i> Create Account</span>
+                        </button>
+
+                        <p class="auth-link">
+                            Already have an account? <a href="#" onclick="switchTab('signin'); return false;">Sign in</a>
+                        </p>
+                        <p class="auth-link">
+                            <a href="index.html">← Back to Home</a>
+                        </p>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div class="toast" id="toast">
+        <i class="fas" id="toastIcon"></i>
+        <span id="toastMessage"></span>
+    </div>
+
+    <script>
+        // user data store
+        let users = JSON.parse(localStorage.getItem('users')) || [];
+        if (users.length === 0) {
+            users = [
+                { id: '1', name: 'Dr. John Smith', email: 'doctor@example.com', password: 'doctor123', role: 'doctor', phone: '1234567890', specialization: 'Cardiologist' },
+                { id: '2', name: 'Jane Doe', email: 'patient@example.com', password: 'patient123', role: 'patient', phone: '0987654321' },
+                { id: '3', name: 'Admin User', email: 'admin@example.com', password: 'admin123', role: 'admin', phone: '1122334455' },
+                { id: '4', name: 'Sarah Wilson', email: 'receptionist@example.com', password: 'receptionist123', role: 'receptionist', phone: '5566778899' }
+            ];
+            localStorage.setItem('users', JSON.stringify(users));
+        }
+
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('signup') === 'true') switchTab('signup');
+
+        const toast = document.getElementById('toast');
+        const toastIcon = document.getElementById('toastIcon');
+        const toastMsg = document.getElementById('toastMessage');
+
+        function showToast(message, type = 'success') {
+            toast.className = 'toast ' + type;
+            toastIcon.className = 'fas ' + (type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle');
+            toastMsg.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+
+        window.switchTab = function(tab) {
+            const signinForm = document.getElementById('signinForm');
+            const signupForm = document.getElementById('signupForm');
+            const signinTab = document.getElementById('signinTab');
+            const signupTab = document.getElementById('signupTab');
+
+            if (tab === 'signin') {
+                signinForm.classList.remove('hidden');
+                signupForm.classList.add('hidden');
+                signinTab.classList.add('active');
+                signupTab.classList.remove('active');
+            } else {
+                signinForm.classList.add('hidden');
+                signupForm.classList.remove('hidden');
+                signupTab.classList.add('active');
+                signinTab.classList.remove('active');
+            }
+        };
+
+        window.toggleSpecialization = function() {
+            const role = document.getElementById('signupRole').value;
+            document.getElementById('specializationGroup').style.display = role === 'doctor' ? 'block' : 'none';
+        };
+
+        // handle signin
+        window.handleSignin = function(e) {
+            e.preventDefault();
+            const email = document.getElementById('signinEmail').value;
+            const password = document.getElementById('signinPassword').value;
+            const btn = document.getElementById('signinBtn');
+
+            btn.innerHTML = '<span class="spinner"></span> Signing in...';
+            btn.disabled = true;
+
+            setTimeout(() => {
+                const user = users.find(u => u.email === email && u.password === password);
+                if (user) {
+                    localStorage.setItem('currentUser', JSON.stringify(user));
+                    showToast('Login successful! Redirecting...', 'success');
+                    setTimeout(() => {
+                        window.location.href = `${user.role}-dashboard.html`;
+                    }, 1500);
+                } else {
+                    showToast('Invalid email or password!', 'error');
+                    btn.innerHTML = '<span><i class="fas fa-arrow-right-to-bracket"></i> Sign In</span>';
+                    btn.disabled = false;
+                }
+            }, 1000);
+        };
+
+        // handle signup
+        window.handleSignup = function(e) {
+            e.preventDefault();
+            const name = document.getElementById('signupName').value;
+            const email = document.getElementById('signupEmail').value;
+            const password = document.getElementById('signupPassword').value;
+            const confirm = document.getElementById('signupConfirmPassword').value;
+            const role = document.getElementById('signupRole').value;
+            const phone = document.getElementById('signupPhone').value;
+            const specialization = document.getElementById('signupSpecialization').value;
+            const btn = document.getElementById('signupBtn');
+
+            if (password !== confirm) return showToast('Passwords do not match!', 'error');
+            if (password.length < 6) return showToast('Password must be at least 6 characters!', 'error');
+            if (!role) return showToast('Please select your role!', 'error');
+            if (users.find(u => u.email === email)) return showToast('Email already exists!', 'error');
+
+            btn.innerHTML = '<span class="spinner"></span> Creating account...';
+            btn.disabled = true;
+
+            setTimeout(() => {
+                const newUser = {
+                    id: Date.now().toString(),
+                    name, email, password, role, phone,
+                    ...(role === 'doctor' && { specialization })
+                };
+                users.push(newUser);
+                localStorage.setItem('users', JSON.stringify(users));
+                localStorage.setItem('currentUser', JSON.stringify(newUser));
+                showToast('Account created! Redirecting...', 'success');
+                setTimeout(() => {
+                    window.location.href = `${role}-dashboard.html`;
+                }, 1500);
+            }, 1000);
+        };
+
+        // auto-redirect if already logged in
+        const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+        if (currentUser) {
+            window.location.href = `${currentUser.role}-dashboard.html`;
+        }
+    </script>
+</body>
+</html>

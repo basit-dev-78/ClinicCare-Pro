@@ -3,10 +3,1298 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css">
-    <title>Document</title>
+    <title>ClinicCare Pro | Premium Healthcare Management</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            color: #1a1f2b;
+            background: #ffffff;
+            line-height: 1.5;
+            overflow-x: hidden;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* Custom Cursor */
+        .cursor {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #4158D0;
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+            transition: all 0.1s ease;
+            transform: translate(-50%, -50%);
+            mix-blend-mode: difference;
+        }
+
+        .cursor-follower {
+            width: 40px;
+            height: 40px;
+            background: rgba(65, 88, 208, 0.1);
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 9998;
+            transition: all 0.3s ease;
+            transform: translate(-50%, -50%);
+        }
+
+        /* Animated Background */
+        .gradient-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(-45deg, #4158D0, #C850C0, #FFCC70, #4158D0);
+            background-size: 400% 400%;
+            animation: gradient 15s ease infinite;
+            z-index: -2;
+            opacity: 0.05;
+        }
+
+        @keyframes gradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Floating Shapes */
+        .floating-shapes {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: -1;
+        }
+
+        .shape {
+            position: absolute;
+            background: linear-gradient(135deg, rgba(65, 88, 208, 0.1), rgba(200, 80, 192, 0.1));
+            border-radius: 50%;
+            animation: float 20s infinite;
+        }
+
+        .shape1 {
+            width: 300px;
+            height: 300px;
+            top: -150px;
+            right: -150px;
+            animation-delay: 0s;
+        }
+
+        .shape2 {
+            width: 400px;
+            height: 400px;
+            bottom: -200px;
+            left: -200px;
+            animation-delay: 5s;
+        }
+
+        .shape3 {
+            width: 200px;
+            height: 200px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation-delay: 10s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            33% { transform: translate(30px, -30px) rotate(120deg); }
+            66% { transform: translate(-20px, 20px) rotate(240deg); }
+        }
+
+        /* Navigation */
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 1.5rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.8);
+        }
+
+        .navbar.scrolled {
+            padding: 1rem 5%;
+            background: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: #1a1f2b;
+            text-decoration: none;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .logo i {
+            color: #4158D0;
+            font-size: 2.2rem;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 3rem;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #1a1f2b;
+            font-weight: 600;
+            position: relative;
+            padding: 0.5rem 0;
+            transition: color 0.3s;
+        }
+
+        .nav-links a::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, #4158D0, #C850C0);
+            transform: scaleX(0);
+            transform-origin: right;
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .nav-links a:hover {
+            color: #4158D0;
+        }
+
+        .nav-links a:hover::before {
+            transform: scaleX(1);
+            transform-origin: left;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn-login {
+            padding: 0.75rem 2rem;
+            border: 2px solid #e2e8f0;
+            background: transparent;
+            color: #1a1f2b;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .btn-login::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 0;
+            height: 100%;
+            background: linear-gradient(90deg, #4158D0, #C850C0);
+            transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: -1;
+        }
+
+        .btn-login:hover {
+            color: white;
+            border-color: transparent;
+        }
+
+        .btn-login:hover::before {
+            width: 100%;
+        }
+
+        .btn-signup {
+            padding: 0.75rem 2rem;
+            border: none;
+            background: linear-gradient(90deg, #4158D0, #C850C0);
+            color: white;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .btn-signup::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, #C850C0, #FFCC70);
+            transition: left 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: -1;
+        }
+
+        .btn-signup:hover::before {
+            left: 0;
+        }
+
+        .btn-signup:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(65, 88, 208, 0.4);
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            padding: 8rem 5% 4rem;
+            display: flex;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-content {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+            animation: fadeInUp 1s ease;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hero-badge {
+            display: inline-block;
+            padding: 0.5rem 1.5rem;
+            background: linear-gradient(90deg, rgba(65, 88, 208, 0.1), rgba(200, 80, 192, 0.1));
+            color: #4158D0;
+            border-radius: 50px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-bottom: 2rem;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(65, 88, 208, 0.2);
+            animation: slideInDown 1s ease;
+        }
+
+        @keyframes slideInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hero h1 {
+            font-size: 4.5rem;
+            font-weight: 800;
+            color: #1a1f2b;
+            margin-bottom: 1.5rem;
+            line-height: 1.1;
+            animation: fadeIn 1.5s ease;
+        }
+
+        .hero h1 span {
+            background: linear-gradient(90deg, #4158D0, #C850C0, #FFCC70);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            position: relative;
+            display: inline-block;
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            color: #4a5568;
+            margin-bottom: 3rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            animation: fadeIn 2s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-bottom: 4rem;
+            animation: fadeInUp 2s ease;
+        }
+
+        .btn-primary {
+            padding: 1rem 2.5rem;
+            background: linear-gradient(90deg, #4158D0, #C850C0);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, #C850C0, #FFCC70);
+            transition: left 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: -1;
+        }
+
+        .btn-primary:hover::before {
+            left: 0;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 20px 40px rgba(65, 88, 208, 0.4);
+        }
+
+        .trust-badges {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            flex-wrap: wrap;
+            animation: fadeIn 2.5s ease;
+        }
+
+        .trust-badges span {
+            color: #4a5568;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s;
+        }
+
+        .trust-badges span:hover {
+            transform: translateY(-3px);
+            color: #4158D0;
+        }
+
+        .trust-badges i {
+            color: #4158D0;
+            font-size: 1.2rem;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+
+        /* Premium Auth Modal - Full Screen Overlay */
+        .auth-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .auth-container {
+            width: 1000px;
+            max-width: 95%;
+            max-height: 90vh;
+            background: white;
+            border-radius: 40px;
+            overflow: hidden;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.3);
+            animation: slideUp 0.5s ease;
+            display: flex;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Left Side - Decorative Panel */
+        .auth-left {
+            flex: 1;
+            background: linear-gradient(135deg, #4158D0, #C850C0);
+            padding: 3rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .auth-left::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none"><path d="M0,0 L100,0 L100,100 L0,100 Z" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="0.5"/></svg>');
+            background-size: 20px 20px;
+            opacity: 0.3;
+            animation: moveGrid 20s linear infinite;
+        }
+
+        @keyframes moveGrid {
+            from { transform: translate(0, 0); }
+            to { transform: translate(20px, 20px); }
+        }
+
+        .auth-left-content {
+            position: relative;
+            z-index: 1;
+            color: white;
+        }
+
+        .auth-left h2 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+
+        .auth-left p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            margin-bottom: 2rem;
+        }
+
+        .auth-features {
+            list-style: none;
+            margin-top: 2rem;
+        }
+
+        .auth-features li {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            font-size: 1.1rem;
+            animation: slideInRight 0.5s ease backwards;
+        }
+
+        .auth-features li:nth-child(1) { animation-delay: 0.1s; }
+        .auth-features li:nth-child(2) { animation-delay: 0.2s; }
+        .auth-features li:nth-child(3) { animation-delay: 0.3s; }
+        .auth-features li:nth-child(4) { animation-delay: 0.4s; }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .auth-features i {
+            width: 30px;
+            height: 30px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+        }
+
+        .auth-testimonial {
+            position: relative;
+            z-index: 1;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            animation: fadeInUp 1s ease;
+        }
+
+        .auth-testimonial p {
+            font-style: italic;
+            margin-bottom: 1rem;
+            font-size: 0.95rem;
+        }
+
+        .auth-testimonial-author {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .auth-testimonial-author img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+        }
+
+        .auth-testimonial-author h4 {
+            font-size: 1rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .auth-testimonial-author p {
+            font-size: 0.8rem;
+            margin-bottom: 0;
+            opacity: 0.7;
+        }
+
+        /* Right Side - Forms */
+        .auth-right {
+            flex: 1;
+            padding: 3rem;
+            background: white;
+            overflow-y: auto;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+            width: 40px;
+            height: 40px;
+            background: #f1f5f9;
+            border: none;
+            border-radius: 50%;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #64748b;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+        }
+
+        .close-btn:hover {
+            background: #4158D0;
+            color: white;
+            transform: rotate(90deg);
+        }
+
+        .auth-tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            background: #f1f5f9;
+            padding: 0.5rem;
+            border-radius: 60px;
+        }
+
+        .auth-tab {
+            flex: 1;
+            padding: 1rem;
+            text-align: center;
+            cursor: pointer;
+            color: #64748b;
+            font-weight: 600;
+            border-radius: 50px;
+            transition: all 0.4s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .auth-tab::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, #4158D0, #C850C0);
+            opacity: 0;
+            transition: opacity 0.4s;
+            z-index: -1;
+        }
+
+        .auth-tab.active {
+            color: white;
+            background: linear-gradient(90deg, #4158D0, #C850C0);
+            box-shadow: 0 10px 20px rgba(65, 88, 208, 0.3);
+        }
+
+        .auth-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .auth-header i {
+            font-size: 3rem;
+            background: linear-gradient(135deg, #4158D0, #C850C0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+            animation: float 3s infinite;
+        }
+
+        .auth-header h2 {
+            color: #1a1f2b;
+            margin-bottom: 0.5rem;
+            font-size: 2rem;
+        }
+
+        .auth-header p {
+            color: #64748b;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #1a1f2b;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 1rem 1.2rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 20px;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 1rem;
+            transition: all 0.4s;
+            background: white;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #4158D0;
+            box-shadow: 0 0 0 5px rgba(65, 88, 208, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .btn-auth {
+            width: 100%;
+            padding: 1.2rem;
+            background: linear-gradient(90deg, #4158D0, #C850C0);
+            color: white;
+            border: none;
+            border-radius: 30px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.4s;
+            position: relative;
+            overflow: hidden;
+            margin-top: 1rem;
+        }
+
+        .btn-auth::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, #C850C0, #FFCC70);
+            transition: left 0.4s;
+            z-index: -1;
+        }
+
+        .btn-auth:hover::before {
+            left: 0;
+        }
+
+        .btn-auth:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 20px 30px rgba(65, 88, 208, 0.4);
+        }
+
+        .auth-link {
+            text-align: center;
+            margin-top: 1.5rem;
+            color: #64748b;
+        }
+
+        .auth-link a {
+            color: #4158D0;
+            text-decoration: none;
+            font-weight: 700;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .auth-link a::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, #4158D0, #C850C0);
+            transform: scaleX(0);
+            transition: transform 0.3s;
+            transform-origin: right;
+        }
+
+        .auth-link a:hover::after {
+            transform: scaleX(1);
+            transform-origin: left;
+        }
+
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: white;
+            padding: 1.2rem 2rem;
+            border-radius: 60px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            transform: translateX(400px);
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 10000;
+            border-left: 4px solid;
+        }
+
+        .toast.show {
+            transform: translateX(0);
+        }
+
+        .toast.success {
+            border-left-color: #10b981;
+        }
+
+        .toast.error {
+            border-left-color: #ef4444;
+        }
+
+        .toast i {
+            font-size: 1.5rem;
+        }
+
+        .toast.success i {
+            color: #10b981;
+        }
+
+        .toast.error i {
+            color: #ef4444;
+        }
+
+        /* Spinner */
+        .spinner {
+            display: inline-block;
+            width: 24px;
+            height: 24px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: column;
+                gap: 1rem;
+                padding: 1rem;
+            }
+
+            .nav-links {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 1.5rem;
+            }
+
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero-buttons {
+                flex-direction: column;
+            }
+
+            .auth-container {
+                flex-direction: column;
+                max-height: 90vh;
+            }
+
+            .auth-left {
+                display: none;
+            }
+
+            .trust-badges {
+                flex-direction: column;
+                align-items: center;
+                gap: 1rem;
+            }
+        }
+    </style>
 </head>
 <body>
-    
+    <!-- Custom Cursor -->
+    <div class="cursor"></div>
+    <div class="cursor-follower"></div>
+
+    <!-- Animated Background -->
+    <div class="gradient-bg"></div>
+    <div class="floating-shapes">
+        <div class="shape shape1"></div>
+        <div class="shape shape2"></div>
+        <div class="shape shape3"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="logo">
+            <i class="fas fa-clinic-medical"></i>
+            <span>ClinicCare Pro</span>
+        </div>
+        <div class="nav-links">
+            <a href="#home">Home</a>
+            <a href="#features">Features</a>
+            <a href="#solutions">Solutions</a>
+            <a href="#pricing">Pricing</a>
+            <a href="#contact">Contact</a>
+        </div>
+        <div class="nav-buttons">
+            <button class="btn-login" onclick="showAuth('signin')">Sign In</button>
+            <button class="btn-signup" onclick="showAuth('signup')">Sign Up</button>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="hero-content">
+            <div class="hero-badge">
+                <i class="fas fa-shield-alt"></i>
+                HIPAA Compliant & ISO 27001 Certified
+            </div>
+            <h1>
+                Transform Your<br>
+                <span>Healthcare Practice</span>
+            </h1>
+            <p>Experience the future of clinic management with our AI-powered platform. Streamline operations, enhance patient care, and boost revenue.</p>
+            <div class="hero-buttons">
+                <button class="btn-primary" onclick="showAuth('signup')">
+                    <i class="fas fa-rocket"></i>
+                    Start Free Trial
+                </button>
+            </div>
+            <div class="trust-badges">
+                <span><i class="fas fa-check-circle"></i> 50,000+ Patients</span>
+                <span><i class="fas fa-check-circle"></i> 2,500+ Doctors</span>
+                <span><i class="fas fa-check-circle"></i> 500+ Clinics</span>
+                <span><i class="fas fa-check-circle"></i> 98% Satisfaction</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Premium Auth Modal -->
+    <div class="auth-modal hidden" id="authModal">
+        <div class="auth-container">
+            <!-- Left Side - Decorative Panel -->
+            <div class="auth-left">
+                <div class="auth-left-content">
+                    <h2>Welcome to<br>ClinicCare Pro</h2>
+                    <p>Join thousands of healthcare professionals who trust our platform</p>
+                    
+                    <ul class="auth-features">
+                        <li>
+                            <i class="fas fa-check"></i>
+                            <span>AI-powered scheduling</span>
+                        </li>
+                        <li>
+                            <i class="fas fa-check"></i>
+                            <span>Secure EHR system</span>
+                        </li>
+                        <li>
+                            <i class="fas fa-check"></i>
+                            <span>Telemedicine integrated</span>
+                        </li>
+                        <li>
+                            <i class="fas fa-check"></i>
+                            <span>24/7 patient portal</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="auth-testimonial">
+                    <p>"This platform has revolutionized our practice. Reduced administrative work by 40% and our patients love it."</p>
+                    <div class="auth-testimonial-author">
+                        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 40 40'%3E%3Ccircle cx='20' cy='20' r='20' fill='%234158D0'/%3E%3Ctext x='20' y='25' text-anchor='middle' fill='white' font-size='16' font-weight='bold'%3EDR%3C/text%3E%3C/svg%3E" alt="Doctor">
+                        <div>
+                            <h4>Dr. Sarah Chen</h4>
+                            <p>Cardiologist</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Side - Forms -->
+            <div class="auth-right">
+                <button class="close-btn" onclick="hideAuth()">&times;</button>
+                
+                <div class="auth-tabs">
+                    <div class="auth-tab active" id="signinTab" onclick="switchTab('signin')">Sign In</div>
+                    <div class="auth-tab" id="signupTab" onclick="switchTab('signup')">Sign Up</div>
+                </div>
+                
+                <!-- Sign In Form -->
+                <form id="signinForm" onsubmit="handleSignin(event)">
+                    <div class="auth-header">
+                        <i class="fas fa-clinic-medical"></i>
+                        <h2>Welcome Back</h2>
+                        <p>Sign in to your account</p>
+                    </div>
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" id="signinEmail" required placeholder="Enter your email">
+                    </div>
+                    <div class="form-group">
+                        <label>Password</label>
+                        <input type="password" id="signinPassword" required placeholder="Enter your password">
+                    </div>
+                    <button type="submit" class="btn-auth" id="signinBtn">Sign In</button>
+                    <p class="auth-link">
+                        Don't have an account? <a href="#" onclick="switchTab('signup')">Sign up</a>
+                    </p>
+                </form>
+
+                <!-- Sign Up Form -->
+                <form id="signupForm" onsubmit="handleSignup(event)" style="display: none;">
+                    <div class="auth-header">
+                        <i class="fas fa-clinic-medical"></i>
+                        <h2>Create Account</h2>
+                        <p>Join ClinicCare Pro today</p>
+                    </div>
+                    <div class="form-group">
+                        <label>Full Name</label>
+                        <input type="text" id="signupName" required placeholder="Enter your full name">
+                    </div>
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" id="signupEmail" required placeholder="Enter your email">
+                    </div>
+                    <div class="form-group">
+                        <label>Password</label>
+                        <input type="password" id="signupPassword" required placeholder="Create a password (min. 6 characters)">
+                    </div>
+                    <div class="form-group">
+                        <label>Confirm Password</label>
+                        <input type="password" id="signupConfirmPassword" required placeholder="Confirm your password">
+                    </div>
+                    <div class="form-group">
+                        <label>Role</label>
+                        <select id="signupRole" required onchange="toggleSpecialization()">
+                            <option value="">Select your role</option>
+                            <option value="admin">Administrator</option>
+                            <option value="doctor">Doctor</option>
+                            <option value="patient">Patient</option>
+                            <option value="receptionist">Receptionist</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Phone</label>
+                        <input type="tel" id="signupPhone" required placeholder="Enter your phone number">
+                    </div>
+                    <div class="form-group" id="specializationGroup" style="display: none;">
+                        <label>Specialization</label>
+                        <input type="text" id="signupSpecialization" placeholder="e.g., Cardiology">
+                    </div>
+                    <button type="submit" class="btn-auth" id="signupBtn">Create Account</button>
+                    <p class="auth-link">
+                        Already have an account? <a href="#" onclick="switchTab('signin')">Sign in</a>
+                    </p>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast">
+        <i class="fas" id="toastIcon"></i>
+        <span id="toastMessage"></span>
+    </div>
+
+    <script>
+        // Store users in localStorage
+        let users = JSON.parse(localStorage.getItem('users')) || [];
+
+        // Initialize with demo users if no users exist
+        if (users.length === 0) {
+            users = [
+                { id: '1', name: 'Dr. John Smith', email: 'doctor@example.com', password: 'doctor123', role: 'doctor', phone: '1234567890', specialization: 'Cardiologist' },
+                { id: '2', name: 'Jane Doe', email: 'patient@example.com', password: 'patient123', role: 'patient', phone: '0987654321' },
+                { id: '3', name: 'Admin User', email: 'admin@example.com', password: 'admin123', role: 'admin', phone: '1122334455' },
+                { id: '4', name: 'Sarah Wilson', email: 'receptionist@example.com', password: 'receptionist123', role: 'receptionist', phone: '5566778899' }
+            ];
+            localStorage.setItem('users', JSON.stringify(users));
+        }
+
+        // Custom Cursor
+        const cursor = document.querySelector('.cursor');
+        const cursorFollower = document.querySelector('.cursor-follower');
+
+        document.addEventListener('mousemove', (e) => {
+            cursor.style.left = e.clientX + 'px';
+            cursor.style.top = e.clientY + 'px';
+            
+            setTimeout(() => {
+                cursorFollower.style.left = e.clientX + 'px';
+                cursorFollower.style.top = e.clientY + 'px';
+            }, 100);
+        });
+
+        // Navbar Scroll Effect
+        window.addEventListener('scroll', () => {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // Toast notification
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            const icon = document.getElementById('toastIcon');
+            const messageEl = document.getElementById('toastMessage');
+            
+            toast.className = 'toast ' + type;
+            icon.className = 'fas ' + (type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle');
+            messageEl.textContent = message;
+            
+            toast.classList.add('show');
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        // Auth modal
+        window.showAuth = function(tab, role = null) {
+            document.getElementById('authModal').classList.remove('hidden');
+            document.body.style.overflow = 'hidden'; // Prevent scrolling on background
+            switchTab(tab);
+            
+            if (role) {
+                setTimeout(() => {
+                    document.getElementById('signupRole').value = role;
+                    toggleSpecialization();
+                }, 100);
+            }
+        };
+
+        window.hideAuth = function() {
+            document.getElementById('authModal').classList.add('hidden');
+            document.body.style.overflow = ''; // Restore scrolling
+        };
+
+        window.switchTab = function(tab) {
+            const signinForm = document.getElementById('signinForm');
+            const signupForm = document.getElementById('signupForm');
+            const signinTab = document.getElementById('signinTab');
+            const signupTab = document.getElementById('signupTab');
+
+            if (tab === 'signin') {
+                signinForm.style.display = 'block';
+                signupForm.style.display = 'none';
+                signinTab.classList.add('active');
+                signupTab.classList.remove('active');
+            } else {
+                signinForm.style.display = 'none';
+                signupForm.style.display = 'block';
+                signupTab.classList.add('active');
+                signinTab.classList.remove('active');
+            }
+        };
+
+        window.toggleSpecialization = function() {
+            const role = document.getElementById('signupRole').value;
+            const specGroup = document.getElementById('specializationGroup');
+            specGroup.style.display = role === 'doctor' ? 'block' : 'none';
+        };
+
+        // Handle sign in
+        window.handleSignin = function(event) {
+            event.preventDefault();
+            
+            const email = document.getElementById('signinEmail').value;
+            const password = document.getElementById('signinPassword').value;
+            const btn = document.getElementById('signinBtn');
+
+            btn.innerHTML = '<span class="spinner"></span> Signing in...';
+            btn.disabled = true;
+
+            setTimeout(() => {
+                const user = users.find(u => u.email === email && u.password === password);
+
+                if (user) {
+                    localStorage.setItem('currentUser', JSON.stringify(user));
+                    showToast('Login successful! Redirecting...', 'success');
+                    
+                    setTimeout(() => {
+                        window.location.href = `${user.role}-dashboard.html`;
+                    }, 1500);
+                } else {
+                    showToast('Invalid email or password!', 'error');
+                    btn.innerHTML = 'Sign In';
+                    btn.disabled = false;
+                }
+            }, 1000);
+        };
+
+        // Handle sign up
+        window.handleSignup = function(event) {
+            event.preventDefault();
+            
+            const name = document.getElementById('signupName').value;
+            const email = document.getElementById('signupEmail').value;
+            const password = document.getElementById('signupPassword').value;
+            const confirmPassword = document.getElementById('signupConfirmPassword').value;
+            const role = document.getElementById('signupRole').value;
+            const phone = document.getElementById('signupPhone').value;
+            const specialization = document.getElementById('signupSpecialization').value;
+            const btn = document.getElementById('signupBtn');
+
+            // Validation
+            if (password !== confirmPassword) {
+                showToast('Passwords do not match!', 'error');
+                return;
+            }
+
+            if (password.length < 6) {
+                showToast('Password must be at least 6 characters!', 'error');
+                return;
+            }
+
+            if (users.find(u => u.email === email)) {
+                showToast('Email already exists!', 'error');
+                return;
+            }
+
+            btn.innerHTML = '<span class="spinner"></span> Creating account...';
+            btn.disabled = true;
+
+            setTimeout(() => {
+                const newUser = {
+                    id: Date.now().toString(),
+                    name,
+                    email,
+                    password,
+                    role,
+                    phone,
+                    ...(role === 'doctor' && { specialization })
+                };
+
+                users.push(newUser);
+                localStorage.setItem('users', JSON.stringify(users));
+                
+                showToast('Account created successfully!', 'success');
+                
+                setTimeout(() => {
+                    window.location.href = `${role}-dashboard.html`;
+                }, 1500);
+            }, 1000);
+        };
+
+        // Check if user is already logged in
+        const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+        if (currentUser) {
+            window.location.href = `${currentUser.role}-dashboard.html`;
+        }
+
+        // Close modal on escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                hideAuth();
+            }
+        });
+    </script>
 </body>
 </html>
