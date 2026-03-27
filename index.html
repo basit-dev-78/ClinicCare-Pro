@@ -2,20 +2,19 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
     <title>ClinicCare Pro | Enterprise Healthcare Management Platform</title>
     
     <!-- SEO Meta Tags -->
-    <meta name="description" content="ClinicCare Pro - The most advanced AI-powered healthcare management platform trusted by 500+ clinics worldwide. Streamline operations, enhance patient care, and boost revenue.">
-    <meta name="keywords" content="healthcare management, clinic software, EHR, medical practice management, telemedicine">
+    <meta name="description" content="ClinicCare Pro - The most advanced AI-powered healthcare management platform trusted by 500+ clinics worldwide.">
+    <meta name="keywords" content="healthcare management, clinic software, EHR, medical practice management">
     <meta name="author" content="ClinicCare Pro">
     <meta name="robots" content="index, follow">
     
     <!-- Open Graph / Social Media Meta Tags -->
     <meta property="og:title" content="ClinicCare Pro - Enterprise Healthcare Management">
     <meta property="og:description" content="Transform your healthcare practice with AI-powered management solutions">
-    <meta property="og:image" content="https://cliniccarepro.com/og-image.jpg">
-    <meta property="og:url" content="https://cliniccarepro.com">
+    <meta property="og:type" content="website">
     <meta name="twitter:card" content="summary_large_image">
     
     <!-- Fonts -->
@@ -38,32 +37,18 @@
             background: #ffffff;
             line-height: 1.5;
             overflow-x: hidden;
+            width: 100%;
+            position: relative;
         }
 
-        /* Custom Cursor */
-        .cursor {
-            width: 20px;
-            height: 20px;
-            border: 2px solid #4158D0;
-            border-radius: 50%;
-            position: fixed;
-            pointer-events: none;
-            z-index: 9999;
-            transition: all 0.1s ease;
-            transform: translate(-50%, -50%);
-            mix-blend-mode: difference;
-        }
-
-        .cursor-follower {
-            width: 40px;
-            height: 40px;
-            background: rgba(65, 88, 208, 0.1);
-            border-radius: 50%;
-            position: fixed;
-            pointer-events: none;
-            z-index: 9998;
-            transition: all 0.3s ease;
-            transform: translate(-50%, -50%);
+        /* Hide scrollbar on mobile but keep functionality */
+        @media (max-width: 768px) {
+            body {
+                overflow-x: hidden;
+            }
+            ::-webkit-scrollbar {
+                width: 4px;
+            }
         }
 
         /* Animated Background */
@@ -81,107 +66,96 @@
         }
 
         @keyframes gradient {
-            0% { background-position: 0% 50%; }
+            0%, 100% { background-position: 0% 50%; }
             50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
         }
 
-        /* Floating Shapes */
-        .floating-shapes {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-            z-index: -1;
-        }
-
-        .shape {
-            position: absolute;
-            background: linear-gradient(135deg, rgba(65, 88, 208, 0.1), rgba(200, 80, 192, 0.1));
-            border-radius: 50%;
-            animation: float 20s infinite;
-        }
-
-        .shape1 {
-            width: 300px;
-            height: 300px;
-            top: -150px;
-            right: -150px;
-            animation-delay: 0s;
-        }
-
-        .shape2 {
-            width: 400px;
-            height: 400px;
-            bottom: -200px;
-            left: -200px;
-            animation-delay: 5s;
-        }
-
-        .shape3 {
-            width: 200px;
-            height: 200px;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            animation-delay: 10s;
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translate(0, 0) rotate(0deg); }
-            33% { transform: translate(30px, -30px) rotate(120deg); }
-            66% { transform: translate(-20px, 20px) rotate(240deg); }
-        }
-
-        /* Navigation */
+        /* Navigation - Fully Responsive with Mobile Toggle */
         .navbar {
             position: fixed;
             top: 0;
+            left: 0;
+            right: 0;
             width: 100%;
-            padding: 1.5rem 5%;
+            padding: 1rem 5%;
             display: flex;
             justify-content: space-between;
             align-items: center;
             z-index: 1000;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.3s ease;
             backdrop-filter: blur(10px);
-            background: rgba(255, 255, 255, 0.8);
+            background: rgba(255, 255, 255, 0.95);
+            gap: 1rem;
+            flex-wrap: wrap;
         }
 
         .navbar.scrolled {
-            padding: 1rem 5%;
-            background: rgba(255, 255, 255, 0.95);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            padding: 0.75rem 5%;
+            background: rgba(255, 255, 255, 0.98);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
         }
 
         .logo {
             display: flex;
             align-items: center;
-            gap: 12px;
-            font-size: 1.8rem;
+            gap: 10px;
+            font-size: 1.3rem;
             font-weight: 800;
             color: #1a1f2b;
             text-decoration: none;
-            position: relative;
-            overflow: hidden;
+            flex-shrink: 0;
+        }
+
+        @media (min-width: 768px) {
+            .logo {
+                font-size: 1.5rem;
+            }
         }
 
         .logo i {
             color: #4158D0;
-            font-size: 2.2rem;
-            animation: pulse 2s infinite;
+            font-size: 1.5rem;
         }
 
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.1); }
+        @media (min-width: 768px) {
+            .logo i {
+                font-size: 1.8rem;
+            }
         }
 
+        /* Mobile Menu Toggle Button */
+        .menu-toggle {
+            display: none;
+            background: linear-gradient(135deg, #4158D0, #C850C0);
+            border: none;
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            flex-shrink: 0;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .menu-toggle:active {
+            transform: scale(0.95);
+        }
+
+        @media (max-width: 768px) {
+            .menu-toggle {
+                display: flex;
+            }
+        }
+
+        /* Navigation Links */
         .nav-links {
             display: flex;
-            gap: 3rem;
+            gap: 1.5rem;
+            align-items: center;
+            transition: all 0.3s ease;
         }
 
         .nav-links a {
@@ -191,7 +165,14 @@
             position: relative;
             padding: 0.5rem 0;
             transition: color 0.3s;
-            font-size: 1rem;
+            font-size: 0.9rem;
+            white-space: nowrap;
+        }
+
+        @media (min-width: 768px) {
+            .nav-links a {
+                font-size: 0.95rem;
+            }
         }
 
         .nav-links a::before {
@@ -203,8 +184,7 @@
             height: 2px;
             background: linear-gradient(90deg, #4158D0, #C850C0);
             transform: scaleX(0);
-            transform-origin: right;
-            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: transform 0.3s ease;
         }
 
         .nav-links a:hover {
@@ -213,132 +193,166 @@
 
         .nav-links a:hover::before {
             transform: scaleX(1);
-            transform-origin: left;
+        }
+
+        /* Mobile Navigation */
+        @media (max-width: 768px) {
+            .nav-links {
+                position: fixed;
+                top: 0;
+                left: -100%;
+                width: 280px;
+                height: 100vh;
+                background: white;
+                flex-direction: column;
+                justify-content: center;
+                gap: 1.5rem;
+                padding: 2rem;
+                box-shadow: 5px 0 30px rgba(0, 0, 0, 0.1);
+                transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                z-index: 1001;
+                align-items: flex-start;
+            }
+            
+            .nav-links.active {
+                left: 0;
+            }
+            
+            .nav-links a {
+                font-size: 1.1rem;
+                width: 100%;
+                white-space: normal;
+            }
+            
+            .nav-overlay {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.5);
+                backdrop-filter: blur(4px);
+                z-index: 1000;
+                display: none;
+                transition: opacity 0.3s;
+            }
+            
+            .nav-overlay.active {
+                display: block;
+            }
+            
+            .close-menu {
+                position: absolute;
+                top: 1.5rem;
+                right: 1.5rem;
+                background: #f0f0f0;
+                border: none;
+                width: 36px;
+                height: 36px;
+                border-radius: 50%;
+                font-size: 1.2rem;
+                color: #1a1f2b;
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+        }
+        
+        @media (min-width: 769px) {
+            .close-menu {
+                display: none;
+            }
         }
 
         .nav-buttons {
             display: flex;
-            gap: 1rem;
+            gap: 0.6rem;
+            flex-shrink: 0;
+        }
+
+        .btn-login, .btn-signup {
+            padding: 0.5rem 1.2rem;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.85rem;
+            white-space: nowrap;
+        }
+
+        @media (min-width: 768px) {
+            .btn-login, .btn-signup {
+                padding: 0.6rem 1.5rem;
+                font-size: 0.9rem;
+            }
         }
 
         .btn-login {
-            padding: 0.75rem 2rem;
             border: 2px solid #e2e8f0;
             background: transparent;
             color: #1a1f2b;
-            border-radius: 50px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
-            overflow: hidden;
-            z-index: 1;
-        }
-
-        .btn-login::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 0;
-            height: 100%;
-            background: linear-gradient(90deg, #4158D0, #C850C0);
-            transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            z-index: -1;
         }
 
         .btn-login:hover {
+            background: linear-gradient(90deg, #4158D0, #C850C0);
             color: white;
             border-color: transparent;
         }
 
-        .btn-login:hover::before {
-            width: 100%;
-        }
-
         .btn-signup {
-            padding: 0.75rem 2rem;
             border: none;
             background: linear-gradient(90deg, #4158D0, #C850C0);
             color: white;
-            border-radius: 50px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
-            overflow: hidden;
-            z-index: 1;
-        }
-
-        .btn-signup::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, #C850C0, #FFCC70);
-            transition: left 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            z-index: -1;
-        }
-
-        .btn-signup:hover::before {
-            left: 0;
         }
 
         .btn-signup:hover {
             transform: translateY(-2px);
-            box-shadow: 0 10px 30px rgba(65, 88, 208, 0.4);
+            box-shadow: 0 5px 15px rgba(65, 88, 208, 0.3);
         }
 
         /* Hero Section */
         .hero {
             min-height: 100vh;
-            padding: 10rem 5% 4rem;
+            padding: 7rem 5% 3rem;
             display: flex;
             align-items: center;
-            position: relative;
-            overflow: hidden;
+            width: 100%;
         }
 
         .hero-content {
             max-width: 800px;
             margin: 0 auto;
             text-align: center;
+            width: 100%;
         }
 
         .hero-badge {
             display: inline-block;
-            padding: 0.5rem 1.5rem;
+            padding: 0.4rem 1.2rem;
             background: linear-gradient(90deg, rgba(65, 88, 208, 0.1), rgba(200, 80, 192, 0.1));
             color: #4158D0;
             border-radius: 50px;
-            font-size: 0.875rem;
+            font-size: 0.7rem;
             font-weight: 600;
-            margin-bottom: 2rem;
-            backdrop-filter: blur(10px);
+            margin-bottom: 1.5rem;
             border: 1px solid rgba(65, 88, 208, 0.2);
-            animation: slideInDown 1s ease;
         }
 
-        @keyframes slideInDown {
-            from {
-                opacity: 0;
-                transform: translateY(-30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
+        @media (min-width: 768px) {
+            .hero-badge {
+                padding: 0.5rem 1.5rem;
+                font-size: 0.8rem;
+                margin-bottom: 2rem;
             }
         }
 
         .hero h1 {
-            font-size: 5rem;
+            font-size: clamp(1.8rem, 8vw, 4.5rem);
             font-weight: 800;
             color: #1a1f2b;
-            margin-bottom: 1.5rem;
-            line-height: 1.1;
-            animation: fadeIn 1.5s ease;
+            margin-bottom: 1rem;
+            line-height: 1.2;
         }
 
         .hero h1 span {
@@ -346,105 +360,77 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            position: relative;
-            display: inline-block;
         }
 
         .hero p {
-            font-size: 1.25rem;
+            font-size: clamp(0.9rem, 4vw, 1.2rem);
             color: #4a5568;
-            margin-bottom: 3rem;
+            margin-bottom: 2rem;
             max-width: 600px;
             margin-left: auto;
             margin-right: auto;
-            animation: fadeIn 2s ease;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+            padding: 0 1rem;
         }
 
         .hero-buttons {
             display: flex;
-            gap: 1rem;
+            gap: 0.8rem;
             justify-content: center;
-            margin-bottom: 4rem;
-            animation: fadeInUp 2s ease;
+            margin-bottom: 2.5rem;
+            flex-wrap: wrap;
+            padding: 0 1rem;
         }
 
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
+        .btn-primary, .btn-secondary {
+            padding: 0.7rem 1.5rem;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        @media (min-width: 768px) {
+            .btn-primary, .btn-secondary {
+                padding: 0.9rem 2rem;
+                font-size: 1rem;
             }
         }
 
         .btn-primary {
-            padding: 1rem 2.5rem;
             background: linear-gradient(90deg, #4158D0, #C850C0);
             color: white;
             border: none;
-            border-radius: 50px;
-            font-size: 1.1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
-            overflow: hidden;
-            z-index: 1;
-        }
-
-        .btn-primary::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, #C850C0, #FFCC70);
-            transition: left 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            z-index: -1;
-        }
-
-        .btn-primary:hover::before {
-            left: 0;
         }
 
         .btn-primary:hover {
-            transform: translateY(-3px) scale(1.05);
-            box-shadow: 0 20px 40px rgba(65, 88, 208, 0.4);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(65, 88, 208, 0.3);
         }
 
         .btn-secondary {
-            padding: 1rem 2.5rem;
             border: 2px solid #4158D0;
             background: transparent;
             color: #4158D0;
-            border-radius: 50px;
-            font-size: 1.1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.4s;
         }
 
         .btn-secondary:hover {
             background: #4158D0;
             color: white;
-            transform: translateY(-3px);
-            box-shadow: 0 20px 40px rgba(65, 88, 208, 0.2);
         }
 
         .trust-badges {
             display: flex;
             justify-content: center;
-            gap: 3rem;
+            gap: 1rem;
             flex-wrap: wrap;
-            animation: fadeIn 2.5s ease;
+            padding: 0 1rem;
+        }
+
+        @media (min-width: 768px) {
+            .trust-badges {
+                gap: 2rem;
+            }
         }
 
         .trust-badges span {
@@ -452,407 +438,515 @@
             font-weight: 500;
             display: flex;
             align-items: center;
-            gap: 0.5rem;
-            transition: all 0.3s;
+            gap: 0.4rem;
+            font-size: 0.75rem;
         }
 
-        .trust-badges span:hover {
-            transform: translateY(-3px);
-            color: #4158D0;
+        @media (min-width: 768px) {
+            .trust-badges span {
+                font-size: 0.9rem;
+                gap: 0.5rem;
+            }
         }
 
         .trust-badges i {
             color: #4158D0;
-            font-size: 1.2rem;
-            animation: bounce 2s infinite;
+            font-size: 0.8rem;
         }
 
-        @keyframes bounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-5px); }
+        /* Stats Section */
+        .stats-section {
+            padding: 3rem 5%;
+            background: linear-gradient(135deg, #4158D0, #C850C0);
+            color: white;
+            width: 100%;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+            max-width: 1000px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        @media (min-width: 640px) {
+            .stats-grid {
+                grid-template-columns: repeat(4, 1fr);
+                gap: 2rem;
+            }
+        }
+
+        .stat-item h3 {
+            font-size: clamp(1.5rem, 5vw, 2.5rem);
+            font-weight: 800;
+            margin-bottom: 0.3rem;
+        }
+
+        .stat-item p {
+            font-size: 0.8rem;
+            opacity: 0.9;
+        }
+
+        @media (min-width: 768px) {
+            .stat-item p {
+                font-size: 1rem;
+            }
         }
 
         /* Features Section */
-        .features-section {
-            padding: 8rem 5%;
-            background: #f8fafc;
+        .features-section, .solutions-section, .pricing-section, .testimonials-section, .contact-section {
+            padding: 3rem 5%;
+            width: 100%;
+        }
+
+        @media (min-width: 768px) {
+            .features-section, .solutions-section, .pricing-section, .testimonials-section, .contact-section {
+                padding: 5rem 5%;
+            }
         }
 
         .section-header {
             text-align: center;
             max-width: 700px;
-            margin: 0 auto 5rem;
+            margin: 0 auto 2rem;
+        }
+
+        @media (min-width: 768px) {
+            .section-header {
+                margin-bottom: 3rem;
+            }
         }
 
         .section-header h2 {
-            font-size: 3.5rem;
+            font-size: clamp(1.5rem, 5vw, 2.5rem);
             font-weight: 800;
+            margin-bottom: 0.8rem;
             color: #1a1f2b;
-            margin-bottom: 1rem;
         }
 
         .section-header p {
-            font-size: 1.2rem;
+            font-size: clamp(0.85rem, 3vw, 1.1rem);
             color: #64748b;
-            line-height: 1.6;
+            padding: 0 1rem;
         }
 
         .features-grid {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 2rem;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
             max-width: 1200px;
             margin: 0 auto;
         }
 
-        .feature-card {
-            background: white;
-            padding: 2.5rem;
-            border-radius: 30px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
-            transition: all 0.4s;
-            position: relative;
-            overflow: hidden;
+        @media (min-width: 640px) {
+            .features-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
         }
 
-        .feature-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 4px;
-            background: linear-gradient(90deg, #4158D0, #C850C0);
-            transform: scaleX(0);
-            transition: transform 0.4s;
+        @media (min-width: 1024px) {
+            .features-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        .feature-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 24px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s;
+            border: 1px solid #eef2ff;
+        }
+
+        @media (min-width: 768px) {
+            .feature-card {
+                padding: 2rem;
+                border-radius: 30px;
+            }
         }
 
         .feature-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 30px 60px rgba(65, 88, 208, 0.15);
-        }
-
-        .feature-card:hover::before {
-            transform: scaleX(1);
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(65, 88, 208, 0.1);
         }
 
         .feature-icon {
-            width: 70px;
-            height: 70px;
+            width: 55px;
+            height: 55px;
             background: linear-gradient(135deg, rgba(65, 88, 208, 0.1), rgba(200, 80, 192, 0.1));
-            border-radius: 20px;
+            border-radius: 18px;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-bottom: 2rem;
+            margin-bottom: 1.2rem;
+        }
+
+        @media (min-width: 768px) {
+            .feature-icon {
+                width: 70px;
+                height: 70px;
+                border-radius: 20px;
+                margin-bottom: 1.5rem;
+            }
         }
 
         .feature-icon i {
-            font-size: 2.2rem;
+            font-size: 1.5rem;
             color: #4158D0;
         }
 
+        @media (min-width: 768px) {
+            .feature-icon i {
+                font-size: 2rem;
+            }
+        }
+
         .feature-card h3 {
-            font-size: 1.5rem;
-            margin-bottom: 1rem;
+            font-size: 1.2rem;
+            margin-bottom: 0.6rem;
             color: #1a1f2b;
+        }
+
+        @media (min-width: 768px) {
+            .feature-card h3 {
+                font-size: 1.4rem;
+                margin-bottom: 0.8rem;
+            }
         }
 
         .feature-card p {
             color: #64748b;
-            line-height: 1.7;
-            margin-bottom: 1.5rem;
+            line-height: 1.5;
+            margin-bottom: 1rem;
+            font-size: 0.85rem;
+        }
+
+        @media (min-width: 768px) {
+            .feature-card p {
+                font-size: 0.9rem;
+            }
         }
 
         .feature-link {
             color: #4158D0;
             text-decoration: none;
             font-weight: 600;
-            display: flex;
+            display: inline-flex;
             align-items: center;
-            gap: 0.5rem;
-            transition: gap 0.3s;
+            gap: 0.4rem;
+            font-size: 0.85rem;
         }
 
-        .feature-link:hover {
-            gap: 1rem;
-        }
-
-        /* Solutions Section */
-        .solutions-section {
-            padding: 8rem 5%;
-            background: white;
-        }
-
+        /* Solutions Grid */
         .solutions-grid {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 3rem;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
             max-width: 1200px;
-            margin: 3rem auto 0;
+            margin: 0 auto;
+        }
+
+        @media (min-width: 640px) {
+            .solutions-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
         }
 
         .solution-card {
             background: #f8fafc;
-            padding: 3rem;
-            border-radius: 40px;
-            transition: all 0.4s;
-            position: relative;
-            overflow: hidden;
+            padding: 1.5rem;
+            border-radius: 24px;
+            transition: all 0.3s;
+        }
+
+        @media (min-width: 768px) {
+            .solution-card {
+                padding: 2rem;
+                border-radius: 30px;
+            }
         }
 
         .solution-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 30px 60px rgba(65, 88, 208, 0.1);
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(65, 88, 208, 0.1);
         }
 
         .solution-icon {
-            width: 80px;
-            height: 80px;
+            width: 55px;
+            height: 55px;
             background: linear-gradient(135deg, #4158D0, #C850C0);
-            border-radius: 20px;
+            border-radius: 18px;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-bottom: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        @media (min-width: 768px) {
+            .solution-icon {
+                width: 70px;
+                height: 70px;
+                border-radius: 20px;
+                margin-bottom: 1.5rem;
+            }
         }
 
         .solution-icon i {
-            font-size: 2.5rem;
+            font-size: 1.5rem;
             color: white;
         }
 
-        .solution-card h3 {
-            font-size: 2rem;
-            margin-bottom: 1rem;
-            color: #1a1f2b;
+        @media (min-width: 768px) {
+            .solution-icon i {
+                font-size: 2rem;
+            }
         }
 
-        .solution-card p {
-            color: #64748b;
-            line-height: 1.7;
-            margin-bottom: 2rem;
+        .solution-card h3 {
+            font-size: 1.2rem;
+            margin-bottom: 0.8rem;
+        }
+
+        @media (min-width: 768px) {
+            .solution-card h3 {
+                font-size: 1.5rem;
+            }
         }
 
         .solution-features {
             list-style: none;
-            margin-bottom: 2rem;
+            margin: 1rem 0;
         }
 
         .solution-features li {
             display: flex;
             align-items: center;
-            gap: 1rem;
-            margin-bottom: 1rem;
-            color: #1a1f2b;
+            gap: 0.6rem;
+            margin-bottom: 0.6rem;
+            font-size: 0.8rem;
+        }
+
+        @media (min-width: 768px) {
+            .solution-features li {
+                font-size: 0.9rem;
+                margin-bottom: 0.8rem;
+            }
         }
 
         .solution-features li i {
             color: #4158D0;
-            font-size: 1.2rem;
+            font-size: 0.8rem;
         }
 
         .btn-solution {
-            padding: 1rem 2rem;
+            padding: 0.6rem 1rem;
             background: transparent;
             border: 2px solid #4158D0;
             color: #4158D0;
             border-radius: 50px;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.4s;
+            transition: all 0.3s;
+            width: 100%;
+            font-size: 0.85rem;
         }
 
-        .btn-solution:hover {
-            background: #4158D0;
-            color: white;
-            transform: translateY(-3px);
-        }
-
-        /* Pricing Section */
-        .pricing-section {
-            padding: 8rem 5%;
-            background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
-        }
-
+        /* Pricing Grid */
         .pricing-grid {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 2rem;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
             max-width: 1200px;
-            margin: 3rem auto 0;
+            margin: 0 auto;
+        }
+
+        @media (min-width: 640px) {
+            .pricing-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .pricing-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
         }
 
         .pricing-card {
             background: white;
-            padding: 3rem 2rem;
-            border-radius: 40px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
-            transition: all 0.4s;
+            padding: 1.5rem;
+            border-radius: 24px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s;
             position: relative;
-            overflow: hidden;
+            border: 1px solid #eef2ff;
+        }
+
+        @media (min-width: 768px) {
+            .pricing-card {
+                padding: 2rem;
+                border-radius: 30px;
+            }
         }
 
         .pricing-card.popular {
-            transform: scale(1.05);
             border: 2px solid #4158D0;
         }
 
         .popular-badge {
             position: absolute;
-            top: 1.5rem;
-            right: 1.5rem;
+            top: 0.8rem;
+            right: 0.8rem;
             background: linear-gradient(90deg, #4158D0, #C850C0);
             color: white;
-            padding: 0.5rem 1rem;
+            padding: 0.2rem 0.8rem;
             border-radius: 50px;
-            font-size: 0.75rem;
+            font-size: 0.6rem;
             font-weight: 600;
         }
 
-        .pricing-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 30px 60px rgba(65, 88, 208, 0.15);
-        }
-
-        .pricing-card.popular:hover {
-            transform: scale(1.05) translateY(-10px);
+        @media (min-width: 768px) {
+            .popular-badge {
+                top: 1rem;
+                right: 1rem;
+                padding: 0.3rem 1rem;
+                font-size: 0.7rem;
+            }
         }
 
         .pricing-header {
             text-align: center;
-            margin-bottom: 2rem;
+            margin-bottom: 1.2rem;
         }
 
         .pricing-header h3 {
-            font-size: 1.8rem;
-            margin-bottom: 1rem;
-            color: #1a1f2b;
-        }
-
-        .price {
-            font-size: 3rem;
-            font-weight: 800;
-            color: #4158D0;
+            font-size: 1.3rem;
             margin-bottom: 0.5rem;
         }
 
+        @media (min-width: 768px) {
+            .pricing-header h3 {
+                font-size: 1.6rem;
+            }
+        }
+
+        .price {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #4158D0;
+        }
+
+        @media (min-width: 768px) {
+            .price {
+                font-size: 2.5rem;
+            }
+        }
+
         .price span {
-            font-size: 1rem;
+            font-size: 0.8rem;
             font-weight: 400;
             color: #64748b;
         }
 
         .pricing-features {
             list-style: none;
-            margin-bottom: 2rem;
+            margin: 1rem 0;
         }
 
         .pricing-features li {
             display: flex;
             align-items: center;
-            gap: 1rem;
-            margin-bottom: 1rem;
-            color: #1a1f2b;
+            gap: 0.6rem;
+            margin-bottom: 0.6rem;
+            font-size: 0.8rem;
+        }
+
+        @media (min-width: 768px) {
+            .pricing-features li {
+                font-size: 0.9rem;
+                margin-bottom: 0.8rem;
+            }
         }
 
         .pricing-features li i {
             color: #4158D0;
-            font-size: 1.1rem;
         }
 
         .btn-pricing {
             width: 100%;
-            padding: 1rem;
+            padding: 0.7rem;
             background: linear-gradient(90deg, #4158D0, #C850C0);
             color: white;
             border: none;
             border-radius: 50px;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.4s;
+            transition: all 0.3s;
+            font-size: 0.85rem;
         }
 
-        .btn-pricing:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 20px 30px rgba(65, 88, 208, 0.3);
-        }
-
-        /* Stats Section */
-        .stats-section {
-            padding: 5rem 5%;
-            background: linear-gradient(135deg, #4158D0, #C850C0);
-            color: white;
-        }
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 3rem;
-            max-width: 1000px;
-            margin: 0 auto;
-            text-align: center;
-        }
-
-        .stat-item h3 {
-            font-size: 3rem;
-            font-weight: 800;
-            margin-bottom: 0.5rem;
-        }
-
-        .stat-item p {
-            font-size: 1.1rem;
-            opacity: 0.9;
-        }
-
-        /* Testimonials Section */
-        .testimonials-section {
-            padding: 8rem 5%;
-            background: white;
-        }
-
+        /* Testimonials */
         .testimonials-grid {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 2rem;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
             max-width: 1200px;
-            margin: 3rem auto 0;
+            margin: 0 auto;
+        }
+
+        @media (min-width: 640px) {
+            .testimonials-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .testimonials-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
         }
 
         .testimonial-card {
             background: #f8fafc;
-            padding: 2.5rem;
-            border-radius: 30px;
-            transition: all 0.4s;
+            padding: 1.5rem;
+            border-radius: 24px;
+            transition: all 0.3s;
         }
 
-        .testimonial-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 30px 60px rgba(65, 88, 208, 0.1);
-        }
-
-        .testimonial-rating {
-            color: #FFCC70;
-            margin-bottom: 1.5rem;
+        @media (min-width: 768px) {
+            .testimonial-card {
+                padding: 2rem;
+                border-radius: 30px;
+            }
         }
 
         .testimonial-text {
-            font-size: 1.1rem;
-            line-height: 1.7;
+            font-size: 0.85rem;
+            line-height: 1.5;
             color: #1a1f2b;
-            margin-bottom: 2rem;
+            margin-bottom: 1rem;
             font-style: italic;
+        }
+
+        @media (min-width: 768px) {
+            .testimonial-text {
+                font-size: 1rem;
+                margin-bottom: 1.5rem;
+            }
         }
 
         .testimonial-author {
             display: flex;
             align-items: center;
-            gap: 1rem;
+            gap: 0.8rem;
         }
 
         .author-avatar {
-            width: 60px;
-            height: 60px;
+            width: 45px;
+            height: 45px;
             background: linear-gradient(135deg, #4158D0, #C850C0);
             border-radius: 50%;
             display: flex;
@@ -860,66 +954,62 @@
             justify-content: center;
             color: white;
             font-weight: 700;
-            font-size: 1.5rem;
+            font-size: 1rem;
         }
 
         .author-info h4 {
-            font-size: 1.1rem;
-            margin-bottom: 0.25rem;
-            color: #1a1f2b;
+            font-size: 0.9rem;
+            margin-bottom: 0.2rem;
         }
 
         .author-info p {
+            font-size: 0.75rem;
             color: #64748b;
-            font-size: 0.9rem;
         }
 
         /* Contact Section */
-        .contact-section {
-            padding: 8rem 5%;
-            background: #f8fafc;
-        }
-
         .contact-container {
             max-width: 1200px;
-            margin: 3rem auto 0;
+            margin: 0 auto;
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 4rem;
+            grid-template-columns: 1fr;
+            gap: 2rem;
             background: white;
-            border-radius: 50px;
-            padding: 4rem;
-            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.05);
+            border-radius: 30px;
+            padding: 1.5rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        }
+
+        @media (min-width: 768px) {
+            .contact-container {
+                grid-template-columns: 1fr 1fr;
+                gap: 3rem;
+                padding: 3rem;
+                border-radius: 40px;
+            }
         }
 
         .contact-info h3 {
-            font-size: 2rem;
-            margin-bottom: 1rem;
-            color: #1a1f2b;
-        }
-
-        .contact-info p {
-            color: #64748b;
-            line-height: 1.7;
-            margin-bottom: 2rem;
+            font-size: 1.5rem;
+            margin-bottom: 0.8rem;
         }
 
         .contact-details {
             list-style: none;
-            margin-bottom: 2rem;
+            margin: 1.5rem 0;
         }
 
         .contact-details li {
             display: flex;
             align-items: center;
-            gap: 1rem;
-            margin-bottom: 1.5rem;
-            color: #1a1f2b;
+            gap: 0.8rem;
+            margin-bottom: 1rem;
+            font-size: 0.85rem;
         }
 
         .contact-details li i {
-            width: 40px;
-            height: 40px;
+            width: 35px;
+            height: 35px;
             background: linear-gradient(135deg, rgba(65, 88, 208, 0.1), rgba(200, 80, 192, 0.1));
             border-radius: 50%;
             display: flex;
@@ -929,121 +1019,108 @@
         }
 
         .contact-form .form-group {
-            margin-bottom: 1.5rem;
+            margin-bottom: 1rem;
         }
 
         .contact-form input,
         .contact-form textarea {
             width: 100%;
-            padding: 1rem 1.2rem;
+            padding: 0.8rem 1rem;
             border: 2px solid #e2e8f0;
-            border-radius: 20px;
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            font-size: 1rem;
-            transition: all 0.4s;
-        }
-
-        .contact-form input:focus,
-        .contact-form textarea:focus {
-            outline: none;
-            border-color: #4158D0;
-            box-shadow: 0 0 0 5px rgba(65, 88, 208, 0.1);
+            border-radius: 16px;
+            font-family: inherit;
+            font-size: 0.85rem;
+            transition: all 0.3s;
         }
 
         .contact-form textarea {
-            height: 150px;
+            height: 100px;
             resize: vertical;
         }
 
         .btn-contact {
             width: 100%;
-            padding: 1rem;
+            padding: 0.8rem;
             background: linear-gradient(90deg, #4158D0, #C850C0);
             color: white;
             border: none;
             border-radius: 50px;
-            font-size: 1.1rem;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.4s;
-        }
-
-        .btn-contact:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 20px 30px rgba(65, 88, 208, 0.3);
+            transition: all 0.3s;
         }
 
         /* CTA Section */
         .cta-section {
-            padding: 6rem 5%;
+            padding: 3rem 5%;
             background: linear-gradient(135deg, #4158D0, #C850C0);
             color: white;
             text-align: center;
+            width: 100%;
         }
 
-        .cta-content {
-            max-width: 700px;
-            margin: 0 auto;
+        @media (min-width: 768px) {
+            .cta-section {
+                padding: 5rem 5%;
+            }
         }
 
         .cta-content h2 {
-            font-size: 3rem;
-            font-weight: 800;
-            margin-bottom: 1rem;
-        }
-
-        .cta-content p {
-            font-size: 1.2rem;
-            opacity: 0.9;
-            margin-bottom: 2rem;
+            font-size: clamp(1.3rem, 5vw, 2rem);
+            margin-bottom: 0.8rem;
         }
 
         .btn-cta {
-            padding: 1.2rem 3rem;
+            margin-top: 1.5rem;
+            padding: 0.8rem 1.8rem;
             background: white;
             color: #4158D0;
             border: none;
             border-radius: 50px;
-            font-size: 1.1rem;
+            font-size: 0.9rem;
             font-weight: 700;
             cursor: pointer;
-            transition: all 0.4s;
-        }
-
-        .btn-cta:hover {
-            transform: translateY(-3px) scale(1.05);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s;
         }
 
         /* Footer */
         .footer {
             background: #1a1f2b;
             color: white;
-            padding: 5rem 5% 2rem;
+            padding: 3rem 5% 1.5rem;
+            width: 100%;
         }
 
         .footer-content {
             display: grid;
-            grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
-            gap: 3rem;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
             max-width: 1400px;
             margin: 0 auto;
         }
 
-        .footer-section:first-child {
-            max-width: 300px;
+        @media (min-width: 640px) {
+            .footer-content {
+                grid-template-columns: repeat(2, 1fr);
+            }
         }
 
-        .footer-section h3 {
-            font-size: 1.2rem;
-            margin-bottom: 1.5rem;
-            color: white;
+        @media (min-width: 1024px) {
+            .footer-content {
+                grid-template-columns: 2fr 1fr 1fr 1fr;
+            }
         }
 
         .footer-section p {
             color: #94a3b8;
-            line-height: 1.7;
-            margin: 1.5rem 0;
+            line-height: 1.5;
+            margin: 0.8rem 0;
+            font-size: 0.8rem;
+        }
+
+        .footer-section h3 {
+            font-size: 1rem;
+            margin-bottom: 1rem;
         }
 
         .footer-section ul {
@@ -1051,14 +1128,13 @@
         }
 
         .footer-section li {
-            margin-bottom: 0.8rem;
+            margin-bottom: 0.5rem;
         }
 
         .footer-section a {
             color: #94a3b8;
             text-decoration: none;
-            transition: color 0.3s;
-            font-size: 0.95rem;
+            font-size: 0.8rem;
         }
 
         .footer-section a:hover {
@@ -1067,43 +1143,37 @@
 
         .social-links {
             display: flex;
-            gap: 1rem;
-            margin-top: 1.5rem;
+            gap: 0.8rem;
+            margin-top: 1rem;
+            flex-wrap: wrap;
         }
 
         .social-links a {
-            width: 40px;
-            height: 40px;
+            width: 32px;
+            height: 32px;
             background: rgba(255, 255, 255, 0.1);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: white;
-            transition: all 0.3s;
-        }
-
-        .social-links a:hover {
-            background: #4158D0;
-            transform: translateY(-3px);
         }
 
         .footer-bottom {
             text-align: center;
-            margin-top: 4rem;
-            padding-top: 2rem;
+            margin-top: 2rem;
+            padding-top: 1.5rem;
             border-top: 1px solid rgba(255, 255, 255, 0.1);
             color: #94a3b8;
-            font-size: 0.95rem;
+            font-size: 0.75rem;
         }
 
-        /* Back to Top Button */
+        /* Back to Top */
         .back-to-top {
             position: fixed;
-            bottom: 2rem;
-            left: 2rem;
-            width: 50px;
-            height: 50px;
+            bottom: 1rem;
+            right: 1rem;
+            width: 40px;
+            height: 40px;
             background: linear-gradient(135deg, #4158D0, #C850C0);
             border-radius: 50%;
             display: flex;
@@ -1113,9 +1183,9 @@
             cursor: pointer;
             opacity: 0;
             visibility: hidden;
-            transition: all 0.4s;
+            transition: all 0.3s;
             z-index: 100;
-            box-shadow: 0 10px 30px rgba(65, 88, 208, 0.4);
+            box-shadow: 0 5px 15px rgba(65, 88, 208, 0.3);
         }
 
         .back-to-top.show {
@@ -1123,96 +1193,45 @@
             visibility: visible;
         }
 
-        .back-to-top:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 20px 40px rgba(65, 88, 208, 0.5);
+        /* Toast */
+        .toast {
+            position: fixed;
+            bottom: 1rem;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: #1a1f2b;
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border-radius: 50px;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            z-index: 1100;
+            transition: transform 0.3s;
+            font-size: 0.8rem;
+            white-space: nowrap;
         }
 
-        /* Responsive */
-        @media (max-width: 1200px) {
-            .features-grid,
-            .pricing-grid,
-            .testimonials-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-
-            .footer-content {
-                grid-template-columns: repeat(3, 1fr);
-            }
-        }
-
-        @media (max-width: 1024px) {
-            .solutions-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .contact-container {
-                grid-template-columns: 1fr;
-                padding: 2rem;
-            }
-
-            .stats-grid {
-                grid-template-columns: repeat(2, 1fr);
+        @media (max-width: 640px) {
+            .toast {
+                white-space: normal;
+                max-width: 90%;
+                text-align: center;
+                padding: 0.8rem 1.2rem;
             }
         }
 
-        @media (max-width: 768px) {
-            .navbar {
-                flex-direction: column;
-                gap: 1rem;
-                padding: 1rem;
-            }
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+        }
 
-            .nav-links {
-                flex-wrap: wrap;
-                justify-content: center;
-                gap: 1.5rem;
-            }
-
-            .hero h1 {
-                font-size: 3rem;
-            }
-
-            .hero-buttons {
-                flex-direction: column;
-            }
-
-            .features-grid,
-            .pricing-grid,
-            .testimonials-grid,
-            .stats-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .footer-content {
-                grid-template-columns: 1fr;
-            }
-
-            .trust-badges {
-                flex-direction: column;
-                align-items: center;
-                gap: 1rem;
-            }
-
-            .back-to-top {
-                bottom: 1rem;
-                left: 1rem;
-            }
+        .toast.success {
+            background: #10b981;
         }
     </style>
 </head>
 <body>
-    <!-- Custom Cursor -->
-    <div class="cursor"></div>
-    <div class="cursor-follower"></div>
-
-    <!-- Animated Background -->
     <div class="gradient-bg"></div>
-    <div class="floating-shapes">
-        <div class="shape shape1"></div>
-        <div class="shape shape2"></div>
-        <div class="shape shape3"></div>
-    </div>
 
     <!-- Navigation -->
     <nav class="navbar" id="navbar">
@@ -1220,16 +1239,23 @@
             <i class="fas fa-clinic-medical"></i>
             <span>ClinicCare Pro</span>
         </div>
-        <div class="nav-links">
+        <button class="menu-toggle" id="menuToggleBtn">
+            <i class="fas fa-bars"></i>
+        </button>
+        <div class="nav-links" id="navLinks">
+            <button class="close-menu" id="closeMenuBtn">
+                <i class="fas fa-times"></i>
+            </button>
             <a href="#home">Home</a>
             <a href="#features">Features</a>
             <a href="#solutions">Solutions</a>
             <a href="#pricing">Pricing</a>
             <a href="#contact">Contact</a>
         </div>
+        <div class="nav-overlay" id="navOverlay"></div>
         <div class="nav-buttons">
-            <button class="btn-login" onclick="openAuthPage('signin')">Sign In</button>
-            <button class="btn-signup" onclick="openAuthPage('signup')">Sign Up</button>
+            <button class="btn-login" onclick="openAuth('signin')">Sign In</button>
+            <button class="btn-signup" onclick="openAuth('signup')">Sign Up</button>
         </div>
     </nav>
 
@@ -1237,30 +1263,26 @@
     <section class="hero" id="home">
         <div class="hero-content" data-aos="fade-up">
             <div class="hero-badge">
-                <i class="fas fa-shield-alt"></i>
-                HIPAA Compliant & ISO 27001 Certified
+                <i class="fas fa-shield-alt"></i> HIPAA Compliant
             </div>
             <h1>
                 The Future of<br>
                 <span>Healthcare Management</span>
             </h1>
-            <p>Experience the most advanced AI-powered platform trusted by 500+ clinics worldwide. Streamline operations, enhance patient care, and boost revenue by up to 40%.</p>
+            <p>AI-powered platform trusted by 500+ clinics. Streamline operations, enhance patient care, and boost revenue.</p>
             <div class="hero-buttons">
-                <button class="btn-primary" onclick="openAuthPage('signup')">
-                    <i class="fas fa-rocket"></i>
-                    Start Free Trial
+                <button class="btn-primary" onclick="openAuth('signup')">
+                    <i class="fas fa-rocket"></i> Start Free Trial
                 </button>
-                <button class="btn-secondary" onclick="document.getElementById('demo').scrollIntoView({behavior: 'smooth'})">
-                    <i class="fas fa-play"></i>
-                    Watch Demo
+                <button class="btn-secondary" onclick="scrollToDemo()">
+                    <i class="fas fa-play"></i> Watch Demo
                 </button>
             </div>
             <div class="trust-badges">
-                <span><i class="fas fa-check-circle"></i> 50,000+ Patients</span>
+                <span><i class="fas fa-check-circle"></i> 50K+ Patients</span>
                 <span><i class="fas fa-check-circle"></i> 2,500+ Doctors</span>
                 <span><i class="fas fa-check-circle"></i> 500+ Clinics</span>
                 <span><i class="fas fa-check-circle"></i> 98% Satisfaction</span>
-                <span><i class="fas fa-check-circle"></i> 24/7 Support</span>
             </div>
         </div>
     </section>
@@ -1268,503 +1290,154 @@
     <!-- Stats Section -->
     <section class="stats-section">
         <div class="stats-grid">
-            <div class="stat-item" data-aos="zoom-in">
-                <h3>10K+</h3>
-                <p>Daily Appointments</p>
-            </div>
-            <div class="stat-item" data-aos="zoom-in" data-aos-delay="100">
-                <h3>2.5M+</h3>
-                <p>Patient Records</p>
-            </div>
-            <div class="stat-item" data-aos="zoom-in" data-aos-delay="200">
-                <h3>99.9%</h3>
-                <p>Uptime Guarantee</p>
-            </div>
-            <div class="stat-item" data-aos="zoom-in" data-aos-delay="300">
-                <h3>24/7</h3>
-                <p>Premium Support</p>
-            </div>
+            <div class="stat-item" data-aos="zoom-in"><h3>10K+</h3><p>Daily Appointments</p></div>
+            <div class="stat-item" data-aos="zoom-in" data-aos-delay="100"><h3>2.5M+</h3><p>Patient Records</p></div>
+            <div class="stat-item" data-aos="zoom-in" data-aos-delay="200"><h3>99.9%</h3><p>Uptime Guarantee</p></div>
+            <div class="stat-item" data-aos="zoom-in" data-aos-delay="300"><h3>24/7</h3><p>Premium Support</p></div>
         </div>
     </section>
 
     <!-- Features Section -->
     <section class="features-section" id="features">
-        <div class="section-header" data-aos="fade-up">
-            <h2>Powerful Features</h2>
-            <p>Everything you need to run a successful healthcare practice in one integrated platform</p>
-        </div>
+        <div class="section-header" data-aos="fade-up"><h2>Powerful Features</h2><p>Everything you need to run a successful healthcare practice</p></div>
         <div class="features-grid">
-            <div class="feature-card" data-aos="fade-up" data-aos-delay="100">
-                <div class="feature-icon">
-                    <i class="fas fa-calendar-check"></i>
-                </div>
-                <h3>Smart Scheduling</h3>
-                <p>AI-powered appointment scheduling with automated reminders, waitlist management, and real-time availability tracking.</p>
-                <a href="#" class="feature-link">Learn more <i class="fas fa-arrow-right"></i></a>
-            </div>
-            <div class="feature-card" data-aos="fade-up" data-aos-delay="200">
-                <div class="feature-icon">
-                    <i class="fas fa-file-medical"></i>
-                </div>
-                <h3>EHR System</h3>
-                <p>Secure electronic health records with customizable templates, voice-to-text, and instant access to patient history.</p>
-                <a href="#" class="feature-link">Learn more <i class="fas fa-arrow-right"></i></a>
-            </div>
-            <div class="feature-card" data-aos="fade-up" data-aos-delay="300">
-                <div class="feature-icon">
-                    <i class="fas fa-video"></i>
-                </div>
-                <h3>Telemedicine</h3>
-                <p>Integrated video consultations with HD quality, screen sharing, and secure patient portal for virtual visits.</p>
-                <a href="#" class="feature-link">Learn more <i class="fas fa-arrow-right"></i></a>
-            </div>
-            <div class="feature-card" data-aos="fade-up" data-aos-delay="400">
-                <div class="feature-icon">
-                    <i class="fas fa-chart-line"></i>
-                </div>
-                <h3>Advanced Analytics</h3>
-                <p>Real-time insights into practice performance, patient outcomes, revenue tracking, and predictive analytics.</p>
-                <a href="#" class="feature-link">Learn more <i class="fas fa-arrow-right"></i></a>
-            </div>
-            <div class="feature-card" data-aos="fade-up" data-aos-delay="500">
-                <div class="feature-icon">
-                    <i class="fas fa-prescription"></i>
-                </div>
-                <h3>e-Prescriptions</h3>
-                <p>Digital prescription management with pharmacy integration, drug interaction checks, and automated refills.</p>
-                <a href="#" class="feature-link">Learn more <i class="fas fa-arrow-right"></i></a>
-            </div>
-            <div class="feature-card" data-aos="fade-up" data-aos-delay="600">
-                <div class="feature-icon">
-                    <i class="fas fa-credit-card"></i>
-                </div>
-                <h3>Billing & Payments</h3>
-                <p>Automated invoicing, insurance claims processing, and secure payment gateway with multiple payment options.</p>
-                <a href="#" class="feature-link">Learn more <i class="fas fa-arrow-right"></i></a>
-            </div>
+            <div class="feature-card" data-aos="fade-up"><div class="feature-icon"><i class="fas fa-calendar-check"></i></div><h3>Smart Scheduling</h3><p>AI-powered appointment scheduling with automated reminders.</p><a href="#" class="feature-link">Learn more →</a></div>
+            <div class="feature-card" data-aos="fade-up" data-aos-delay="100"><div class="feature-icon"><i class="fas fa-file-medical"></i></div><h3>EHR System</h3><p>Secure electronic health records with instant access.</p><a href="#" class="feature-link">Learn more →</a></div>
+            <div class="feature-card" data-aos="fade-up" data-aos-delay="200"><div class="feature-icon"><i class="fas fa-video"></i></div><h3>Telemedicine</h3><p>HD video consultations with secure patient portal.</p><a href="#" class="feature-link">Learn more →</a></div>
+            <div class="feature-card" data-aos="fade-up" data-aos-delay="300"><div class="feature-icon"><i class="fas fa-chart-line"></i></div><h3>Advanced Analytics</h3><p>Real-time insights and predictive analytics.</p><a href="#" class="feature-link">Learn more →</a></div>
+            <div class="feature-card" data-aos="fade-up" data-aos-delay="400"><div class="feature-icon"><i class="fas fa-prescription"></i></div><h3>e-Prescriptions</h3><p>Digital prescriptions with pharmacy integration.</p><a href="#" class="feature-link">Learn more →</a></div>
+            <div class="feature-card" data-aos="fade-up" data-aos-delay="500"><div class="feature-icon"><i class="fas fa-credit-card"></i></div><h3>Billing & Payments</h3><p>Automated invoicing and secure payments.</p><a href="#" class="feature-link">Learn more →</a></div>
         </div>
     </section>
 
     <!-- Solutions Section -->
     <section class="solutions-section" id="solutions">
-        <div class="section-header" data-aos="fade-up">
-            <h2>Tailored Solutions</h2>
-            <p>Specialized dashboards designed for different healthcare professionals</p>
-        </div>
+        <div class="section-header" data-aos="fade-up"><h2>Tailored Solutions</h2><p>Specialized dashboards for every healthcare role</p></div>
         <div class="solutions-grid">
-            <div class="solution-card" data-aos="fade-right">
-                <div class="solution-icon">
-                    <i class="fas fa-user-md"></i>
-                </div>
-                <h3>For Doctors</h3>
-                <p>Streamline your clinical workflow with intuitive tools designed for physicians</p>
-                <ul class="solution-features">
-                    <li><i class="fas fa-check-circle"></i> Patient management & history</li>
-                    <li><i class="fas fa-check-circle"></i> Digital prescriptions</li>
-                    <li><i class="fas fa-check-circle"></i> Appointment calendar</li>
-                    <li><i class="fas fa-check-circle"></i> Clinical notes & templates</li>
-                    <li><i class="fas fa-check-circle"></i> Lab results integration</li>
-                </ul>
-                <button class="btn-solution" onclick="openAuthPage('signup', 'doctor')">Learn More</button>
-            </div>
-            <div class="solution-card" data-aos="fade-left">
-                <div class="solution-icon">
-                    <i class="fas fa-user"></i>
-                </div>
-                <h3>For Patients</h3>
-                <p>Take control of your healthcare journey with patient-centric features</p>
-                <ul class="solution-features">
-                    <li><i class="fas fa-check-circle"></i> Online appointment booking</li>
-                    <li><i class="fas fa-check-circle"></i> Secure messaging</li>
-                    <li><i class="fas fa-check-circle"></i> Medical records access</li>
-                    <li><i class="fas fa-check-circle"></i> Prescription refills</li>
-                    <li><i class="fas fa-check-circle"></i> Telemedicine visits</li>
-                </ul>
-                <button class="btn-solution" onclick="openAuthPage('signup', 'patient')">Learn More</button>
-            </div>
-            <div class="solution-card" data-aos="fade-right" data-aos-delay="100">
-                <div class="solution-icon">
-                    <i class="fas fa-user-tie"></i>
-                </div>
-                <h3>For Administrators</h3>
-                <p>Complete practice management and business intelligence tools</p>
-                <ul class="solution-features">
-                    <li><i class="fas fa-check-circle"></i> Staff management</li>
-                    <li><i class="fas fa-check-circle"></i> Financial reporting</li>
-                    <li><i class="fas fa-check-circle"></i> Inventory tracking</li>
-                    <li><i class="fas fa-check-circle"></i> Compliance monitoring</li>
-                    <li><i class="fas fa-check-circle"></i> Revenue analytics</li>
-                </ul>
-                <button class="btn-solution" onclick="openAuthPage('signup', 'admin')">Learn More</button>
-            </div>
-            <div class="solution-card" data-aos="fade-left" data-aos-delay="100">
-                <div class="solution-icon">
-                    <i class="fas fa-user-nurse"></i>
-                </div>
-                <h3>For Receptionists</h3>
-                <p>Efficient front-desk operations and patient flow management</p>
-                <ul class="solution-features">
-                    <li><i class="fas fa-check-circle"></i> Check-in/check-out</li>
-                    <li><i class="fas fa-check-circle"></i> Insurance verification</li>
-                    <li><i class="fas fa-check-circle"></i> Appointment scheduling</li>
-                    <li><i class="fas fa-check-circle"></i> Payment collection</li>
-                    <li><i class="fas fa-check-circle"></i> Patient communication</li>
-                </ul>
-                <button class="btn-solution" onclick="openAuthPage('signup', 'receptionist')">Learn More</button>
-            </div>
+            <div class="solution-card" data-aos="fade-right"><div class="solution-icon"><i class="fas fa-user-md"></i></div><h3>For Doctors</h3><ul class="solution-features"><li><i class="fas fa-check-circle"></i> Patient management</li><li><i class="fas fa-check-circle"></i> Digital prescriptions</li><li><i class="fas fa-check-circle"></i> Clinical notes</li></ul><button class="btn-solution" onclick="openAuth('signup','doctor')">Learn More</button></div>
+            <div class="solution-card" data-aos="fade-left"><div class="solution-icon"><i class="fas fa-user"></i></div><h3>For Patients</h3><ul class="solution-features"><li><i class="fas fa-check-circle"></i> Online booking</li><li><i class="fas fa-check-circle"></i> Medical records access</li><li><i class="fas fa-check-circle"></i> Telemedicine visits</li></ul><button class="btn-solution" onclick="openAuth('signup','patient')">Learn More</button></div>
+            <div class="solution-card" data-aos="fade-right"><div class="solution-icon"><i class="fas fa-user-tie"></i></div><h3>For Administrators</h3><ul class="solution-features"><li><i class="fas fa-check-circle"></i> Staff management</li><li><i class="fas fa-check-circle"></i> Financial reporting</li><li><i class="fas fa-check-circle"></i> Revenue analytics</li></ul><button class="btn-solution" onclick="openAuth('signup','admin')">Learn More</button></div>
+            <div class="solution-card" data-aos="fade-left"><div class="solution-icon"><i class="fas fa-user-nurse"></i></div><h3>For Receptionists</h3><ul class="solution-features"><li><i class="fas fa-check-circle"></i> Check-in/out</li><li><i class="fas fa-check-circle"></i> Appointment scheduling</li><li><i class="fas fa-check-circle"></i> Payment collection</li></ul><button class="btn-solution" onclick="openAuth('signup','receptionist')">Learn More</button></div>
         </div>
     </section>
 
     <!-- Pricing Section -->
     <section class="pricing-section" id="pricing">
-        <div class="section-header" data-aos="fade-up">
-            <h2>Simple, Transparent Pricing</h2>
-            <p>Choose the perfect plan for your practice. All plans include a 14-day free trial.</p>
-        </div>
+        <div class="section-header" data-aos="fade-up"><h2>Simple Pricing</h2><p>All plans include a 14-day free trial</p></div>
         <div class="pricing-grid">
-            <div class="pricing-card" data-aos="fade-up" data-aos-delay="100">
-                <div class="pricing-header">
-                    <h3>Starter</h3>
-                    <div class="price">$49<span>/month</span></div>
-                </div>
-                <ul class="pricing-features">
-                    <li><i class="fas fa-check"></i> Up to 500 patients</li>
-                    <li><i class="fas fa-check"></i> Basic EHR system</li>
-                    <li><i class="fas fa-check"></i> Appointment scheduling</li>
-                    <li><i class="fas fa-check"></i> Email support</li>
-                    <li><i class="fas fa-check"></i> Basic reporting</li>
-                    <li><i class="fas fa-check"></i> 2 staff accounts</li>
-                </ul>
-                <button class="btn-pricing" onclick="openAuthPage('signup')">Get Started</button>
-            </div>
-            <div class="pricing-card popular" data-aos="fade-up" data-aos-delay="200">
-                <div class="popular-badge">Most Popular</div>
-                <div class="pricing-header">
-                    <h3>Professional</h3>
-                    <div class="price">$99<span>/month</span></div>
-                </div>
-                <ul class="pricing-features">
-                    <li><i class="fas fa-check"></i> Up to 2,000 patients</li>
-                    <li><i class="fas fa-check"></i> Advanced EHR system</li>
-                    <li><i class="fas fa-check"></i> Smart scheduling</li>
-                    <li><i class="fas fa-check"></i> Telemedicine included</li>
-                    <li><i class="fas fa-check"></i> Priority support 24/7</li>
-                    <li><i class="fas fa-check"></i> 10 staff accounts</li>
-                    <li><i class="fas fa-check"></i> Advanced analytics</li>
-                    <li><i class="fas fa-check"></i> API access</li>
-                </ul>
-                <button class="btn-pricing" onclick="openAuthPage('signup')">Get Started</button>
-            </div>
-            <div class="pricing-card" data-aos="fade-up" data-aos-delay="300">
-                <div class="pricing-header">
-                    <h3>Enterprise</h3>
-                    <div class="price">$199<span>/month</span></div>
-                </div>
-                <ul class="pricing-features">
-                    <li><i class="fas fa-check"></i> Unlimited patients</li>
-                    <li><i class="fas fa-check"></i> Custom EHR solutions</li>
-                    <li><i class="fas fa-check"></i> White-label option</li>
-                    <li><i class="fas fa-check"></i> Dedicated account manager</li>
-                    <li><i class="fas fa-check"></i> Custom integrations</li>
-                    <li><i class="fas fa-check"></i> Unlimited staff</li>
-                    <li><i class="fas fa-check"></i> SLA guarantee</li>
-                    <li><i class="fas fa-check"></i> On-premise option</li>
-                </ul>
-                <button class="btn-pricing" onclick="openAuthPage('signup')">Contact Sales</button>
-            </div>
+            <div class="pricing-card" data-aos="fade-up"><div class="pricing-header"><h3>Starter</h3><div class="price">$49<span>/mo</span></div></div><ul class="pricing-features"><li><i class="fas fa-check"></i> Up to 500 patients</li><li><i class="fas fa-check"></i> Basic EHR system</li><li><i class="fas fa-check"></i> Email support</li></ul><button class="btn-pricing" onclick="openAuth('signup')">Get Started</button></div>
+            <div class="pricing-card popular" data-aos="fade-up" data-aos-delay="100"><div class="popular-badge">Popular</div><div class="pricing-header"><h3>Professional</h3><div class="price">$99<span>/mo</span></div></div><ul class="pricing-features"><li><i class="fas fa-check"></i> Up to 2,000 patients</li><li><i class="fas fa-check"></i> Telemedicine included</li><li><i class="fas fa-check"></i> Priority 24/7 support</li></ul><button class="btn-pricing" onclick="openAuth('signup')">Get Started</button></div>
+            <div class="pricing-card" data-aos="fade-up" data-aos-delay="200"><div class="pricing-header"><h3>Enterprise</h3><div class="price">$199<span>/mo</span></div></div><ul class="pricing-features"><li><i class="fas fa-check"></i> Unlimited patients</li><li><i class="fas fa-check"></i> Custom integrations</li><li><i class="fas fa-check"></i> Dedicated account manager</li></ul><button class="btn-pricing" onclick="openAuth('signup')">Contact Sales</button></div>
         </div>
     </section>
 
-    <!-- Testimonials Section -->
+    <!-- Testimonials -->
     <section class="testimonials-section">
-        <div class="section-header" data-aos="fade-up">
-            <h2>Trusted by Healthcare Professionals</h2>
-            <p>See what our clients say about ClinicCare Pro</p>
-        </div>
+        <div class="section-header" data-aos="fade-up"><h2>Trusted by Professionals</h2><p>See what our clients say</p></div>
         <div class="testimonials-grid">
-            <div class="testimonial-card" data-aos="fade-up" data-aos-delay="100">
-                <div class="testimonial-rating">
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                </div>
-                <p class="testimonial-text">"ClinicCare Pro has transformed our practice. The AI-powered scheduling alone saved us 20 hours per week. Our patients love the easy booking system."</p>
-                <div class="testimonial-author">
-                    <div class="author-avatar">DS</div>
-                    <div class="author-info">
-                        <h4>Dr. Sarah Johnson</h4>
-                        <p>Cardiologist, NYC Medical</p>
-                    </div>
-                </div>
-            </div>
-            <div class="testimonial-card" data-aos="fade-up" data-aos-delay="200">
-                <div class="testimonial-rating">
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                </div>
-                <p class="testimonial-text">"The EHR system is incredibly intuitive. We've reduced documentation time by 40% and the telemedicine integration works flawlessly. Best decision we made."</p>
-                <div class="testimonial-author">
-                    <div class="author-avatar">MC</div>
-                    <div class="author-info">
-                        <h4>Dr. Michael Chen</h4>
-                        <p>Family Medicine, Austin</p>
-                    </div>
-                </div>
-            </div>
-            <div class="testimonial-card" data-aos="fade-up" data-aos-delay="300">
-                <div class="testimonial-rating">
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                </div>
-                <p class="testimonial-text">"As a practice administrator, the analytics and reporting tools are invaluable. I can track everything from revenue to patient satisfaction in real-time."</p>
-                <div class="testimonial-author">
-                    <div class="author-avatar">RW</div>
-                    <div class="author-info">
-                        <h4>Rachel Williams</h4>
-                        <p>Clinic Administrator</p>
-                    </div>
-                </div>
-            </div>
+            <div class="testimonial-card" data-aos="fade-up"><div class="testimonial-text">"ClinicCare Pro transformed our practice. The AI scheduling saved us 20 hours per week."</div><div class="testimonial-author"><div class="author-avatar">DS</div><div class="author-info"><h4>Dr. Sarah Johnson</h4><p>Cardiologist</p></div></div></div>
+            <div class="testimonial-card" data-aos="fade-up" data-aos-delay="100"><div class="testimonial-text">"The EHR system reduced documentation time by 40%. Incredibly intuitive."</div><div class="testimonial-author"><div class="author-avatar">MC</div><div class="author-info"><h4>Dr. Michael Chen</h4><p>Family Medicine</p></div></div></div>
+            <div class="testimonial-card" data-aos="fade-up" data-aos-delay="200"><div class="testimonial-text">"Analytics tools are invaluable. I can track everything in real-time."</div><div class="testimonial-author"><div class="author-avatar">RW</div><div class="author-info"><h4>Rachel Williams</h4><p>Clinic Admin</p></div></div></div>
         </div>
     </section>
 
     <!-- Contact Section -->
     <section class="contact-section" id="contact">
-        <div class="section-header" data-aos="fade-up">
-            <h2>Get In Touch</h2>
-            <p>Have questions? We're here to help you 24/7</p>
-        </div>
+        <div class="section-header" data-aos="fade-up"><h2>Get In Touch</h2><p>Have questions? We're here to help</p></div>
         <div class="contact-container" data-aos="fade-up">
-            <div class="contact-info">
-                <h3>Let's Talk</h3>
-                <p>Whether you're interested in our platform, need technical support, or want to schedule a demo, our team is ready to assist you.</p>
-                <ul class="contact-details">
-                    <li><i class="fas fa-phone"></i> +1 (888) 123-4567</li>
-                    <li><i class="fas fa-envelope"></i> hello@cliniccarepro.com</li>
-                    <li><i class="fas fa-map-marker-alt"></i> 123 Medical Center Dr, Suite 100, San Francisco, CA 94105</li>
-                    <li><i class="fas fa-clock"></i> Monday - Friday: 9AM - 6PM PST</li>
-                </ul>
-                <div class="social-links">
-                    <a href="#"><i class="fab fa-linkedin-in"></i></a>
-                    <a href="#"><i class="fab fa-twitter"></i></a>
-                    <a href="#"><i class="fab fa-facebook-f"></i></a>
-                    <a href="#"><i class="fab fa-instagram"></i></a>
-                </div>
-            </div>
-            <div class="contact-form">
-                <form onsubmit="handleContact(event)">
-                    <div class="form-group">
-                        <input type="text" placeholder="Your Name" required>
-                    </div>
-                    <div class="form-group">
-                        <input type="email" placeholder="Email Address" required>
-                    </div>
-                    <div class="form-group">
-                        <input type="text" placeholder="Subject">
-                    </div>
-                    <div class="form-group">
-                        <textarea placeholder="Your Message" required></textarea>
-                    </div>
-                    <button type="submit" class="btn-contact">Send Message</button>
-                </form>
-            </div>
+            <div class="contact-info"><h3>Let's Talk</h3><p>Need support or want a demo? Our team is ready.</p><ul class="contact-details"><li><i class="fas fa-phone"></i> +1 (888) 123-4567</li><li><i class="fas fa-envelope"></i> hello@cliniccarepro.com</li><li><i class="fas fa-clock"></i> Mon-Fri: 9AM - 6PM PST</li></ul><div class="social-links"><a href="#"><i class="fab fa-linkedin-in"></i></a><a href="#"><i class="fab fa-twitter"></i></a><a href="#"><i class="fab fa-facebook-f"></i></a></div></div>
+            <div class="contact-form"><form onsubmit="handleContact(event)"><div class="form-group"><input type="text" placeholder="Your Name" required></div><div class="form-group"><input type="email" placeholder="Email Address" required></div><div class="form-group"><textarea placeholder="Your Message" required></textarea></div><button type="submit" class="btn-contact">Send Message</button></form></div>
         </div>
     </section>
 
     <!-- CTA Section -->
-    <section class="cta-section" id="demo">
-        <div class="cta-content" data-aos="zoom-in">
-            <h2>Ready to Transform Your Practice?</h2>
-            <p>Join thousands of healthcare providers who trust ClinicCare Pro. Start your free 14-day trial today. No credit card required.</p>
-            <button class="btn-cta" onclick="openAuthPage('signup')">
-                <i class="fas fa-rocket"></i>
-                Start Free Trial
-            </button>
-        </div>
-    </section>
+    <section class="cta-section" id="demo"><div class="cta-content"><h2>Ready to Transform Your Practice?</h2><p>Start your free 14-day trial today.</p><button class="btn-cta" onclick="openAuth('signup')"><i class="fas fa-rocket"></i> Start Free Trial</button></div></section>
 
     <!-- Footer -->
-    <footer class="footer">
-        <div class="footer-content">
-            <div class="footer-section">
-                <div class="logo" style="color: white; margin-bottom: 1rem;">
-                    <i class="fas fa-clinic-medical"></i>
-                    <span>ClinicCare Pro</span>
-                </div>
-                <p>The most advanced healthcare management platform for modern medical practices. Trusted by over 500 clinics worldwide.</p>
-                <div class="social-links">
-                    <a href="#"><i class="fab fa-linkedin-in"></i></a>
-                    <a href="#"><i class="fab fa-twitter"></i></a>
-                    <a href="#"><i class="fab fa-facebook-f"></i></a>
-                    <a href="#"><i class="fab fa-instagram"></i></a>
-                    <a href="#"><i class="fab fa-youtube"></i></a>
-                </div>
-            </div>
-            <div class="footer-section">
-                <h3>Product</h3>
-                <ul>
-                    <li><a href="#">Features</a></li>
-                    <li><a href="#">Pricing</a></li>
-                    <li><a href="#">Security</a></li>
-                    <li><a href="#">Updates</a></li>
-                    <li><a href="#">Roadmap</a></li>
-                </ul>
-            </div>
-            <div class="footer-section">
-                <h3>Solutions</h3>
-                <ul>
-                    <li><a href="#">For Doctors</a></li>
-                    <li><a href="#">For Patients</a></li>
-                    <li><a href="#">For Admins</a></li>
-                    <li><a href="#">For Receptionists</a></li>
-                    <li><a href="#">Enterprise</a></li>
-                </ul>
-            </div>
-            <div class="footer-section">
-                <h3>Resources</h3>
-                <ul>
-                    <li><a href="#">Blog</a></li>
-                    <li><a href="#">Documentation</a></li>
-                    <li><a href="#">API Reference</a></li>
-                    <li><a href="#">Community</a></li>
-                    <li><a href="#">Support</a></li>
-                </ul>
-            </div>
-            <div class="footer-section">
-                <h3>Company</h3>
-                <ul>
-                    <li><a href="#">About Us</a></li>
-                    <li><a href="#">Careers</a></li>
-                    <li><a href="#">Press</a></li>
-                    <li><a href="#">Partners</a></li>
-                    <li><a href="#">Contact</a></li>
-                </ul>
-            </div>
-        </div>
-        <div class="footer-bottom">
-            <p>&copy; 2024 ClinicCare Pro. All rights reserved. | <a href="#" style="color: #94a3b8;">Privacy Policy</a> | <a href="#" style="color: #94a3b8;">Terms of Service</a> | <a href="#" style="color: #94a3b8;">Cookie Policy</a></p>
-        </div>
-    </footer>
+    <footer class="footer"><div class="footer-content"><div class="footer-section"><div class="logo" style="color:white;margin-bottom:0.8rem;"><i class="fas fa-clinic-medical"></i><span>ClinicCare Pro</span></div><p>The most advanced healthcare management platform.</p><div class="social-links"><a href="#"><i class="fab fa-linkedin-in"></i></a><a href="#"><i class="fab fa-twitter"></i></a><a href="#"><i class="fab fa-facebook-f"></i></a></div></div><div class="footer-section"><h3>Product</h3><ul><li><a href="#">Features</a></li><li><a href="#">Pricing</a></li><li><a href="#">Security</a></li></ul></div><div class="footer-section"><h3>Solutions</h3><ul><li><a href="#">For Doctors</a></li><li><a href="#">For Patients</a></li><li><a href="#">For Admins</a></li></ul></div><div class="footer-section"><h3>Company</h3><ul><li><a href="#">About Us</a></li><li><a href="#">Careers</a></li><li><a href="#">Contact</a></li></ul></div></div><div class="footer-bottom"><p>&copy; 2024 ClinicCare Pro. All rights reserved.</p></div></footer>
 
-    <!-- Back to Top Button -->
-    <div class="back-to-top" onclick="scrollToTop()">
-        <i class="fas fa-arrow-up"></i>
-    </div>
+    <div class="back-to-top" onclick="scrollToTop()"><i class="fas fa-arrow-up"></i></div>
+    <div class="toast" id="toast"><i class="fas" id="toastIcon"></i><span id="toastMessage"></span></div>
 
-    <!-- Toast Notification -->
-    <div class="toast" id="toast">
-        <i class="fas" id="toastIcon"></i>
-        <span id="toastMessage"></span>
-    </div>
-
-    <!-- AOS Animation Library -->
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    
     <script>
-        // Initialize AOS
-        AOS.init({
-            duration: 1000,
-            once: true,
-            offset: 100
-        });
+        AOS.init({ duration: 800, once: true, offset: 50 });
 
-        // Custom Cursor
-        const cursor = document.querySelector('.cursor');
-        const cursorFollower = document.querySelector('.cursor-follower');
+        // Mobile Menu Toggle
+        const menuToggleBtn = document.getElementById('menuToggleBtn');
+        const closeMenuBtn = document.getElementById('closeMenuBtn');
+        const navLinks = document.getElementById('navLinks');
+        const navOverlay = document.getElementById('navOverlay');
 
-        document.addEventListener('mousemove', (e) => {
-            cursor.style.left = e.clientX + 'px';
-            cursor.style.top = e.clientY + 'px';
-            
-            setTimeout(() => {
-                cursorFollower.style.left = e.clientX + 'px';
-                cursorFollower.style.top = e.clientY + 'px';
-            }, 100);
-        });
+        function openMobileMenu() {
+            navLinks.classList.add('active');
+            navOverlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
 
-        // Navbar Scroll Effect
+        function closeMobileMenu() {
+            navLinks.classList.remove('active');
+            navOverlay.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        if (menuToggleBtn) menuToggleBtn.addEventListener('click', openMobileMenu);
+        if (closeMenuBtn) closeMenuBtn.addEventListener('click', closeMobileMenu);
+        if (navOverlay) navOverlay.addEventListener('click', closeMobileMenu);
+        document.querySelectorAll('.nav-links a').forEach(link => link.addEventListener('click', closeMobileMenu));
+
+        // Navbar scroll effect
         window.addEventListener('scroll', () => {
             const navbar = document.getElementById('navbar');
-            if (window.scrollY > 50) {
-                navbar.classList.add('scrolled');
-            } else {
-                navbar.classList.remove('scrolled');
-            }
-            
-            // Back to top button
             const backToTop = document.querySelector('.back-to-top');
-            if (window.scrollY > 300) {
-                backToTop.classList.add('show');
-            } else {
-                backToTop.classList.remove('show');
-            }
+            if (window.scrollY > 50) navbar.classList.add('scrolled');
+            else navbar.classList.remove('scrolled');
+            if (window.scrollY > 300) backToTop.classList.add('show');
+            else backToTop.classList.remove('show');
         });
 
-        // Toast notification
         function showToast(message, type = 'success') {
             const toast = document.getElementById('toast');
             const icon = document.getElementById('toastIcon');
-            const messageEl = document.getElementById('toastMessage');
-            
-            toast.className = 'toast ' + type;
+            const msgEl = document.getElementById('toastMessage');
+            toast.className = 'toast show ' + type;
             icon.className = 'fas ' + (type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle');
-            messageEl.textContent = message;
-            
-            toast.classList.add('show');
-            
-            setTimeout(() => {
-                toast.classList.remove('show');
-            }, 3000);
+            msgEl.textContent = message;
+            setTimeout(() => toast.classList.remove('show'), 3000);
         }
+        window.showToast = showToast;
 
-        // Open auth page in same tab
-        window.openAuthPage = function(tab, role = null) {
-            // Build URL with query parameters
-            let url = 'auth-modal.html?tab=' + tab;
-            if (role) {
-                url += '&role=' + role;
-            }
-            
-            // Navigate to the auth page in the same tab
-            window.location.href = url;
+        window.openAuth = function(tab, role = null) {
+            showToast('Redirecting to ' + tab + ' page...', 'success');
+            setTimeout(() => {
+                let url = 'auth-modal.html?tab=' + tab;
+                if (role) url += '&role=' + role;
+                window.location.href = url;
+            }, 500);
         };
 
-        // Handle contact form
         window.handleContact = function(event) {
             event.preventDefault();
-            showToast('Thank you for your message! We\'ll respond within 24 hours.', 'success');
+            showToast('Thank you! We\'ll respond within 24 hours.', 'success');
             event.target.reset();
         };
 
-        // Smooth scrolling for navigation links
+        window.scrollToDemo = function() {
+            document.getElementById('demo').scrollIntoView({ behavior: 'smooth' });
+        };
+
+        window.scrollToTop = function() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        };
+
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
+            anchor.addEventListener('click', function(e) {
                 e.preventDefault();
                 const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
-                    });
-                }
+                if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                closeMobileMenu();
             });
         });
-
-        // Back to top function
-        window.scrollToTop = function() {
-            window.scrollTo({
-                top: 0,
-                behavior: 'smooth'
-            });
-        };
     </script>
 </body>
 </html>
