@@ -86,7 +86,6 @@
             backdrop-filter: blur(10px);
             background: rgba(255, 255, 255, 0.95);
             gap: 1rem;
-            flex-wrap: wrap;
         }
 
         .navbar.scrolled {
@@ -123,7 +122,15 @@
             }
         }
 
-        /* Mobile Menu Toggle Button */
+        /* Desktop: auth buttons on right side */
+        .nav-buttons {
+            display: flex;
+            gap: 0.6rem;
+            flex-shrink: 0;
+            order: 2;
+        }
+
+        /* Mobile Menu Toggle Button - visible only on mobile */
         .menu-toggle {
             display: none;
             background: linear-gradient(135deg, #4158D0, #C850C0);
@@ -144,18 +151,14 @@
             transform: scale(0.95);
         }
 
-        @media (max-width: 768px) {
-            .menu-toggle {
-                display: flex;
-            }
-        }
-
-        /* Navigation Links */
+        /* Navigation Links - Desktop: inline row */
         .nav-links {
             display: flex;
             gap: 1.5rem;
             align-items: center;
             transition: all 0.3s ease;
+            order: 1;
+            margin-right: auto;
         }
 
         .nav-links a {
@@ -195,23 +198,37 @@
             transform: scaleX(1);
         }
 
-        /* Mobile Navigation */
+        /* Mobile Navigation Styles */
         @media (max-width: 768px) {
+            .menu-toggle {
+                display: flex;
+                order: 3;
+            }
+            
+            .nav-buttons {
+                order: 2;
+                margin-left: auto;
+            }
+            
+            /* On mobile, nav-links becomes a full-screen sidebar */
             .nav-links {
                 position: fixed;
                 top: 0;
                 left: -100%;
-                width: 280px;
+                width: 85%;
+                max-width: 320px;
                 height: 100vh;
                 background: white;
                 flex-direction: column;
-                justify-content: center;
-                gap: 1.5rem;
-                padding: 2rem;
-                box-shadow: 5px 0 30px rgba(0, 0, 0, 0.1);
+                justify-content: flex-start;
+                gap: 0;
+                padding: 5rem 2rem 2rem 2rem;
+                box-shadow: 5px 0 30px rgba(0, 0, 0, 0.15);
                 transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
                 z-index: 1001;
                 align-items: flex-start;
+                margin-right: 0;
+                overflow-y: auto;
             }
             
             .nav-links.active {
@@ -219,9 +236,62 @@
             }
             
             .nav-links a {
-                font-size: 1.1rem;
+                font-size: 1.2rem;
                 width: 100%;
                 white-space: normal;
+                padding: 1rem 0;
+                border-bottom: 1px solid #eef2ff;
+                margin: 0;
+            }
+            
+            .nav-links a::before {
+                display: none;
+            }
+            
+            .nav-links a:active {
+                color: #4158D0;
+                background: rgba(65, 88, 208, 0.05);
+                padding-left: 0.5rem;
+            }
+            
+            /* Mobile menu: add auth buttons inside the drawer (below nav links) */
+            .mobile-drawer-buttons {
+                display: flex;
+                flex-direction: column;
+                gap: 0.8rem;
+                width: 100%;
+                margin-top: 2rem;
+                padding-top: 1.5rem;
+                border-top: 1px solid #e2e8f0;
+            }
+            
+            .mobile-drawer-buttons .btn-login-mobile,
+            .mobile-drawer-buttons .btn-signup-mobile {
+                width: 100%;
+                padding: 0.8rem 1rem;
+                border-radius: 50px;
+                font-weight: 600;
+                text-align: center;
+                cursor: pointer;
+                transition: all 0.3s;
+                font-size: 1rem;
+            }
+            
+            .mobile-drawer-buttons .btn-login-mobile {
+                border: 2px solid #4158D0;
+                background: transparent;
+                color: #4158D0;
+            }
+            
+            .mobile-drawer-buttons .btn-signup-mobile {
+                background: linear-gradient(90deg, #4158D0, #C850C0);
+                color: white;
+                border: none;
+            }
+            
+            .mobile-drawer-buttons .btn-login-mobile:active,
+            .mobile-drawer-buttons .btn-signup-mobile:active {
+                transform: scale(0.97);
             }
             
             .nav-overlay {
@@ -243,12 +313,12 @@
             
             .close-menu {
                 position: absolute;
-                top: 1.5rem;
-                right: 1.5rem;
-                background: #f0f0f0;
+                top: 1.2rem;
+                right: 1.2rem;
+                background: #f1f5f9;
                 border: none;
-                width: 36px;
-                height: 36px;
+                width: 40px;
+                height: 40px;
                 border-radius: 50%;
                 font-size: 1.2rem;
                 color: #1a1f2b;
@@ -256,19 +326,19 @@
                 display: flex;
                 align-items: center;
                 justify-content: center;
+                transition: all 0.2s;
+            }
+            
+            .close-menu:active {
+                background: #e2e8f0;
             }
         }
         
         @media (min-width: 769px) {
-            .close-menu {
+            .close-menu,
+            .mobile-drawer-buttons {
                 display: none;
             }
-        }
-
-        .nav-buttons {
-            display: flex;
-            gap: 0.6rem;
-            flex-shrink: 0;
         }
 
         .btn-login, .btn-signup {
@@ -1233,15 +1303,12 @@
 <body>
     <div class="gradient-bg"></div>
 
-    <!-- Navigation -->
+    <!-- Navigation: Desktop: logo | nav links | auth buttons (right side). Mobile: logo | auth buttons | toggle button -->
     <nav class="navbar" id="navbar">
         <div class="logo">
             <i class="fas fa-clinic-medical"></i>
             <span>ClinicCare Pro</span>
         </div>
-        <button class="menu-toggle" id="menuToggleBtn">
-            <i class="fas fa-bars"></i>
-        </button>
         <div class="nav-links" id="navLinks">
             <button class="close-menu" id="closeMenuBtn">
                 <i class="fas fa-times"></i>
@@ -1251,12 +1318,20 @@
             <a href="#solutions">Solutions</a>
             <a href="#pricing">Pricing</a>
             <a href="#contact">Contact</a>
+            <!-- Mobile drawer: auth buttons appear inside drawer after links (dynamic) -->
+            <div class="mobile-drawer-buttons" id="mobileDrawerButtons">
+                <button class="btn-login-mobile" onclick="openAuth('signin')">Sign In</button>
+                <button class="btn-signup-mobile" onclick="openAuth('signup')">Sign Up</button>
+            </div>
         </div>
-        <div class="nav-overlay" id="navOverlay"></div>
         <div class="nav-buttons">
             <button class="btn-login" onclick="openAuth('signin')">Sign In</button>
             <button class="btn-signup" onclick="openAuth('signup')">Sign Up</button>
         </div>
+        <button class="menu-toggle" id="menuToggleBtn">
+            <i class="fas fa-bars"></i>
+        </button>
+        <div class="nav-overlay" id="navOverlay"></div>
     </nav>
 
     <!-- Hero Section -->
@@ -1297,7 +1372,7 @@
         </div>
     </section>
 
-    <!-- Features Section -->
+    <!-- Features, Solutions, Pricing, Testimonials, Contact Sections (unchanged content) -->
     <section class="features-section" id="features">
         <div class="section-header" data-aos="fade-up"><h2>Powerful Features</h2><p>Everything you need to run a successful healthcare practice</p></div>
         <div class="features-grid">
@@ -1310,7 +1385,6 @@
         </div>
     </section>
 
-    <!-- Solutions Section -->
     <section class="solutions-section" id="solutions">
         <div class="section-header" data-aos="fade-up"><h2>Tailored Solutions</h2><p>Specialized dashboards for every healthcare role</p></div>
         <div class="solutions-grid">
@@ -1321,7 +1395,6 @@
         </div>
     </section>
 
-    <!-- Pricing Section -->
     <section class="pricing-section" id="pricing">
         <div class="section-header" data-aos="fade-up"><h2>Simple Pricing</h2><p>All plans include a 14-day free trial</p></div>
         <div class="pricing-grid">
@@ -1331,7 +1404,6 @@
         </div>
     </section>
 
-    <!-- Testimonials -->
     <section class="testimonials-section">
         <div class="section-header" data-aos="fade-up"><h2>Trusted by Professionals</h2><p>See what our clients say</p></div>
         <div class="testimonials-grid">
@@ -1341,7 +1413,6 @@
         </div>
     </section>
 
-    <!-- Contact Section -->
     <section class="contact-section" id="contact">
         <div class="section-header" data-aos="fade-up"><h2>Get In Touch</h2><p>Have questions? We're here to help</p></div>
         <div class="contact-container" data-aos="fade-up">
@@ -1350,10 +1421,8 @@
         </div>
     </section>
 
-    <!-- CTA Section -->
     <section class="cta-section" id="demo"><div class="cta-content"><h2>Ready to Transform Your Practice?</h2><p>Start your free 14-day trial today.</p><button class="btn-cta" onclick="openAuth('signup')"><i class="fas fa-rocket"></i> Start Free Trial</button></div></section>
 
-    <!-- Footer -->
     <footer class="footer"><div class="footer-content"><div class="footer-section"><div class="logo" style="color:white;margin-bottom:0.8rem;"><i class="fas fa-clinic-medical"></i><span>ClinicCare Pro</span></div><p>The most advanced healthcare management platform.</p><div class="social-links"><a href="#"><i class="fab fa-linkedin-in"></i></a><a href="#"><i class="fab fa-twitter"></i></a><a href="#"><i class="fab fa-facebook-f"></i></a></div></div><div class="footer-section"><h3>Product</h3><ul><li><a href="#">Features</a></li><li><a href="#">Pricing</a></li><li><a href="#">Security</a></li></ul></div><div class="footer-section"><h3>Solutions</h3><ul><li><a href="#">For Doctors</a></li><li><a href="#">For Patients</a></li><li><a href="#">For Admins</a></li></ul></div><div class="footer-section"><h3>Company</h3><ul><li><a href="#">About Us</a></li><li><a href="#">Careers</a></li><li><a href="#">Contact</a></li></ul></div></div><div class="footer-bottom"><p>&copy; 2024 ClinicCare Pro. All rights reserved.</p></div></footer>
 
     <div class="back-to-top" onclick="scrollToTop()"><i class="fas fa-arrow-up"></i></div>
@@ -1386,7 +1455,6 @@
         if (navOverlay) navOverlay.addEventListener('click', closeMobileMenu);
         document.querySelectorAll('.nav-links a').forEach(link => link.addEventListener('click', closeMobileMenu));
 
-        // Navbar scroll effect
         window.addEventListener('scroll', () => {
             const navbar = document.getElementById('navbar');
             const backToTop = document.querySelector('.back-to-top');
@@ -1410,7 +1478,7 @@
         window.openAuth = function(tab, role = null) {
             showToast('Redirecting to ' + tab + ' page...', 'success');
             setTimeout(() => {
-                let url = 'auth-modal.html?tab=' + tab;
+                let url = 'auth.html?tab=' + tab;
                 if (role) url += '&role=' + role;
                 window.location.href = url;
             }, 500);

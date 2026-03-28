@@ -1,1067 +1,276 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
-    <title>ClinicCare Pro · Admin Dashboard</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Prominent Login</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #2f3e55;
+      --accent: #ffb347;
+      --accent2: #6dd5ed;
+      --bg: #f5f7fa;
+      --text: #1f2937;
+      --muted: #6b7280;
+    }
 
-        body {
-            font-family: 'Inter', sans-serif;
-            background: #f5f9ff;
-            color: #0a2540;
-            overflow-x: hidden;
-            width: 100%;
-            position: relative;
-        }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+    }
 
-        /* Hide scrollbar on mobile for cleaner look */
-        @media (max-width: 768px) {
-            ::-webkit-scrollbar {
-                width: 3px;
-            }
-        }
+    body {
+      background: linear-gradient(135deg, #dfe9f3, #ffffff);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
 
-        .dashboard {
-            display: flex;
-            min-height: 100vh;
-            width: 100%;
-            position: relative;
-        }
+    /* floating blobs */
+    .blob {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(60px);
+      opacity: 0.5;
+      animation: float 10s infinite ease-in-out;
+    }
 
-        /* ===== SIDEBAR - OFF-CANVAS ON MOBILE ===== */
-        .sidebar {
-            position: fixed;
-            top: 0;
-            left: -280px;
-            width: 280px;
-            height: 100vh;
-            background: linear-gradient(180deg, #0a1a33 0%, #0a1428 100%);
-            border-right: 1px solid rgba(255,255,255,0.05);
-            box-shadow: 15px 0 25px -15px rgba(0,0,0,0.3);
-            display: flex;
-            flex-direction: column;
-            z-index: 1000;
-            transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
+    .blob1 { width: 300px; height: 300px; background: #6dd5ed; top: -80px; left: -80px; }
+    .blob2 { width: 250px; height: 250px; background: #ffb347; bottom: -60px; right: -60px; animation-delay: 3s; }
 
-        .sidebar.open {
-            left: 0;
-        }
+    @keyframes float {
+      0%,100% { transform: translateY(0px);} 
+      50% { transform: translateY(-30px);} 
+    }
 
-        /* Desktop sidebar visible */
-        @media (min-width: 1024px) {
-            .sidebar {
-                position: fixed;
-                left: 0;
-                width: 260px;
-            }
-            .menu-toggle-btn {
-                display: none !important;
-            }
-            .sidebar-overlay {
-                display: none !important;
-            }
-            .main-panel {
-                margin-left: 260px;
-            }
-        }
+    .container {
+      width: 95%;
+      max-width: 1050px;
+      min-height: 550px;
+      background: rgba(255,255,255,0.9);
+      backdrop-filter: blur(12px);
+      border-radius: 20px;
+      display: flex;
+      overflow: hidden;
+      box-shadow: 0 25px 80px rgba(0,0,0,0.12);
+      animation: fadeIn 1s ease;
+      position: relative;
+      z-index: 2;
+    }
 
-        .sidebar-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(4px);
-            z-index: 999;
-            display: none;
-            transition: opacity 0.3s;
-        }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(40px);} 
+      to { opacity: 1; transform: translateY(0);} 
+    }
 
-        .sidebar-overlay.active {
-            display: block;
-        }
+    .left {
+      flex: 1;
+      padding: 60px 45px;
+    }
 
-        .sidebar-header {
-            padding: 24px 20px 16px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            border-bottom: 1px solid rgba(255,255,255,0.06);
-        }
-        .brand-icon {
-            width: 42px;
-            height: 42px;
-            background: linear-gradient(145deg, #2563eb, #7c3aed);
-            border-radius: 14px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 20px;
-            flex-shrink: 0;
-            color: white;
-        }
-        .sidebar-header h2 {
-            font-weight: 700;
-            font-size: 1rem;
-            background: linear-gradient(to right, #fff, #a5c9ff);
-            -webkit-background-clip: text;
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
-            white-space: nowrap;
-        }
+    .logo {
+      font-weight: 700;
+      font-size: 20px;
+      margin-bottom: 35px;
+      letter-spacing: 1px;
+    }
 
-        .profile-card {
-            background: rgba(255,255,255,0.04);
-            margin: 16px 14px 20px;
-            padding: 14px;
-            border-radius: 20px;
-            border: 1px solid rgba(255,255,255,0.08);
-        }
-        .profile-name {
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-bottom: 8px;
-            font-size: 0.85rem;
-            color: #f0fcff;
-        }
-        .profile-detail {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin: 6px 0;
-            color: #b8d0e9;
-            font-size: 0.7rem;
-            word-break: break-all;
-        }
-        .profile-detail i {
-            width: 16px;
-            flex-shrink: 0;
-        }
-        .role-tag {
-            background: linear-gradient(145deg, #2563eb, #7c3aed);
-            padding: 4px 12px;
-            border-radius: 40px;
-            font-size: 0.65rem;
-            font-weight: 600;
-            display: inline-block;
-            margin-top: 6px;
-        }
+    h2 {
+      font-size: 22px;
+      margin-bottom: 30px;
+      color: var(--text);
+    }
 
-        .nav-menu {
-            flex: 1;
-            padding: 0 10px;
-            overflow-y: auto;
-        }
-        .nav-item {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 10px 14px;
-            margin: 4px 0;
-            border-radius: 14px;
-            color: #b0c7f0;
-            font-weight: 500;
-            font-size: 0.85rem;
-            transition: all 0.2s;
-            cursor: pointer;
-        }
-        .nav-item i {
-            width: 20px;
-            font-size: 1rem;
-            color: #7b98cf;
-            flex-shrink: 0;
-        }
-        .nav-item span {
-            flex: 1;
-        }
-        .nav-item:hover {
-            background: rgba(37, 99, 235, 0.2);
-            color: white;
-        }
-        .nav-item.active {
-            background: linear-gradient(95deg, #2563eb, #4f46e5);
-            color: white;
-            box-shadow: 0 4px 12px -4px #2563eb;
-        }
-        .nav-item.active i {
-            color: white;
-        }
+    .input-group {
+      margin-bottom: 20px;
+    }
 
-        .logout-button {
-            margin: 12px 14px 20px;
-            padding: 10px 16px;
-            background: rgba(239, 68, 68, 0.12);
-            border: 1px solid rgba(239, 68, 68, 0.25);
-            border-radius: 40px;
-            color: #ffbcbc;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        .logout-button:hover {
-            background: #ef4444;
-            color: white;
-        }
+    .input-group label {
+      font-size: 12px;
+      color: var(--muted);
+    }
 
-        /* ===== MAIN PANEL ===== */
-        .main-panel {
-            flex: 1;
-            width: 100%;
-            padding: 16px;
-            background: #f5f9ff;
-            transition: margin-left 0.3s ease;
-        }
+    .input-group input {
+      width: 100%;
+      padding: 13px;
+      margin-top: 6px;
+      border: 1px solid #e5e7eb;
+      border-radius: 10px;
+      transition: 0.3s;
+      background: #f9fafb;
+    }
 
-        /* Mobile Header with Menu Toggle */
-        .mobile-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            background: white;
-            padding: 12px 16px;
-            border-radius: 28px;
-            margin-bottom: 20px;
-            border: 1px solid #e6edf8;
-        }
+    .input-group input:focus {
+      border-color: var(--accent2);
+      background: #fff;
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(109,213,237,0.2);
+    }
 
-        .menu-toggle-btn {
-            background: linear-gradient(135deg, #2563eb, #4f46e5);
-            border: none;
-            width: 42px;
-            height: 42px;
-            border-radius: 50%;
-            color: white;
-            font-size: 1.2rem;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.2s;
-            flex-shrink: 0;
-        }
+    .btn {
+      width: 100%;
+      padding: 13px;
+      background: linear-gradient(135deg, var(--primary), #1f2a3a);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      margin-top: 10px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: 0.3s;
+      box-shadow: 0 8px 20px rgba(47,62,85,0.3);
+    }
 
-        .menu-toggle-btn:active {
-            transform: scale(0.95);
-        }
+    .btn:hover {
+      transform: translateY(-2px) scale(1.02);
+      box-shadow: 0 12px 25px rgba(47,62,85,0.4);
+    }
 
-        .page-title-mobile {
-            font-weight: 700;
-            font-size: 1.1rem;
-            background: linear-gradient(145deg, #1e3a8a, #2563eb);
-            -webkit-background-clip: text;
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
-            flex: 1;
-            text-align: center;
-        }
+    .links {
+      margin-top: 20px;
+      font-size: 12px;
+      color: var(--muted);
+    }
 
-        .live-clock-mobile {
-            background: #ecf2ff;
-            padding: 6px 12px;
-            border-radius: 40px;
-            font-weight: 500;
-            font-size: 0.7rem;
-            color: #1e3a8a;
-            font-family: monospace;
-            flex-shrink: 0;
-        }
+    .links a {
+      display: block;
+      margin-top: 6px;
+      color: var(--muted);
+      text-decoration: none;
+      transition: 0.2s;
+    }
 
-        /* Desktop Header */
-        .desktop-header {
-            display: none;
-            background: white;
-            padding: 12px 24px;
-            border-radius: 48px;
-            margin-bottom: 24px;
-            border: 1px solid #e6edf8;
-            justify-content: space-between;
-            align-items: center;
-        }
+    .links a:hover {
+      color: var(--primary);
+      transform: translateX(3px);
+    }
 
-        .desktop-header .page-title {
-            font-weight: 700;
-            font-size: 1.3rem;
-            background: linear-gradient(145deg, #1e3a8a, #2563eb);
-            -webkit-background-clip: text;
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
+    .terms {
+      margin-top: 25px;
+      font-size: 10px;
+      color: #9ca3af;
+    }
 
-        .live-clock-desktop {
-            background: #ecf2ff;
-            padding: 6px 20px;
-            border-radius: 40px;
-            font-weight: 500;
-            font-size: 0.75rem;
-            color: #1e3a8a;
-        }
+    .right {
+      flex: 1;
+      background: linear-gradient(135deg, #f0f4f8, #ffffff);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 30px;
+      position: relative;
+    }
 
-        @media (min-width: 1024px) {
-            .mobile-header {
-                display: none;
-            }
-            .desktop-header {
-                display: flex;
-            }
-            .main-panel {
-                padding: 20px 24px;
-            }
-        }
+    .circle {
+      width: 240px;
+      height: 240px;
+      background: linear-gradient(135deg, #e6eef3, #ffffff);
+      border-radius: 50%;
+      position: absolute;
+      animation: float 6s ease-in-out infinite;
+    }
 
-        /* Stats Grid - Responsive */
-        .stat-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
-            margin-bottom: 20px;
-        }
+    .illustration {
+      width: 200px;
+      z-index: 2;
+      animation: pop 1s ease;
+    }
 
-        @media (min-width: 640px) {
-            .stat-grid {
-                grid-template-columns: repeat(4, 1fr);
-                gap: 16px;
-            }
-        }
+    @keyframes pop {
+      from { transform: scale(0.8); opacity: 0;} 
+      to { transform: scale(1); opacity: 1;} 
+    }
 
-        .stat-block {
-            background: white;
-            padding: 12px 14px;
-            border-radius: 24px;
-            border: 1px solid #e2edff;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
-        }
+    .text {
+      margin-top: 25px;
+      text-align: center;
+      font-size: 15px;
+      color: var(--text);
+      line-height: 1.6;
+    }
 
-        .stat-icon {
-            width: 44px;
-            height: 44px;
-            background: linear-gradient(135deg, #eef4ff, #e1eafe);
-            border-radius: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.4rem;
-            color: #2563eb;
-            flex-shrink: 0;
-        }
+    .text span {
+      color: var(--accent);
+      font-weight: 700;
+    }
 
-        .stat-info {
-            flex: 1;
-            min-width: 0;
-        }
+    .support {
+      position: absolute;
+      top: 20px;
+      right: 25px;
+      font-size: 12px;
+      color: var(--muted);
+    }
 
-        .stat-info h4 {
-            font-weight: 500;
-            color: #5a6e8c;
-            font-size: 0.65rem;
-            letter-spacing: 0.3px;
-            white-space: nowrap;
-        }
+    @media (max-width: 768px) {
+      .container {
+        flex-direction: column;
+      }
 
-        .stat-info .figure {
-            font-weight: 800;
-            font-size: 1.5rem;
-            color: #0a2b44;
-            line-height: 1.2;
-            word-break: break-word;
-        }
+      .right {
+        order: -1;
+        height: 260px;
+      }
 
-        /* Content Cards */
-        .content-card {
-            background: white;
-            border-radius: 28px;
-            padding: 16px 18px;
-            border: 1px solid #e6edfc;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
-            margin-bottom: 20px;
-            overflow-x: auto;
-        }
+      .circle {
+        width: 160px;
+        height: 160px;
+      }
+    }
 
-        .card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 12px;
-            margin-bottom: 16px;
-        }
-
-        .card-header h3 {
-            font-weight: 700;
-            font-size: 1rem;
-            color: #1e3a5f;
-        }
-
-        /* Tables */
-        .table-responsive {
-            overflow-x: auto;
-            border-radius: 20px;
-            -webkit-overflow-scrolling: touch;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 0.75rem;
-            min-width: 500px;
-        }
-
-        th {
-            text-align: left;
-            padding: 10px 8px;
-            font-weight: 700;
-            color: #4f6f8f;
-            font-size: 0.65rem;
-            text-transform: uppercase;
-            border-bottom: 2px solid #eaf0fa;
-        }
-
-        td {
-            padding: 10px 8px;
-            border-bottom: 1px solid #f0f4fc;
-            color: #1f3b5c;
-            vertical-align: middle;
-        }
-
-        /* Badges */
-        .status-badge {
-            padding: 3px 10px;
-            border-radius: 30px;
-            font-size: 0.65rem;
-            font-weight: 600;
-            display: inline-block;
-            white-space: nowrap;
-        }
-
-        .badge-active {
-            background: #e1f7ea;
-            color: #0a7143;
-        }
-
-        .badge-pending {
-            background: #fff0db;
-            color: #b45500;
-        }
-
-        .badge-role {
-            background: #e5eeff;
-            color: #1d4ed8;
-        }
-
-        /* Buttons */
-        .btn-primary {
-            background: linear-gradient(105deg, #2563eb, #4f46e5);
-            color: white;
-            border: none;
-            padding: 7px 16px;
-            border-radius: 40px;
-            font-weight: 600;
-            font-size: 0.7rem;
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            transition: all 0.2s;
-            white-space: nowrap;
-        }
-
-        .btn-primary:active {
-            transform: scale(0.97);
-        }
-
-        .btn-outline {
-            background: white;
-            border: 1px solid #cfe2ff;
-            color: #1e5a88;
-            padding: 5px 12px;
-            border-radius: 30px;
-            font-size: 0.65rem;
-            cursor: pointer;
-            white-space: nowrap;
-        }
-
-        .icon-action {
-            background: transparent;
-            border: none;
-            font-size: 0.85rem;
-            color: #6f8eb3;
-            padding: 5px 8px;
-            border-radius: 20px;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .icon-action:hover {
-            background: #eef3ff;
-            color: #2563eb;
-        }
-
-        .icon-action.delete:hover {
-            background: #fee9e9;
-            color: #dc2626;
-        }
-
-        /* Chart Container */
-        .chart-box {
-            height: 140px;
-            width: 100%;
-            background: #ffffff;
-            border-radius: 20px;
-            padding: 8px;
-        }
-
-        /* Modal */
-        .modal-overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(5px);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 1100;
-            padding: 16px;
-        }
-
-        .modal-window {
-            background: white;
-            border-radius: 36px;
-            padding: 24px;
-            max-width: 500px;
-            width: 100%;
-            max-height: 85vh;
-            overflow-y: auto;
-        }
-
-        .form-field {
-            margin-bottom: 16px;
-        }
-
-        .form-field label {
-            font-weight: 600;
-            font-size: 0.75rem;
-            margin-bottom: 5px;
-            display: block;
-            color: #2c5270;
-        }
-
-        .form-input {
-            width: 100%;
-            padding: 10px 16px;
-            border: 1.5px solid #e2eaff;
-            border-radius: 40px;
-            font-size: 0.85rem;
-            font-family: inherit;
-            background: white;
-        }
-
-        .form-input:focus {
-            outline: none;
-            border-color: #2563eb;
-        }
-
-        .modal-actions {
-            display: flex;
-            gap: 12px;
-            margin-top: 20px;
-            flex-wrap: wrap;
-        }
-
-        /* Toast */
-        .toast-notification {
-            position: fixed;
-            bottom: 20px;
-            left: 16px;
-            right: 16px;
-            background: #1e2f3c;
-            color: white;
-            border-radius: 60px;
-            padding: 12px 20px;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            transform: translateY(100px);
-            transition: transform 0.25s ease;
-            z-index: 1200;
-            border-left: 4px solid;
-            font-size: 0.8rem;
-        }
-
-        @media (min-width: 640px) {
-            .toast-notification {
-                left: auto;
-                right: 24px;
-                bottom: 24px;
-                min-width: 280px;
-            }
-        }
-
-        .toast-notification.show {
-            transform: translateY(0);
-        }
-
-        .toast-success {
-            border-left-color: #10b981;
-        }
-
-        /* Mobile Popup for profile info */
-        .mobile-popup {
-            display: none;
-            position: fixed;
-            background: #1e3a8a;
-            color: white;
-            padding: 10px 16px;
-            border-radius: 24px;
-            font-size: 0.8rem;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
-            z-index: 1300;
-            max-width: 85vw;
-            word-break: break-word;
-            pointer-events: none;
-            text-align: center;
-            white-space: nowrap;
-        }
-
-        @media (max-width: 640px) {
-            .mobile-popup {
-                white-space: normal;
-            }
-        }
-
-        .mobile-popup.show {
-            display: block;
-        }
-
-        /* Utility */
-        button {
-            cursor: pointer;
-            background: none;
-            border: none;
-        }
-    </style>
+  </style>
 </head>
 <body>
-<div class="dashboard">
-    <!-- Sidebar Overlay for mobile -->
-    <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
-    <!-- Sidebar -->
-    <div class="sidebar" id="sidebar">
-        <div class="sidebar-header">
-            <div class="brand-icon"><i class="fas fa-heart-pulse"></i></div>
-            <h2>ClinicCare Pro</h2>
-        </div>
-        <div class="profile-card" id="profileCard"></div>
-        <nav class="nav-menu" id="navMenu">
-            <div class="nav-item active" data-page="dashboard"><i class="fas fa-chart-pie"></i> <span>Dashboard</span></div>
-            <div class="nav-item" data-page="users"><i class="fas fa-users"></i> <span>Users</span></div>
-            <div class="nav-item" data-page="doctors"><i class="fas fa-user-md"></i> <span>Doctors</span></div>
-            <div class="nav-item" data-page="appointments"><i class="fas fa-calendar-check"></i> <span>Appointments</span></div>
-            <div class="nav-item" data-page="departments"><i class="fas fa-building"></i> <span>Departments</span></div>
-            <div class="nav-item" data-page="reports"><i class="fas fa-chart-line"></i> <span>Analytics</span></div>
-            <div class="nav-item" data-page="audit"><i class="fas fa-history"></i> <span>Audit</span></div>
-            <div class="nav-item" data-page="settings"><i class="fas fa-sliders-h"></i> <span>Settings</span></div>
-        </nav>
-        <div class="logout-button" id="logoutBtn">
-            <i class="fas fa-sign-out-alt"></i> <span>Logout</span>
-        </div>
+  <div class="blob blob1"></div>
+  <div class="blob blob2"></div>
+
+  <div class="container">
+
+    <div class="left">
+      <div class="logo">Prominent</div>
+      <h2>Login to your Prominent Account</h2>
+
+      <div class="input-group">
+        <label>Access Email</label>
+        <input type="text" placeholder="Access email" />
+      </div>
+
+      <div class="input-group">
+        <label>Access Key</label>
+        <input type="password" placeholder="Access key" />
+      </div>
+
+      <button class="btn">Sign in</button>
+
+      <div class="links">
+        <p>Don't have an account? Register here</p>
+        <a href="#">Forgot key?</a>
+        <a href="#">Retrieve account</a>
+      </div>
+
+      <div class="terms">
+        By logging into the Prominent application you are agreeing to the Terms & Conditions
+      </div>
     </div>
 
-    <!-- Main Panel -->
-    <div class="main-panel">
-        <!-- Mobile Header with Toggle Button -->
-        <div class="mobile-header">
-            <button class="menu-toggle-btn" id="menuToggleBtn">
-                <i class="fas fa-bars"></i>
-            </button>
-            <span class="page-title-mobile" id="mobileTitle">Dashboard</span>
-            <span class="live-clock-mobile" id="mobileClock"></span>
-        </div>
-
-        <!-- Desktop Header -->
-        <div class="desktop-header">
-            <span class="page-title" id="desktopTitle">Admin Dashboard</span>
-            <span class="live-clock-desktop" id="desktopClock"></span>
-        </div>
-
-        <div class="content-area" id="contentArea"></div>
+    <div class="right">
+      <div class="support">Support</div>
+      <div class="circle"></div>
+      <img class="illustration" src="https://cdn-icons-png.flaticon.com/512/4140/4140048.png" alt="illustration">
+      <div class="text">
+        We take care of your <span>Billing</span><br>
+        You take care of <span>Patient</span>
+      </div>
     </div>
-</div>
 
-<!-- Mobile Popup -->
-<div id="mobilePopup" class="mobile-popup"></div>
+  </div>
 
-<!-- Modal Root -->
-<div id="modalRoot" style="display:none;"></div>
-<div class="toast-notification" id="toastMsg"><i class="fas" id="toastIcon"></i><span id="toastText"></span></div>
-
-<script>
-(function() {
-    // Current Admin User
-    let currentUser = {
-        id: 'A1001',
-        name: 'Dr. Michael Adams',
-        email: 'michael.a@cliniccare.com',
-        phone: '+1 (415) 555-8901',
-        role: 'admin'
-    };
-    localStorage.setItem('currentUser', JSON.stringify(currentUser));
-
-    // Mobile Sidebar Controls
-    const sidebar = document.getElementById('sidebar');
-    const overlay = document.getElementById('sidebarOverlay');
-    const menuToggle = document.getElementById('menuToggleBtn');
-
-    function closeSidebar() {
-        sidebar.classList.remove('open');
-        overlay.classList.remove('active');
-        document.body.style.overflow = '';
-    }
-
-    function openSidebar() {
-        sidebar.classList.add('open');
-        overlay.classList.add('active');
-        document.body.style.overflow = 'hidden';
-    }
-
-    if (menuToggle) {
-        menuToggle.addEventListener('click', openSidebar);
-    }
-    if (overlay) {
-        overlay.addEventListener('click', closeSidebar);
-    }
-
-    // Close sidebar when clicking nav items on mobile
-    document.querySelectorAll('.nav-item').forEach(item => {
-        item.addEventListener('click', () => {
-            if (window.innerWidth < 1024) {
-                closeSidebar();
-            }
-        });
-    });
-
-    // Mobile Popup Function
-    const popup = document.getElementById('mobilePopup');
-    function showMobilePopup(event, text) {
-        if (window.innerWidth > 768) return;
-        const rect = event.target.getBoundingClientRect();
-        popup.innerHTML = text;
-        popup.classList.add('show');
-        let top = rect.top - popup.offsetHeight - 10;
-        if (top < 10) top = rect.bottom + 10;
-        let left = rect.left + (rect.width / 2) - 100;
-        if (left < 10) left = 10;
-        if (left + 200 > window.innerWidth) left = window.innerWidth - 210;
-        popup.style.top = top + 'px';
-        popup.style.left = left + 'px';
-        clearTimeout(window.popupTimer);
-        window.popupTimer = setTimeout(() => {
-            popup.classList.remove('show');
-        }, 2000);
-    }
-    window.showMobilePopup = showMobilePopup;
-
-    // Hide popup on scroll/resize
-    window.addEventListener('scroll', () => popup.classList.remove('show'));
-    window.addEventListener('resize', () => popup.classList.remove('show'));
-
-    // Toast
-    function showToast(msg, type = 'success') {
-        const toast = document.getElementById('toastMsg');
-        const icon = document.getElementById('toastIcon');
-        const text = document.getElementById('toastText');
-        icon.className = 'fas ' + (type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle');
-        text.innerText = msg;
-        toast.className = 'toast-notification toast-' + type;
-        toast.classList.add('show');
-        setTimeout(() => toast.classList.remove('show'), 3000);
-    }
-    window.showToast = showToast;
-
-    // Initialize Storage
-    if (!localStorage.getItem('users')) {
-        localStorage.setItem('users', JSON.stringify([
-            { id: 'U101', name: 'John Doe', email: 'john@ex.com', phone: '555-2301', role: 'patient', status: 'active', createdAt: '2025-01-10' },
-            { id: 'U102', name: 'Jane Smith', email: 'jane@ex.com', phone: '555-6712', role: 'patient', status: 'active', createdAt: '2025-01-15' },
-            { id: 'U103', name: 'Dr. Sarah Chen', email: 'sarah.chen@clinic.com', phone: '555-8234', role: 'doctor', specialization: 'Cardiology', status: 'active' },
-            { id: 'U104', name: 'Dr. James Wilson', email: 'wilson@clinic.com', phone: '555-9845', role: 'doctor', specialization: 'Neurology', status: 'active' },
-            { id: 'U105', name: 'Emily Davis', email: 'emily@ex.com', phone: '555-1122', role: 'patient', status: 'active' }
-        ]));
-    }
-    if (!localStorage.getItem('appointments')) {
-        localStorage.setItem('appointments', JSON.stringify([
-            { id: 'A101', patient: 'John Doe', doctor: 'Dr. Sarah Chen', date: '2025-03-20', time: '10:30', status: 'confirmed' },
-            { id: 'A102', patient: 'Jane Smith', doctor: 'Dr. James Wilson', date: '2025-03-21', time: '14:00', status: 'pending' }
-        ]));
-    }
-    if (!localStorage.getItem('departments')) {
-        localStorage.setItem('departments', JSON.stringify([
-            { id: 'D1', name: 'Cardiology', head: 'Dr. Sarah Chen', staffCount: 8 },
-            { id: 'D2', name: 'Neurology', head: 'Dr. James Wilson', staffCount: 5 }
-        ]));
-    }
-    if (!localStorage.getItem('auditLog')) {
-        localStorage.setItem('auditLog', JSON.stringify([
-            { user: 'admin', action: 'Login', timestamp: new Date().toLocaleString() }
-        ]));
-    }
-
-    // Render Profile with click handlers
-    function renderProfile() {
-        const u = currentUser;
-        document.getElementById('profileCard').innerHTML = `
-            <div class="profile-name" onclick="showMobilePopup(event, '${u.name}')">
-                <i class="fas fa-user-shield"></i> <span>${u.name.split(' ')[0]}</span>
-            </div>
-            <div class="profile-detail" onclick="showMobilePopup(event, '${u.email}')">
-                <i class="fas fa-envelope"></i> <span>${u.email}</span>
-            </div>
-            <div class="profile-detail" onclick="showMobilePopup(event, '${u.phone}')">
-                <i class="fas fa-phone-alt"></i> <span>${u.phone}</span>
-            </div>
-            <div><span class="role-tag" onclick="showMobilePopup(event, 'Administrator')"><i class="fas fa-crown"></i> Admin</span></div>
-        `;
-    }
-    renderProfile();
-
-    // Clock Update
-    function updateClocks() {
-        const now = new Date();
-        const timeStr = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-        const mobileClock = document.getElementById('mobileClock');
-        const desktopClock = document.getElementById('desktopClock');
-        if (mobileClock) mobileClock.innerText = timeStr;
-        if (desktopClock) desktopClock.innerText = timeStr;
-    }
-    updateClocks();
-    setInterval(updateClocks, 1000);
-
-    // Modal Helpers
-    function closeModal() { document.getElementById('modalRoot').style.display = 'none'; }
-    window.closeModal = closeModal;
-
-    function openModal(html) {
-        document.getElementById('modalRoot').style.display = 'flex';
-        document.getElementById('modalRoot').innerHTML = `<div class="modal-overlay" onclick="closeModal()"><div class="modal-window" onclick="event.stopPropagation()">${html}</div></div>`;
-    }
-    window.openModal = openModal;
-
-    // Navigation
-    const navItems = document.querySelectorAll('.nav-item');
-    navItems.forEach(item => {
-        item.addEventListener('click', () => {
-            navItems.forEach(n => n.classList.remove('active'));
-            item.classList.add('active');
-            const page = item.dataset.page;
-            const title = item.querySelector('span')?.innerText || 'Dashboard';
-            document.getElementById('mobileTitle').innerText = title;
-            const desktopTitle = document.getElementById('desktopTitle');
-            if (desktopTitle) desktopTitle.innerText = title;
-            loadPage(page);
-        });
-    });
-
-    window.loadPage = function(page) {
-        const container = document.getElementById('contentArea');
-        if (page === 'dashboard') renderDashboard(container);
-        else if (page === 'users') renderUsers(container);
-        else if (page === 'doctors') renderDoctors(container);
-        else if (page === 'appointments') renderAppointments(container);
-        else if (page === 'departments') renderDepartments(container);
-        else if (page === 'reports') renderReports(container);
-        else if (page === 'audit') renderAudit(container);
-        else if (page === 'settings') renderSettings(container);
-    };
-
-    // Dashboard
-    function renderDashboard(con) {
-        const users = JSON.parse(localStorage.getItem('users')) || [];
-        const apps = JSON.parse(localStorage.getItem('appointments')) || [];
-        const totalUsers = users.length;
-        const totalDocs = users.filter(u => u.role === 'doctor').length;
-        const totalPats = users.filter(u => u.role === 'patient').length;
-        con.innerHTML = `
-            <div class="stat-grid">
-                <div class="stat-block"><div class="stat-icon"><i class="fas fa-users"></i></div><div class="stat-info"><h4>Total Users</h4><div class="figure">${totalUsers}</div></div></div>
-                <div class="stat-block"><div class="stat-icon"><i class="fas fa-user-md"></i></div><div class="stat-info"><h4>Doctors</h4><div class="figure">${totalDocs}</div></div></div>
-                <div class="stat-block"><div class="stat-icon"><i class="fas fa-heartbeat"></i></div><div class="stat-info"><h4>Patients</h4><div class="figure">${totalPats}</div></div></div>
-                <div class="stat-block"><div class="stat-icon"><i class="fas fa-calendar-alt"></i></div><div class="stat-info"><h4>Appointments</h4><div class="figure">${apps.length}</div></div></div>
-            </div>
-            <div class="content-card">
-                <div class="card-header"><h3>Recent Activity</h3><button class="btn-primary" onclick="loadPage('users')">Manage Users</button></div>
-                <div class="table-responsive">
-                    <table><thead><tr><th>User</th><th>Action</th><th>Time</th></tr></thead>
-                    <tbody><tr><td>Admin</td><td>System Update</td><td>${new Date().toLocaleTimeString()}</td></tr></tbody></table>
-                </div>
-            </div>
-            <div class="content-card">
-                <div class="card-header"><h3>Weekly Appointments Trend</h3></div>
-                <div class="chart-box"><canvas id="dashChart"></canvas></div>
-            </div>
-        `;
-        setTimeout(() => {
-            const ctx = document.getElementById('dashChart')?.getContext('2d');
-            if (ctx) {
-                new Chart(ctx, {
-                    type: 'line',
-                    data: { labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'], datasets: [{ label: 'Appointments', data: [6, 9, 8, 11, 14, 10, 7], borderColor: '#2563eb', tension: 0.3, fill: true, backgroundColor: '#2563eb20' }] },
-                    options: { responsive: true, maintainAspectRatio: false }
-                });
-            }
-        }, 50);
-    }
-
-    // Users Management
-    function renderUsers(con) {
-        const users = JSON.parse(localStorage.getItem('users')) || [];
-        con.innerHTML = `
-            <div class="content-card">
-                <div class="card-header"><h3>User Management</h3><button class="btn-primary" onclick="addUserModal()"><i class="fas fa-plus"></i> Add User</button></div>
-                <div class="table-responsive">
-                    <table><thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Status</th><th>Actions</th></tr></thead>
-                    <tbody>${users.map(u => `
-                        <tr>
-                            <td>${u.name}</td><td>${u.email}</td>
-                            <td><span class="status-badge badge-role">${u.role}</span></td>
-                            <td><span class="status-badge ${u.status === 'active' ? 'badge-active' : 'badge-pending'}">${u.status}</span></td>
-                            <td><button class="icon-action" onclick="editUser('${u.id}')"><i class="fas fa-edit"></i></button>
-                            <button class="icon-action delete" onclick="deleteUser('${u.id}')"><i class="fas fa-trash"></i></button></td>
-                        </tr>
-                    `).join('')}</tbody></table>
-                </div>
-            </div>
-        `;
-    }
-
-    window.addUserModal = function() {
-        openModal(`
-            <h2 style="margin-bottom:16px;">Add User</h2>
-            <div class="form-field"><label>Full Name</label><input class="form-input" id="userName" placeholder="John Doe"></div>
-            <div class="form-field"><label>Email</label><input class="form-input" id="userEmail" type="email" placeholder="john@example.com"></div>
-            <div class="form-field"><label>Phone</label><input class="form-input" id="userPhone" placeholder="555-1234"></div>
-            <div class="form-field"><label>Role</label><select class="form-input" id="userRole"><option value="patient">Patient</option><option value="doctor">Doctor</option></select></div>
-            <div class="modal-actions"><button class="btn-primary" onclick="saveNewUser()">Create</button><button class="btn-outline" onclick="closeModal()">Cancel</button></div>
-        `);
-    };
-
-    window.saveNewUser = function() {
-        const users = JSON.parse(localStorage.getItem('users')) || [];
-        const newUser = {
-            id: 'U' + Math.floor(Math.random() * 900 + 100),
-            name: document.getElementById('userName')?.value || 'New User',
-            email: document.getElementById('userEmail')?.value || 'new@example.com',
-            phone: document.getElementById('userPhone')?.value || '',
-            role: document.getElementById('userRole')?.value || 'patient',
-            status: 'active'
-        };
-        users.push(newUser);
-        localStorage.setItem('users', JSON.stringify(users));
-        closeModal();
-        showToast('User added successfully', 'success');
-        loadPage('users');
-    };
-
-    window.editUser = function(id) {
-        const users = JSON.parse(localStorage.getItem('users'));
-        const u = users.find(x => x.id === id);
-        if (!u) return;
-        openModal(`
-            <h2 style="margin-bottom:16px;">Edit User</h2>
-            <div class="form-field"><label>Name</label><input class="form-input" id="editName" value="${u.name}"></div>
-            <div class="form-field"><label>Email</label><input class="form-input" id="editEmail" value="${u.email}"></div>
-            <div class="form-field"><label>Phone</label><input class="form-input" id="editPhone" value="${u.phone || ''}"></div>
-            <div class="form-field"><label>Status</label><select class="form-input" id="editStatus"><option value="active" ${u.status === 'active' ? 'selected' : ''}>Active</option><option value="inactive" ${u.status === 'inactive' ? 'selected' : ''}>Inactive</option></select></div>
-            <div class="modal-actions"><button class="btn-primary" onclick="updateUser('${id}')">Update</button><button class="btn-outline" onclick="closeModal()">Cancel</button></div>
-        `);
-    };
-
-    window.updateUser = function(id) {
-        const users = JSON.parse(localStorage.getItem('users'));
-        const u = users.find(x => x.id === id);
-        if (u) {
-            u.name = document.getElementById('editName')?.value || u.name;
-            u.email = document.getElementById('editEmail')?.value || u.email;
-            u.phone = document.getElementById('editPhone')?.value || u.phone;
-            u.status = document.getElementById('editStatus')?.value || u.status;
-        }
-        localStorage.setItem('users', JSON.stringify(users));
-        closeModal();
-        showToast('User updated', 'success');
-        loadPage('users');
-    };
-
-    window.deleteUser = function(id) {
-        if (!confirm('Are you sure you want to delete this user?')) return;
-        let users = JSON.parse(localStorage.getItem('users')).filter(u => u.id !== id);
-        localStorage.setItem('users', JSON.stringify(users));
-        showToast('User deleted', 'warning');
-        loadPage('users');
-    };
-
-    // Other Pages
-    function renderDoctors(con) {
-        const docs = JSON.parse(localStorage.getItem('users')).filter(u => u.role === 'doctor');
-        con.innerHTML = `<div class="content-card"><h3>Doctors Directory</h3><div class="table-responsive">${docs.length ? `<table><thead><tr><th>Name</th><th>Specialization</th><th>Email</th></tr></thead><tbody>${docs.map(d => `<tr><td>${d.name}</td><td>${d.specialization || '—'}</td><td>${d.email}</td></tr>`).join('')}</tbody></table>` : '<p>No doctors found.</p>'}</div></div>`;
-    }
-
-    function renderAppointments(con) {
-        const apps = JSON.parse(localStorage.getItem('appointments')) || [];
-        con.innerHTML = `<div class="content-card"><h3>Appointments</h3><div class="table-responsive"><table><thead><tr><th>Patient</th><th>Doctor</th><th>Date</th><th>Time</th><th>Status</th></tr></thead><tbody>${apps.map(a => `<tr><td>${a.patient}</td><td>${a.doctor}</td><td>${a.date}</td><td>${a.time}</td><td><span class="status-badge ${a.status === 'confirmed' ? 'badge-active' : 'badge-pending'}">${a.status}</span></td></tr>`).join('')}</tbody></table></div></div>`;
-    }
-
-    function renderDepartments(con) {
-        const depts = JSON.parse(localStorage.getItem('departments')) || [];
-        con.innerHTML = `<div class="content-card"><h3>Departments</h3><div class="table-responsive"><table><thead><tr><th>Department</th><th>Head</th><th>Staff Count</th></tr></thead><tbody>${depts.map(d => `<tr><td>${d.name}</td><td>${d.head}</td><td>${d.staffCount}</td></tr>`).join('')}</tbody></table></div></div>`;
-    }
-
-    function renderReports(con) {
-        con.innerHTML = `<div class="content-card"><h3>Revenue Analytics</h3><div class="chart-box"><canvas id="reportsChart"></canvas></div></div>`;
-        setTimeout(() => {
-            const ctx = document.getElementById('reportsChart')?.getContext('2d');
-            if (ctx) new Chart(ctx, { type: 'bar', data: { labels: ['Jan', 'Feb', 'Mar', 'Apr'], datasets: [{ label: 'Revenue (k$)', data: [42, 48, 57, 63], backgroundColor: '#2563eb' }] }, options: { responsive: true, maintainAspectRatio: false } });
-        }, 50);
-    }
-
-    function renderAudit(con) {
-        const log = JSON.parse(localStorage.getItem('auditLog')) || [];
-        con.innerHTML = `<div class="content-card"><h3>Audit Trail</h3><div class="table-responsive"><table><thead><tr><th>User</th><th>Action</th><th>Timestamp</th></tr></thead><tbody>${log.map(l => `<tr><td>${l.user}</td><td>${l.action}</td><td>${l.timestamp}</td></tr>`).join('')}</tbody></table></div></div>`;
-    }
-
-    function renderSettings(con) {
-        con.innerHTML = `<div class="content-card"><h3>System Settings</h3><div class="form-field"><label>Clinic Name</label><input class="form-input" id="clinicName" value="ClinicCare Pro"></div><div class="form-field"><label>Default Language</label><select class="form-input"><option>English</option><option>Spanish</option></select></div><button class="btn-primary" onclick="showToast('Settings saved', 'success')">Save Changes</button></div>`;
-    }
-
-    // Logout
-    document.getElementById('logoutBtn').addEventListener('click', () => {
-        showToast('Logging out...', 'info');
-        setTimeout(() => {
-            localStorage.removeItem('currentUser');
-            window.location.href = 'index.html';
-        }, 800);
-    });
-
-    // Start
-    loadPage('dashboard');
-})();
-</script>
 </body>
 </html>

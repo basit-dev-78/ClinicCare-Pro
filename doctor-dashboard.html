@@ -1,10 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
     <title>ClinicCare · Doctor Panel</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <style>
@@ -27,9 +31,11 @@
             width: 4px;
             height: 4px;
         }
+
         ::-webkit-scrollbar-track {
             background: #eef4fe;
         }
+
         ::-webkit-scrollbar-thumb {
             background: #2c7da0;
             border-radius: 20px;
@@ -68,12 +74,15 @@
                 left: 0;
                 width: 260px;
             }
+
             .menu-toggle-btn {
                 display: none !important;
             }
+
             .sidebar-overlay {
                 display: none !important;
             }
+
             .main-panel {
                 margin-left: 260px;
             }
@@ -102,6 +111,7 @@
             gap: 12px;
             border-bottom: 1px solid rgba(255, 255, 255, 0.08);
         }
+
         .brand-icon {
             width: 44px;
             height: 44px;
@@ -114,6 +124,7 @@
             flex-shrink: 0;
             color: white;
         }
+
         .sidebar-header h2 {
             font-weight: 700;
             font-size: 1rem;
@@ -130,6 +141,7 @@
             border-radius: 20px;
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
+
         .profile-name {
             font-weight: 600;
             display: flex;
@@ -139,6 +151,7 @@
             font-size: 0.85rem;
             color: #f0fcff;
         }
+
         .profile-detail {
             display: flex;
             align-items: center;
@@ -148,10 +161,12 @@
             font-size: 0.7rem;
             word-break: break-all;
         }
+
         .profile-detail i {
             width: 16px;
             flex-shrink: 0;
         }
+
         .role-tag {
             background: linear-gradient(135deg, #2c7da0, #1f5e7a);
             padding: 4px 12px;
@@ -167,6 +182,7 @@
             padding: 0 10px;
             overflow-y: auto;
         }
+
         .nav-item {
             display: flex;
             align-items: center;
@@ -180,24 +196,29 @@
             transition: all 0.2s;
             cursor: pointer;
         }
+
         .nav-item i {
             width: 20px;
             font-size: 1rem;
             color: #86b3d4;
             flex-shrink: 0;
         }
+
         .nav-item span {
             flex: 1;
         }
+
         .nav-item:hover {
             background: rgba(44, 125, 160, 0.3);
             color: white;
         }
+
         .nav-item.active {
             background: linear-gradient(95deg, #2c7da0, #1f5e7a);
             color: white;
             box-shadow: 0 4px 12px -4px #1f5e7a;
         }
+
         .nav-item.active i {
             color: white;
         }
@@ -216,6 +237,7 @@
             cursor: pointer;
             transition: all 0.2s;
         }
+
         .logout-button:hover {
             background: #ef4444;
             color: white;
@@ -317,9 +339,11 @@
             .mobile-header {
                 display: none;
             }
+
             .desktop-header {
                 display: flex;
             }
+
             .main-panel {
                 padding: 20px 24px;
             }
@@ -450,14 +474,17 @@
             display: inline-block;
             white-space: nowrap;
         }
+
         .badge-active {
             background: #e1f7ea;
             color: #0a7143;
         }
+
         .badge-pending {
             background: #fff0db;
             color: #b45500;
         }
+
         .badge-completed {
             background: #d9effa;
             color: #1a6d8f;
@@ -478,9 +505,11 @@
             gap: 6px;
             white-space: nowrap;
         }
+
         .btn-primary:active {
             transform: scale(0.97);
         }
+
         .btn-secondary {
             background: white;
             border: 1px solid #cfe2ff;
@@ -491,6 +520,7 @@
             cursor: pointer;
             white-space: nowrap;
         }
+
         .icon-action {
             background: transparent;
             border: none;
@@ -500,6 +530,7 @@
             border-radius: 20px;
             cursor: pointer;
         }
+
         .icon-action:hover {
             background: #eef3ff;
             color: #2c7da0;
@@ -517,6 +548,7 @@
             z-index: 1100;
             padding: 16px;
         }
+
         .modal-window {
             background: white;
             border-radius: 36px;
@@ -526,9 +558,11 @@
             max-height: 85vh;
             overflow-y: auto;
         }
+
         .form-field {
             margin-bottom: 16px;
         }
+
         .form-field label {
             font-weight: 600;
             font-size: 0.75rem;
@@ -536,7 +570,9 @@
             display: block;
             color: #2c5270;
         }
-        .form-input, .form-textarea {
+
+        .form-input,
+        .form-textarea {
             width: 100%;
             padding: 10px 16px;
             border: 1.5px solid #e2eaff;
@@ -545,11 +581,13 @@
             font-family: inherit;
             background: white;
         }
+
         .form-textarea {
             border-radius: 24px;
             min-height: 80px;
             resize: vertical;
         }
+
         .modal-actions {
             display: flex;
             gap: 12px;
@@ -577,6 +615,7 @@
             border-left: 4px solid;
             font-size: 0.8rem;
         }
+
         @media (min-width: 640px) {
             .toast-notification {
                 left: auto;
@@ -585,9 +624,11 @@
                 min-width: 280px;
             }
         }
+
         .toast-notification.show {
             transform: translateY(0);
         }
+
         .toast-success {
             border-left-color: #10b981;
         }
@@ -608,174 +649,183 @@
             pointer-events: none;
             text-align: center;
         }
+
         .mobile-popup.show {
             display: block;
         }
     </style>
 </head>
+
 <body>
-<div class="dashboard">
-    <!-- Sidebar Overlay -->
-    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    <div class="dashboard">
+        <!-- Sidebar Overlay -->
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
-    <!-- Sidebar -->
-    <div class="sidebar" id="sidebar">
-        <div class="sidebar-header">
-            <div class="brand-icon"><i class="fas fa-stethoscope"></i></div>
-            <h2>ClinicCare · Doctor</h2>
+        <!-- Sidebar -->
+        <div class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="brand-icon"><i class="fas fa-stethoscope"></i></div>
+                <h2>ClinicCare · Doctor</h2>
+            </div>
+            <div class="profile-card" id="profileCard"></div>
+            <nav class="nav-menu">
+                <div class="nav-item active" data-page="dashboard"><i class="fas fa-chart-pie"></i>
+                    <span>Dashboard</span>
+                </div>
+                <div class="nav-item" data-page="appointments"><i class="fas fa-calendar-check"></i> <span>My
+                        Appointments</span></div>
+                <div class="nav-item" data-page="patients"><i class="fas fa-users"></i> <span>My Patients</span></div>
+                <div class="nav-item" data-page="records"><i class="fas fa-notes-medical"></i> <span>Medical
+                        Records</span></div>
+                <div class="nav-item" data-page="prescriptions"><i class="fas fa-prescription"></i>
+                    <span>Prescriptions</span>
+                </div>
+                <div class="nav-item" data-page="schedule"><i class="fas fa-clock"></i> <span>Today's Schedule</span>
+                </div>
+            </nav>
+            <div class="logout-button" id="logoutBtn">
+                <i class="fas fa-sign-out-alt"></i> <span>Logout</span>
+            </div>
         </div>
-        <div class="profile-card" id="profileCard"></div>
-        <nav class="nav-menu">
-            <div class="nav-item active" data-page="dashboard"><i class="fas fa-chart-pie"></i> <span>Dashboard</span></div>
-            <div class="nav-item" data-page="appointments"><i class="fas fa-calendar-check"></i> <span>My Appointments</span></div>
-            <div class="nav-item" data-page="patients"><i class="fas fa-users"></i> <span>My Patients</span></div>
-            <div class="nav-item" data-page="records"><i class="fas fa-notes-medical"></i> <span>Medical Records</span></div>
-            <div class="nav-item" data-page="prescriptions"><i class="fas fa-prescription"></i> <span>Prescriptions</span></div>
-            <div class="nav-item" data-page="schedule"><i class="fas fa-clock"></i> <span>Today's Schedule</span></div>
-        </nav>
-        <div class="logout-button" id="logoutBtn">
-            <i class="fas fa-sign-out-alt"></i> <span>Logout</span>
+
+        <!-- Main Panel -->
+        <div class="main-panel">
+            <!-- Mobile Header -->
+            <div class="mobile-header">
+                <button class="menu-toggle-btn" id="menuToggleBtn">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <span class="page-title-mobile" id="mobileTitle">Dashboard</span>
+                <span class="live-clock-mobile" id="mobileClock"></span>
+            </div>
+
+            <!-- Desktop Header -->
+            <div class="desktop-header">
+                <span class="page-title" id="desktopTitle">Doctor Dashboard</span>
+                <span class="live-clock-desktop" id="desktopClock"></span>
+            </div>
+
+            <div class="content-area" id="contentArea"></div>
         </div>
     </div>
 
-    <!-- Main Panel -->
-    <div class="main-panel">
-        <!-- Mobile Header -->
-        <div class="mobile-header">
-            <button class="menu-toggle-btn" id="menuToggleBtn">
-                <i class="fas fa-bars"></i>
-            </button>
-            <span class="page-title-mobile" id="mobileTitle">Dashboard</span>
-            <span class="live-clock-mobile" id="mobileClock"></span>
-        </div>
+    <!-- Mobile Popup -->
+    <div id="mobilePopup" class="mobile-popup"></div>
+    <div id="modalRoot" style="display:none;"></div>
+    <div class="toast-notification" id="toastMsg"><i class="fas" id="toastIcon"></i><span id="toastText"></span></div>
 
-        <!-- Desktop Header -->
-        <div class="desktop-header">
-            <span class="page-title" id="desktopTitle">Doctor Dashboard</span>
-            <span class="live-clock-desktop" id="desktopClock"></span>
-        </div>
+    <script>
+        (function () {
+            // Current Doctor User
+            let currentUser = {
+                id: 'D1',
+                name: 'Dr. Sarah Chen',
+                email: 'sarah.chen@clinic.com',
+                phone: '555-8234',
+                role: 'doctor',
+                specialization: 'Cardiology'
+            };
+            localStorage.setItem('currentUser', JSON.stringify(currentUser));
 
-        <div class="content-area" id="contentArea"></div>
-    </div>
-</div>
+            // Mobile Sidebar Controls
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebarOverlay');
+            const menuToggle = document.getElementById('menuToggleBtn');
 
-<!-- Mobile Popup -->
-<div id="mobilePopup" class="mobile-popup"></div>
-<div id="modalRoot" style="display:none;"></div>
-<div class="toast-notification" id="toastMsg"><i class="fas" id="toastIcon"></i><span id="toastText"></span></div>
-
-<script>
-(function() {
-    // Current Doctor User
-    let currentUser = {
-        id: 'D1',
-        name: 'Dr. Sarah Chen',
-        email: 'sarah.chen@clinic.com',
-        phone: '555-8234',
-        role: 'doctor',
-        specialization: 'Cardiology'
-    };
-    localStorage.setItem('currentUser', JSON.stringify(currentUser));
-
-    // Mobile Sidebar Controls
-    const sidebar = document.getElementById('sidebar');
-    const overlay = document.getElementById('sidebarOverlay');
-    const menuToggle = document.getElementById('menuToggleBtn');
-
-    function closeSidebar() {
-        sidebar.classList.remove('open');
-        overlay.classList.remove('active');
-        document.body.style.overflow = '';
-    }
-
-    function openSidebar() {
-        sidebar.classList.add('open');
-        overlay.classList.add('active');
-        document.body.style.overflow = 'hidden';
-    }
-
-    if (menuToggle) {
-        menuToggle.addEventListener('click', openSidebar);
-    }
-    if (overlay) {
-        overlay.addEventListener('click', closeSidebar);
-    }
-
-    // Close sidebar when clicking nav items on mobile
-    document.querySelectorAll('.nav-item').forEach(item => {
-        item.addEventListener('click', () => {
-            if (window.innerWidth < 1024) {
-                closeSidebar();
+            function closeSidebar() {
+                sidebar.classList.remove('open');
+                overlay.classList.remove('active');
+                document.body.style.overflow = '';
             }
-        });
-    });
 
-    // Mobile Popup
-    const popup = document.getElementById('mobilePopup');
-    function showMobilePopup(event, text) {
-        if (window.innerWidth > 768) return;
-        const rect = event.target.getBoundingClientRect();
-        popup.innerHTML = text;
-        popup.classList.add('show');
-        let top = rect.top - popup.offsetHeight - 10;
-        if (top < 10) top = rect.bottom + 10;
-        let left = rect.left + (rect.width / 2) - 100;
-        if (left < 10) left = 10;
-        if (left + 200 > window.innerWidth) left = window.innerWidth - 210;
-        popup.style.top = top + 'px';
-        popup.style.left = left + 'px';
-        clearTimeout(window.popupTimer);
-        window.popupTimer = setTimeout(() => popup.classList.remove('show'), 2000);
-    }
-    window.showMobilePopup = showMobilePopup;
+            function openSidebar() {
+                sidebar.classList.add('open');
+                overlay.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            }
 
-    // Toast
-    function showToast(msg, type = 'success') {
-        const toast = document.getElementById('toastMsg');
-        const icon = document.getElementById('toastIcon');
-        const text = document.getElementById('toastText');
-        icon.className = 'fas ' + (type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle');
-        text.innerText = msg;
-        toast.className = 'toast-notification toast-' + type;
-        toast.classList.add('show');
-        setTimeout(() => toast.classList.remove('show'), 3000);
-    }
-    window.showToast = showToast;
+            if (menuToggle) {
+                menuToggle.addEventListener('click', openSidebar);
+            }
+            if (overlay) {
+                overlay.addEventListener('click', closeSidebar);
+            }
 
-    // Initialize Storage
-    if (!localStorage.getItem('users')) {
-        localStorage.setItem('users', JSON.stringify([
-            { id: 'P1', name: 'John Doe', email: 'john@ex.com', phone: '555-2301', role: 'patient', status: 'active', dob: '1985-06-15' },
-            { id: 'P2', name: 'Jane Smith', email: 'jane@ex.com', phone: '555-6712', role: 'patient', status: 'active', dob: '1990-09-22' },
-            { id: 'P3', name: 'Emily Davis', email: 'emily@ex.com', phone: '555-1122', role: 'patient', status: 'active', dob: '1978-03-10' },
-            { id: 'P4', name: 'Michael Brown', email: 'michael@ex.com', phone: '555-3344', role: 'patient', status: 'active', dob: '1965-12-02' },
-            { id: 'D1', name: 'Dr. Sarah Chen', email: 'sarah.chen@clinic.com', phone: '555-8234', role: 'doctor', specialization: 'Cardiology', status: 'active' }
-        ]));
-    }
-    if (!localStorage.getItem('appointments')) {
-        const today = new Date().toISOString().slice(0, 10);
-        localStorage.setItem('appointments', JSON.stringify([
-            { id: 'A101', patient: 'John Doe', doctor: 'Dr. Sarah Chen', date: today, time: '09:00', status: 'confirmed', reason: 'Chest pain', notes: '' },
-            { id: 'A102', patient: 'Jane Smith', doctor: 'Dr. Sarah Chen', date: today, time: '10:30', status: 'checked-in', reason: 'Heart palpitations', notes: '' },
-            { id: 'A103', patient: 'Emily Davis', doctor: 'Dr. Sarah Chen', date: today, time: '14:15', status: 'pending', reason: 'Follow-up', notes: '' },
-            { id: 'A104', patient: 'Michael Brown', doctor: 'Dr. Sarah Chen', date: '2025-04-11', time: '09:30', status: 'confirmed', reason: 'ECG review', notes: '' }
-        ]));
-    }
-    if (!localStorage.getItem('medicalRecords')) {
-        localStorage.setItem('medicalRecords', JSON.stringify([
-            { id: 'M1', patient: 'John Doe', doctor: 'Dr. Sarah Chen', date: '2025-03-15', diagnosis: 'Hypertension', prescription: 'Lisinopril 10mg', notes: 'BP 140/90' }
-        ]));
-    }
-    if (!localStorage.getItem('prescriptions')) {
-        localStorage.setItem('prescriptions', JSON.stringify([
-            { id: 'R1', patient: 'John Doe', doctor: 'Dr. Sarah Chen', date: '2025-03-15', medication: 'Lisinopril 10mg', instructions: 'Once daily', refills: 2 }
-        ]));
-    }
+            // Close sidebar when clicking nav items on mobile
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.addEventListener('click', () => {
+                    if (window.innerWidth < 1024) {
+                        closeSidebar();
+                    }
+                });
+            });
 
-    // Render Profile
-    function renderProfile() {
-        const u = currentUser;
-        document.getElementById('profileCard').innerHTML = `
+            // Mobile Popup
+            const popup = document.getElementById('mobilePopup');
+            function showMobilePopup(event, text) {
+                if (window.innerWidth > 768) return;
+                const rect = event.target.getBoundingClientRect();
+                popup.innerHTML = text;
+                popup.classList.add('show');
+                let top = rect.top - popup.offsetHeight - 10;
+                if (top < 10) top = rect.bottom + 10;
+                let left = rect.left + (rect.width / 2) - 100;
+                if (left < 10) left = 10;
+                if (left + 200 > window.innerWidth) left = window.innerWidth - 210;
+                popup.style.top = top + 'px';
+                popup.style.left = left + 'px';
+                clearTimeout(window.popupTimer);
+                window.popupTimer = setTimeout(() => popup.classList.remove('show'), 2000);
+            }
+            window.showMobilePopup = showMobilePopup;
+
+            // Toast
+            function showToast(msg, type = 'success') {
+                const toast = document.getElementById('toastMsg');
+                const icon = document.getElementById('toastIcon');
+                const text = document.getElementById('toastText');
+                icon.className = 'fas ' + (type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle');
+                text.innerText = msg;
+                toast.className = 'toast-notification toast-' + type;
+                toast.classList.add('show');
+                setTimeout(() => toast.classList.remove('show'), 3000);
+            }
+            window.showToast = showToast;
+
+            // Initialize Storage
+            if (!localStorage.getItem('users')) {
+                localStorage.setItem('users', JSON.stringify([
+                    { id: 'P1', name: 'John Doe', email: 'john@ex.com', phone: '555-2301', role: 'patient', status: 'active', dob: '1985-06-15' },
+                    { id: 'P2', name: 'Jane Smith', email: 'jane@ex.com', phone: '555-6712', role: 'patient', status: 'active', dob: '1990-09-22' },
+                    { id: 'P3', name: 'Emily Davis', email: 'emily@ex.com', phone: '555-1122', role: 'patient', status: 'active', dob: '1978-03-10' },
+                    { id: 'P4', name: 'Michael Brown', email: 'michael@ex.com', phone: '555-3344', role: 'patient', status: 'active', dob: '1965-12-02' },
+                    { id: 'D1', name: 'Dr. Sarah Chen', email: 'sarah.chen@clinic.com', phone: '555-8234', role: 'doctor', specialization: 'Cardiology', status: 'active' }
+                ]));
+            }
+            if (!localStorage.getItem('appointments')) {
+                const today = new Date().toISOString().slice(0, 10);
+                localStorage.setItem('appointments', JSON.stringify([
+                    { id: 'A101', patient: 'John Doe', doctor: 'Dr. Sarah Chen', date: today, time: '09:00', status: 'confirmed', reason: 'Chest pain', notes: '' },
+                    { id: 'A102', patient: 'Jane Smith', doctor: 'Dr. Sarah Chen', date: today, time: '10:30', status: 'checked-in', reason: 'Heart palpitations', notes: '' },
+                    { id: 'A103', patient: 'Emily Davis', doctor: 'Dr. Sarah Chen', date: today, time: '14:15', status: 'pending', reason: 'Follow-up', notes: '' },
+                    { id: 'A104', patient: 'Michael Brown', doctor: 'Dr. Sarah Chen', date: '2025-04-11', time: '09:30', status: 'confirmed', reason: 'ECG review', notes: '' }
+                ]));
+            }
+            if (!localStorage.getItem('medicalRecords')) {
+                localStorage.setItem('medicalRecords', JSON.stringify([
+                    { id: 'M1', patient: 'John Doe', doctor: 'Dr. Sarah Chen', date: '2025-03-15', diagnosis: 'Hypertension', prescription: 'Lisinopril 10mg', notes: 'BP 140/90' }
+                ]));
+            }
+            if (!localStorage.getItem('prescriptions')) {
+                localStorage.setItem('prescriptions', JSON.stringify([
+                    { id: 'R1', patient: 'John Doe', doctor: 'Dr. Sarah Chen', date: '2025-03-15', medication: 'Lisinopril 10mg', instructions: 'Once daily', refills: 2 }
+                ]));
+            }
+
+            // Render Profile
+            function renderProfile() {
+                const u = currentUser;
+                document.getElementById('profileCard').innerHTML = `
             <div class="profile-name" onclick="showMobilePopup(event, '${u.name}')">
                 <i class="fas fa-user-md"></i> <span>Dr. ${u.name.split(' ')[1] || 'Chen'}</span>
             </div>
@@ -787,70 +837,70 @@
             </div>
             <div><span class="role-tag" onclick="showMobilePopup(event, 'Cardiologist')"><i class="fas fa-id-badge"></i> Cardiologist</span></div>
         `;
-    }
-    renderProfile();
+            }
+            renderProfile();
 
-    // Clock
-    function updateClocks() {
-        const now = new Date();
-        const timeStr = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-        const mobileClock = document.getElementById('mobileClock');
-        const desktopClock = document.getElementById('desktopClock');
-        if (mobileClock) mobileClock.innerText = timeStr;
-        if (desktopClock) desktopClock.innerText = timeStr;
-    }
-    updateClocks();
-    setInterval(updateClocks, 1000);
+            // Clock
+            function updateClocks() {
+                const now = new Date();
+                const timeStr = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+                const mobileClock = document.getElementById('mobileClock');
+                const desktopClock = document.getElementById('desktopClock');
+                if (mobileClock) mobileClock.innerText = timeStr;
+                if (desktopClock) desktopClock.innerText = timeStr;
+            }
+            updateClocks();
+            setInterval(updateClocks, 1000);
 
-    // Modal Helpers
-    function closeModal() { document.getElementById('modalRoot').style.display = 'none'; }
-    window.closeModal = closeModal;
+            // Modal Helpers
+            function closeModal() { document.getElementById('modalRoot').style.display = 'none'; }
+            window.closeModal = closeModal;
 
-    function openModal(html) {
-        document.getElementById('modalRoot').style.display = 'flex';
-        document.getElementById('modalRoot').innerHTML = `<div class="modal-overlay" onclick="closeModal()"><div class="modal-window" onclick="event.stopPropagation()">${html}</div></div>`;
-    }
-    window.openModal = openModal;
+            function openModal(html) {
+                document.getElementById('modalRoot').style.display = 'flex';
+                document.getElementById('modalRoot').innerHTML = `<div class="modal-overlay" onclick="closeModal()"><div class="modal-window" onclick="event.stopPropagation()">${html}</div></div>`;
+            }
+            window.openModal = openModal;
 
-    // Navigation
-    const navItems = document.querySelectorAll('.nav-item');
-    navItems.forEach(item => {
-        item.addEventListener('click', () => {
-            navItems.forEach(n => n.classList.remove('active'));
-            item.classList.add('active');
-            const page = item.dataset.page;
-            const title = item.querySelector('span')?.innerText || 'Dashboard';
-            document.getElementById('mobileTitle').innerText = title;
-            const desktopTitle = document.getElementById('desktopTitle');
-            if (desktopTitle) desktopTitle.innerText = title;
-            loadPage(page);
-        });
-    });
+            // Navigation
+            const navItems = document.querySelectorAll('.nav-item');
+            navItems.forEach(item => {
+                item.addEventListener('click', () => {
+                    navItems.forEach(n => n.classList.remove('active'));
+                    item.classList.add('active');
+                    const page = item.dataset.page;
+                    const title = item.querySelector('span')?.innerText || 'Dashboard';
+                    document.getElementById('mobileTitle').innerText = title;
+                    const desktopTitle = document.getElementById('desktopTitle');
+                    if (desktopTitle) desktopTitle.innerText = title;
+                    loadPage(page);
+                });
+            });
 
-    window.loadPage = function(page) {
-        const container = document.getElementById('contentArea');
-        if (page === 'dashboard') renderDashboard(container);
-        else if (page === 'appointments') renderAppointments(container);
-        else if (page === 'patients') renderPatients(container);
-        else if (page === 'records') renderRecords(container);
-        else if (page === 'prescriptions') renderPrescriptions(container);
-        else if (page === 'schedule') renderSchedule(container);
-    };
+            window.loadPage = function (page) {
+                const container = document.getElementById('contentArea');
+                if (page === 'dashboard') renderDashboard(container);
+                else if (page === 'appointments') renderAppointments(container);
+                else if (page === 'patients') renderPatients(container);
+                else if (page === 'records') renderRecords(container);
+                else if (page === 'prescriptions') renderPrescriptions(container);
+                else if (page === 'schedule') renderSchedule(container);
+            };
 
-    function getTodayStr() { return new Date().toISOString().slice(0, 10); }
+            function getTodayStr() { return new Date().toISOString().slice(0, 10); }
 
-    // Dashboard
-    function renderDashboard(con) {
-        const apps = JSON.parse(localStorage.getItem('appointments')) || [];
-        const doctorName = currentUser.name;
-        const myApps = apps.filter(a => a.doctor === doctorName);
-        const today = getTodayStr();
-        const todayApps = myApps.filter(a => a.date === today).length;
-        const pendingApps = myApps.filter(a => a.status === 'pending').length;
-        const totalPatients = [...new Set(myApps.map(a => a.patient))].length;
-        const upcomingApps = myApps.filter(a => a.date >= today && a.status !== 'cancelled').length;
+            // Dashboard
+            function renderDashboard(con) {
+                const apps = JSON.parse(localStorage.getItem('appointments')) || [];
+                const doctorName = currentUser.name;
+                const myApps = apps.filter(a => a.doctor === doctorName);
+                const today = getTodayStr();
+                const todayApps = myApps.filter(a => a.date === today).length;
+                const pendingApps = myApps.filter(a => a.status === 'pending').length;
+                const totalPatients = [...new Set(myApps.map(a => a.patient))].length;
+                const upcomingApps = myApps.filter(a => a.date >= today && a.status !== 'cancelled').length;
 
-        con.innerHTML = `
+                con.innerHTML = `
             <div class="stat-grid">
                 <div class="stat-block"><div class="stat-icon"><i class="fas fa-calendar-day"></i></div><div class="stat-info"><h4>Today's Apps</h4><div class="figure">${todayApps}</div></div></div>
                 <div class="stat-block"><div class="stat-icon"><i class="fas fa-clock"></i></div><div class="stat-info"><h4>Pending</h4><div class="figure">${pendingApps}</div></div></div>
@@ -869,70 +919,70 @@
                 </div>
             </div>
         `;
-    }
+            }
 
-    // Appointments
-    function renderAppointments(con) {
-        const apps = JSON.parse(localStorage.getItem('appointments')) || [];
-        const myApps = apps.filter(a => a.doctor === currentUser.name).sort((a, b) => a.date.localeCompare(b.date) || a.time.localeCompare(b.time));
-        con.innerHTML = `<div class="content-card"><div class="card-header"><h3>My Appointments</h3></div><div class="table-responsive"><table><thead><tr><th>Date</th><th>Time</th><th>Patient</th><th>Reason</th><th>Status</th><th>Actions</th></tr></thead>
+            // Appointments
+            function renderAppointments(con) {
+                const apps = JSON.parse(localStorage.getItem('appointments')) || [];
+                const myApps = apps.filter(a => a.doctor === currentUser.name).sort((a, b) => a.date.localeCompare(b.date) || a.time.localeCompare(b.time));
+                con.innerHTML = `<div class="content-card"><div class="card-header"><h3>My Appointments</h3></div><div class="table-responsive"><table><thead><tr><th>Date</th><th>Time</th><th>Patient</th><th>Reason</th><th>Status</th><th>Actions</th></tr></thead>
         <tbody>${myApps.map(a => `<tr><td>${a.date}</td><td>${a.time}</td><td>${a.patient}</td><td>${a.reason || '—'}</td>
         <td><span class="status-badge ${a.status === 'confirmed' || a.status === 'checked-in' ? 'badge-active' : a.status === 'pending' ? 'badge-pending' : 'badge-completed'}">${a.status}</span></td>
         <td><button class="icon-action" onclick="startConsultation('${a.id}')"><i class="fas fa-notes-medical"></i></button>
         <button class="icon-action" onclick="editApptNotes('${a.id}')"><i class="fas fa-edit"></i></button></td></tr>`).join('')}</tbody></table></div></div>`;
-    }
+            }
 
-    // Patients
-    function renderPatients(con) {
-        const users = JSON.parse(localStorage.getItem('users')) || [];
-        const patients = users.filter(u => u.role === 'patient');
-        const apps = JSON.parse(localStorage.getItem('appointments')) || [];
-        const myPatientNames = [...new Set(apps.filter(a => a.doctor === currentUser.name).map(a => a.patient))];
-        const myPatients = patients.filter(p => myPatientNames.includes(p.name));
-        con.innerHTML = `<div class="content-card"><div class="card-header"><h3>My Patients</h3></div><div class="table-responsive"><table><thead><tr><th>Name</th><th>Email</th><th>Phone</th><th>Last Visit</th><th>Action</th></tr></thead>
+            // Patients
+            function renderPatients(con) {
+                const users = JSON.parse(localStorage.getItem('users')) || [];
+                const patients = users.filter(u => u.role === 'patient');
+                const apps = JSON.parse(localStorage.getItem('appointments')) || [];
+                const myPatientNames = [...new Set(apps.filter(a => a.doctor === currentUser.name).map(a => a.patient))];
+                const myPatients = patients.filter(p => myPatientNames.includes(p.name));
+                con.innerHTML = `<div class="content-card"><div class="card-header"><h3>My Patients</h3></div><div class="table-responsive"><table><thead><tr><th>Name</th><th>Email</th><th>Phone</th><th>Last Visit</th><th>Action</th></tr></thead>
         <tbody>${myPatients.map(p => {
-            const lastVisit = apps.filter(a => a.patient === p.name).sort((a, b) => b.date.localeCompare(a.date))[0];
-            return `<tr><td>${p.name}</td><td>${p.email}</td><td>${p.phone}</td><td>${lastVisit ? lastVisit.date : '—'}</td>
+                    const lastVisit = apps.filter(a => a.patient === p.name).sort((a, b) => b.date.localeCompare(a.date))[0];
+                    return `<tr><td>${p.name}</td><td>${p.email}</td><td>${p.phone}</td><td>${lastVisit ? lastVisit.date : '—'}</td>
             <td><button class="btn-secondary" onclick="viewPatientRecords('${p.name}')">Records</button></td></tr>`;
-        }).join('')}</tbody>}</div></div>`;
-    }
+                }).join('')}</tbody>}</div></div>`;
+            }
 
-    // Records
-    function renderRecords(con) {
-        const records = JSON.parse(localStorage.getItem('medicalRecords')) || [];
-        const myRecords = records.filter(r => r.doctor === currentUser.name);
-        con.innerHTML = `<div class="content-card"><div class="card-header"><h3>Medical Records</h3><button class="btn-primary" onclick="addRecordModal()"><i class="fas fa-plus"></i> New Record</button></div>
+            // Records
+            function renderRecords(con) {
+                const records = JSON.parse(localStorage.getItem('medicalRecords')) || [];
+                const myRecords = records.filter(r => r.doctor === currentUser.name);
+                con.innerHTML = `<div class="content-card"><div class="card-header"><h3>Medical Records</h3><button class="btn-primary" onclick="addRecordModal()"><i class="fas fa-plus"></i> New Record</button></div>
         <div class="table-responsive">${myRecords.length ? `<table><thead><tr><th>Date</th><th>Patient</th><th>Diagnosis</th><th>Prescription</th><th>Actions</th></tr></thead>
         <tbody>${myRecords.map(r => `<tr><td>${r.date}</td><td>${r.patient}</td><td>${r.diagnosis}</td><td>${r.prescription}</td>
         <td><button class="icon-action" onclick="editRecord('${r.id}')"><i class="fas fa-edit"></i></button></td></tr>`).join('')}</tbody></table>` : '<p>No records found.</p>'}</div></div>`;
-    }
+            }
 
-    // Prescriptions
-    function renderPrescriptions(con) {
-        const rx = JSON.parse(localStorage.getItem('prescriptions')) || [];
-        const myRx = rx.filter(r => r.doctor === currentUser.name);
-        con.innerHTML = `<div class="content-card"><div class="card-header"><h3>Prescriptions</h3><button class="btn-primary" onclick="addPrescriptionModal()"><i class="fas fa-plus"></i> New Rx</button></div>
+            // Prescriptions
+            function renderPrescriptions(con) {
+                const rx = JSON.parse(localStorage.getItem('prescriptions')) || [];
+                const myRx = rx.filter(r => r.doctor === currentUser.name);
+                con.innerHTML = `<div class="content-card"><div class="card-header"><h3>Prescriptions</h3><button class="btn-primary" onclick="addPrescriptionModal()"><i class="fas fa-plus"></i> New Rx</button></div>
         <div class="table-responsive">${myRx.length ? `<table><thead><tr><th>Date</th><th>Patient</th><th>Medication</th><th>Instructions</th><th>Refills</th></tr></thead>
         <tbody>${myRx.map(r => `<tr><td>${r.date}</td><td>${r.patient}</td><td>${r.medication}</td><td>${r.instructions}</td><td>${r.refills}</td></tr>`).join('')}</tbody></table>` : '<p>No prescriptions found.</p>'}</div></div>`;
-    }
+            }
 
-    // Schedule
-    function renderSchedule(con) {
-        const apps = JSON.parse(localStorage.getItem('appointments')) || [];
-        const today = getTodayStr();
-        const todayApps = apps.filter(a => a.doctor === currentUser.name && a.date === today).sort((a, b) => a.time.localeCompare(b.time));
-        con.innerHTML = `<div class="content-card"><div class="card-header"><h3>Schedule for ${today}</h3></div><div class="table-responsive">${todayApps.length ? `<table><thead><tr><th>Time</th><th>Patient</th><th>Reason</th><th>Status</th><th>Action</th></tr></thead>
+            // Schedule
+            function renderSchedule(con) {
+                const apps = JSON.parse(localStorage.getItem('appointments')) || [];
+                const today = getTodayStr();
+                const todayApps = apps.filter(a => a.doctor === currentUser.name && a.date === today).sort((a, b) => a.time.localeCompare(b.time));
+                con.innerHTML = `<div class="content-card"><div class="card-header"><h3>Schedule for ${today}</h3></div><div class="table-responsive">${todayApps.length ? `<table><thead><tr><th>Time</th><th>Patient</th><th>Reason</th><th>Status</th><th>Action</th></tr></thead>
         <tbody>${todayApps.map(a => `<tr><td>${a.time}</td><td>${a.patient}</td><td>${a.reason || '—'}</td>
         <td><span class="status-badge ${a.status === 'confirmed' || a.status === 'checked-in' ? 'badge-active' : 'badge-pending'}">${a.status}</span></td>
         <td><button class="btn-primary" onclick="startConsultation('${a.id}')">Start</button></td></tr>`).join('')}</tbody></table>` : '<p>No appointments scheduled for today.</p>'}</div></div>`;
-    }
+            }
 
-    // Consultation Modal
-    window.startConsultation = function(apptId) {
-        const apps = JSON.parse(localStorage.getItem('appointments'));
-        const appt = apps.find(a => a.id === apptId);
-        if (!appt) return;
-        openModal(`
+            // Consultation Modal
+            window.startConsultation = function (apptId) {
+                const apps = JSON.parse(localStorage.getItem('appointments'));
+                const appt = apps.find(a => a.id === apptId);
+                if (!appt) return;
+                openModal(`
             <h3>Consultation: ${appt.patient}</h3>
             <p><strong>${appt.date} ${appt.time}</strong> | Reason: ${appt.reason || '—'}</p>
             <div class="form-field"><label>Diagnosis / Notes</label><textarea class="form-textarea" id="consultNotes">${appt.notes || ''}</textarea></div>
@@ -940,56 +990,56 @@
             <div class="form-field"><label>Instructions</label><input class="form-input" id="consultInstr" placeholder="Dosage instructions"></div>
             <div class="modal-actions"><button class="btn-primary" onclick="saveConsultation('${apptId}')">Complete</button><button class="btn-secondary" onclick="closeModal()">Cancel</button></div>
         `);
-    };
+            };
 
-    window.saveConsultation = function(apptId) {
-        const apps = JSON.parse(localStorage.getItem('appointments'));
-        const appt = apps.find(a => a.id === apptId);
-        if (!appt) return;
-        const notes = document.getElementById('consultNotes')?.value || '';
-        const rx = document.getElementById('consultRx')?.value || '';
-        const instr = document.getElementById('consultInstr')?.value || '';
-        appt.notes = notes;
-        appt.status = 'completed';
+            window.saveConsultation = function (apptId) {
+                const apps = JSON.parse(localStorage.getItem('appointments'));
+                const appt = apps.find(a => a.id === apptId);
+                if (!appt) return;
+                const notes = document.getElementById('consultNotes')?.value || '';
+                const rx = document.getElementById('consultRx')?.value || '';
+                const instr = document.getElementById('consultInstr')?.value || '';
+                appt.notes = notes;
+                appt.status = 'completed';
 
-        // Add medical record
-        const records = JSON.parse(localStorage.getItem('medicalRecords')) || [];
-        records.push({
-            id: 'M' + Date.now(),
-            patient: appt.patient,
-            doctor: currentUser.name,
-            date: getTodayStr(),
-            diagnosis: notes.substring(0, 60),
-            prescription: rx,
-            notes: notes
-        });
-        localStorage.setItem('medicalRecords', JSON.stringify(records));
+                // Add medical record
+                const records = JSON.parse(localStorage.getItem('medicalRecords')) || [];
+                records.push({
+                    id: 'M' + Date.now(),
+                    patient: appt.patient,
+                    doctor: currentUser.name,
+                    date: getTodayStr(),
+                    diagnosis: notes.substring(0, 60),
+                    prescription: rx,
+                    notes: notes
+                });
+                localStorage.setItem('medicalRecords', JSON.stringify(records));
 
-        // Add prescription if provided
-        if (rx.trim()) {
-            const prescriptions = JSON.parse(localStorage.getItem('prescriptions')) || [];
-            prescriptions.push({
-                id: 'R' + Date.now(),
-                patient: appt.patient,
-                doctor: currentUser.name,
-                date: getTodayStr(),
-                medication: rx,
-                instructions: instr || 'As directed',
-                refills: 0
-            });
-            localStorage.setItem('prescriptions', JSON.stringify(prescriptions));
-        }
+                // Add prescription if provided
+                if (rx.trim()) {
+                    const prescriptions = JSON.parse(localStorage.getItem('prescriptions')) || [];
+                    prescriptions.push({
+                        id: 'R' + Date.now(),
+                        patient: appt.patient,
+                        doctor: currentUser.name,
+                        date: getTodayStr(),
+                        medication: rx,
+                        instructions: instr || 'As directed',
+                        refills: 0
+                    });
+                    localStorage.setItem('prescriptions', JSON.stringify(prescriptions));
+                }
 
-        localStorage.setItem('appointments', JSON.stringify(apps));
-        closeModal();
-        showToast('Consultation saved', 'success');
-        loadPage('dashboard');
-    };
+                localStorage.setItem('appointments', JSON.stringify(apps));
+                closeModal();
+                showToast('Consultation saved', 'success');
+                loadPage('dashboard');
+            };
 
-    window.editApptNotes = function(apptId) {
-        const apps = JSON.parse(localStorage.getItem('appointments'));
-        const appt = apps.find(a => a.id === apptId);
-        openModal(`
+            window.editApptNotes = function (apptId) {
+                const apps = JSON.parse(localStorage.getItem('appointments'));
+                const appt = apps.find(a => a.id === apptId);
+                openModal(`
             <h3>Edit Appointment</h3>
             <div class="form-field"><label>Notes</label><textarea class="form-textarea" id="editNotes">${appt?.notes || ''}</textarea></div>
             <div class="form-field"><label>Status</label><select class="form-input" id="editStatus">
@@ -1000,36 +1050,36 @@
             </select></div>
             <div class="modal-actions"><button class="btn-primary" onclick="updateApptNotes('${apptId}')">Update</button><button class="btn-secondary" onclick="closeModal()">Cancel</button></div>
         `);
-    };
+            };
 
-    window.updateApptNotes = function(apptId) {
-        const apps = JSON.parse(localStorage.getItem('appointments'));
-        const appt = apps.find(a => a.id === apptId);
-        if (appt) {
-            appt.notes = document.getElementById('editNotes')?.value || appt.notes;
-            appt.status = document.getElementById('editStatus')?.value || appt.status;
-        }
-        localStorage.setItem('appointments', JSON.stringify(apps));
-        closeModal();
-        showToast('Updated', 'success');
-        loadPage('appointments');
-    };
+            window.updateApptNotes = function (apptId) {
+                const apps = JSON.parse(localStorage.getItem('appointments'));
+                const appt = apps.find(a => a.id === apptId);
+                if (appt) {
+                    appt.notes = document.getElementById('editNotes')?.value || appt.notes;
+                    appt.status = document.getElementById('editStatus')?.value || appt.status;
+                }
+                localStorage.setItem('appointments', JSON.stringify(apps));
+                closeModal();
+                showToast('Updated', 'success');
+                loadPage('appointments');
+            };
 
-    window.viewPatientRecords = function(patientName) {
-        const records = JSON.parse(localStorage.getItem('medicalRecords')) || [];
-        const patientRecords = records.filter(r => r.patient === patientName);
-        openModal(`
+            window.viewPatientRecords = function (patientName) {
+                const records = JSON.parse(localStorage.getItem('medicalRecords')) || [];
+                const patientRecords = records.filter(r => r.patient === patientName);
+                openModal(`
             <h3>Medical Records: ${patientName}</h3>
             ${patientRecords.length ? patientRecords.map(r => `<div style="background:#f5f9ff; padding:12px; border-radius:16px; margin-bottom:10px;">
                 <strong>${r.date}</strong> - ${r.diagnosis}<br><small>${r.notes}</small><br><em>Rx: ${r.prescription}</em>
             </div>`).join('') : '<p>No records found</p>'}
             <div class="modal-actions"><button class="btn-secondary" onclick="closeModal()">Close</button></div>
         `);
-    };
+            };
 
-    window.addRecordModal = function() {
-        const patients = JSON.parse(localStorage.getItem('users')).filter(u => u.role === 'patient');
-        openModal(`
+            window.addRecordModal = function () {
+                const patients = JSON.parse(localStorage.getItem('users')).filter(u => u.role === 'patient');
+                openModal(`
             <h3>New Medical Record</h3>
             <div class="form-field"><label>Patient</label><select class="form-input" id="recPatient">${patients.map(p => `<option value="${p.name}">${p.name}</option>`).join('')}</select></div>
             <div class="form-field"><label>Diagnosis</label><input class="form-input" id="recDiagnosis"></div>
@@ -1037,28 +1087,28 @@
             <div class="form-field"><label>Notes</label><textarea class="form-textarea" id="recNotes"></textarea></div>
             <div class="modal-actions"><button class="btn-primary" onclick="saveRecord()">Save</button><button class="btn-secondary" onclick="closeModal()">Cancel</button></div>
         `);
-    };
+            };
 
-    window.saveRecord = function() {
-        const records = JSON.parse(localStorage.getItem('medicalRecords')) || [];
-        records.push({
-            id: 'M' + Date.now(),
-            patient: document.getElementById('recPatient')?.value,
-            doctor: currentUser.name,
-            date: getTodayStr(),
-            diagnosis: document.getElementById('recDiagnosis')?.value || '',
-            prescription: document.getElementById('recRx')?.value || '',
-            notes: document.getElementById('recNotes')?.value || ''
-        });
-        localStorage.setItem('medicalRecords', JSON.stringify(records));
-        closeModal();
-        showToast('Record added', 'success');
-        loadPage('records');
-    };
+            window.saveRecord = function () {
+                const records = JSON.parse(localStorage.getItem('medicalRecords')) || [];
+                records.push({
+                    id: 'M' + Date.now(),
+                    patient: document.getElementById('recPatient')?.value,
+                    doctor: currentUser.name,
+                    date: getTodayStr(),
+                    diagnosis: document.getElementById('recDiagnosis')?.value || '',
+                    prescription: document.getElementById('recRx')?.value || '',
+                    notes: document.getElementById('recNotes')?.value || ''
+                });
+                localStorage.setItem('medicalRecords', JSON.stringify(records));
+                closeModal();
+                showToast('Record added', 'success');
+                loadPage('records');
+            };
 
-    window.addPrescriptionModal = function() {
-        const patients = JSON.parse(localStorage.getItem('users')).filter(u => u.role === 'patient');
-        openModal(`
+            window.addPrescriptionModal = function () {
+                const patients = JSON.parse(localStorage.getItem('users')).filter(u => u.role === 'patient');
+                openModal(`
             <h3>New Prescription</h3>
             <div class="form-field"><label>Patient</label><select class="form-input" id="rxPatient">${patients.map(p => `<option value="${p.name}">${p.name}</option>`).join('')}</select></div>
             <div class="form-field"><label>Medication</label><input class="form-input" id="rxMed"></div>
@@ -1066,41 +1116,42 @@
             <div class="form-field"><label>Refills</label><input class="form-input" type="number" id="rxRefills" value="0"></div>
             <div class="modal-actions"><button class="btn-primary" onclick="savePrescription()">Save</button><button class="btn-secondary" onclick="closeModal()">Cancel</button></div>
         `);
-    };
+            };
 
-    window.savePrescription = function() {
-        const rx = JSON.parse(localStorage.getItem('prescriptions')) || [];
-        rx.push({
-            id: 'R' + Date.now(),
-            patient: document.getElementById('rxPatient')?.value,
-            doctor: currentUser.name,
-            date: getTodayStr(),
-            medication: document.getElementById('rxMed')?.value || '',
-            instructions: document.getElementById('rxInstr')?.value || '',
-            refills: parseInt(document.getElementById('rxRefills')?.value) || 0
-        });
-        localStorage.setItem('prescriptions', JSON.stringify(rx));
-        closeModal();
-        showToast('Prescription added', 'success');
-        loadPage('prescriptions');
-    };
+            window.savePrescription = function () {
+                const rx = JSON.parse(localStorage.getItem('prescriptions')) || [];
+                rx.push({
+                    id: 'R' + Date.now(),
+                    patient: document.getElementById('rxPatient')?.value,
+                    doctor: currentUser.name,
+                    date: getTodayStr(),
+                    medication: document.getElementById('rxMed')?.value || '',
+                    instructions: document.getElementById('rxInstr')?.value || '',
+                    refills: parseInt(document.getElementById('rxRefills')?.value) || 0
+                });
+                localStorage.setItem('prescriptions', JSON.stringify(rx));
+                closeModal();
+                showToast('Prescription added', 'success');
+                loadPage('prescriptions');
+            };
 
-    window.editRecord = function(id) {
-        showToast('Edit feature coming soon', 'info');
-    };
+            window.editRecord = function (id) {
+                showToast('Edit feature coming soon', 'info');
+            };
 
-    // Logout
-    document.getElementById('logoutBtn').addEventListener('click', () => {
-        showToast('Logging out...', 'info');
-        setTimeout(() => {
-            localStorage.removeItem('currentUser');
-            window.location.href = 'index.html';
-        }, 800);
-    });
+            // Logout
+            document.getElementById('logoutBtn').addEventListener('click', () => {
+                showToast('Logging out...', 'info');
+                setTimeout(() => {
+                    localStorage.removeItem('currentUser');
+                    window.location.href = 'index.html';
+                }, 800);
+            });
 
-    // Start
-    loadPage('dashboard');
-})();
-</script>
+            // Start
+            loadPage('dashboard');
+        })();
+    </script>
 </body>
+
 </html>

@@ -1,10 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
     <title>ClinicCare · Receptionist Suite</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         * {
@@ -40,7 +44,7 @@
             transition: left 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
             display: flex;
             flex-direction: column;
-            box-shadow: 4px 0 20px rgba(0,0,0,0.3);
+            box-shadow: 4px 0 20px rgba(0, 0, 0, 0.3);
         }
 
         .sidebar.open {
@@ -54,13 +58,14 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(0,0,0,0.5);
+            background: rgba(0, 0, 0, 0.5);
             backdrop-filter: blur(3px);
             z-index: 999;
             display: none;
             opacity: 0;
             transition: opacity 0.2s;
         }
+
         .sidebar-overlay.active {
             display: block;
             opacity: 1;
@@ -74,12 +79,15 @@
                 width: 260px;
                 transform: none;
             }
+
             .sidebar-overlay {
                 display: none !important;
             }
+
             .menu-toggle {
                 display: none !important;
             }
+
             .main-panel {
                 margin-left: 260px;
             }
@@ -90,8 +98,9 @@
             display: flex;
             align-items: center;
             gap: 12px;
-            border-bottom: 1px solid rgba(255,255,255,0.08);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
         }
+
         .brand-icon {
             width: 44px;
             height: 44px;
@@ -103,6 +112,7 @@
             font-size: 22px;
             color: white;
         }
+
         .sidebar-header h2 {
             font-weight: 700;
             font-size: 1rem;
@@ -113,12 +123,13 @@
         }
 
         .profile-card {
-            background: rgba(255,255,255,0.06);
+            background: rgba(255, 255, 255, 0.06);
             margin: 20px 16px 16px;
             padding: 14px 16px;
             border-radius: 24px;
-            border: 1px solid rgba(255,255,255,0.1);
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
+
         .profile-name {
             font-weight: 600;
             display: flex;
@@ -128,6 +139,7 @@
             font-size: 0.85rem;
             color: #f0fcff;
         }
+
         .profile-detail {
             display: flex;
             align-items: center;
@@ -137,6 +149,7 @@
             font-size: 0.7rem;
             word-break: break-all;
         }
+
         .role-tag {
             background: #2c7da0cc;
             padding: 4px 12px;
@@ -152,6 +165,7 @@
             padding: 8px 12px;
             overflow-y: auto;
         }
+
         .nav-item {
             display: flex;
             align-items: center;
@@ -165,19 +179,23 @@
             transition: all 0.2s;
             cursor: pointer;
         }
+
         .nav-item i {
             width: 22px;
             font-size: 1.1rem;
             color: #86b3d4;
         }
+
         .nav-item:hover {
             background: #1f4e6e;
             color: white;
         }
+
         .nav-item.active {
             background: linear-gradient(95deg, #268e81, #1b6b5f);
             color: white;
         }
+
         .nav-item.active i {
             color: white;
         }
@@ -196,6 +214,7 @@
             cursor: pointer;
             transition: 0.2s;
         }
+
         .logout-button:hover {
             background: #ef4444;
             color: white;
@@ -219,9 +238,10 @@
             padding: 12px 16px;
             border-radius: 28px;
             margin-bottom: 20px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
             border: 1px solid #e6edf8;
         }
+
         .menu-toggle {
             background: linear-gradient(135deg, #2c7da0, #22668d);
             border: none;
@@ -236,9 +256,11 @@
             justify-content: center;
             transition: 0.2s;
         }
+
         .menu-toggle:active {
             transform: scale(0.95);
         }
+
         .page-title-mobile {
             font-weight: 800;
             font-size: 1.2rem;
@@ -247,6 +269,7 @@
             background-clip: text;
             -webkit-text-fill-color: transparent;
         }
+
         .live-clock {
             background: #eaf2ff;
             padding: 6px 14px;
@@ -268,6 +291,7 @@
             justify-content: space-between;
             align-items: center;
         }
+
         .desktop-header .page-title {
             font-weight: 800;
             font-size: 1.3rem;
@@ -276,13 +300,16 @@
             background-clip: text;
             -webkit-text-fill-color: transparent;
         }
+
         @media (min-width: 1024px) {
             .main-panel {
                 padding: 20px 24px;
             }
+
             .mobile-header {
                 display: none;
             }
+
             .desktop-header {
                 display: flex;
             }
@@ -295,12 +322,14 @@
             gap: 12px;
             margin-bottom: 20px;
         }
+
         @media (min-width: 640px) {
             .stat-grid {
                 grid-template-columns: repeat(4, 1fr);
                 gap: 16px;
             }
         }
+
         .stat-block {
             background: white;
             padding: 12px 14px;
@@ -309,8 +338,9 @@
             display: flex;
             align-items: center;
             gap: 12px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.02);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
         }
+
         .stat-icon {
             width: 44px;
             height: 44px;
@@ -322,12 +352,14 @@
             font-size: 1.4rem;
             color: #2c7da0;
         }
+
         .stat-info h4 {
             font-weight: 500;
             color: #5a6e8c;
             font-size: 0.65rem;
             letter-spacing: 0.3px;
         }
+
         .stat-info .figure {
             font-weight: 800;
             font-size: 1.5rem;
@@ -340,10 +372,11 @@
             border-radius: 28px;
             padding: 16px 18px;
             border: 1px solid #e6edfc;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.02);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
             margin-bottom: 20px;
             overflow-x: auto;
         }
+
         .card-header {
             display: flex;
             justify-content: space-between;
@@ -352,6 +385,7 @@
             gap: 12px;
             margin-bottom: 16px;
         }
+
         .card-header h3 {
             font-weight: 700;
             font-size: 1rem;
@@ -364,17 +398,20 @@
             border-radius: 20px;
             -webkit-overflow-scrolling: touch;
         }
+
         table {
             width: 100%;
             border-collapse: collapse;
             font-size: 0.75rem;
             min-width: 500px;
         }
+
         @media (max-width: 640px) {
             table {
                 min-width: 480px;
             }
         }
+
         th {
             text-align: left;
             padding: 10px 8px;
@@ -384,6 +421,7 @@
             text-transform: uppercase;
             border-bottom: 2px solid #eaf0fa;
         }
+
         td {
             padding: 10px 8px;
             border-bottom: 1px solid #f0f4fc;
@@ -399,10 +437,26 @@
             display: inline-block;
             white-space: nowrap;
         }
-        .badge-active { background: #e1f7ea; color: #0a7143; }
-        .badge-pending { background: #fff0db; color: #b45500; }
-        .badge-cancelled { background: #ffe7e7; color: #c24141; }
-        .badge-checkedin { background: #d9effa; color: #1a6d8f; }
+
+        .badge-active {
+            background: #e1f7ea;
+            color: #0a7143;
+        }
+
+        .badge-pending {
+            background: #fff0db;
+            color: #b45500;
+        }
+
+        .badge-cancelled {
+            background: #ffe7e7;
+            color: #c24141;
+        }
+
+        .badge-checkedin {
+            background: #d9effa;
+            color: #1a6d8f;
+        }
 
         .btn-primary {
             background: linear-gradient(105deg, #2c7da0, #22668d);
@@ -419,7 +473,11 @@
             transition: 0.2s;
             white-space: nowrap;
         }
-        .btn-primary:active { transform: scale(0.97); }
+
+        .btn-primary:active {
+            transform: scale(0.97);
+        }
+
         .btn-secondary {
             background: white;
             border: 1px solid #cfe2ff;
@@ -430,6 +488,7 @@
             cursor: pointer;
             white-space: nowrap;
         }
+
         .icon-action {
             background: transparent;
             border: none;
@@ -440,7 +499,10 @@
             cursor: pointer;
             margin: 0 2px;
         }
-        .icon-action:active { background: #eef3ff; }
+
+        .icon-action:active {
+            background: #eef3ff;
+        }
 
         /* modal */
         .modal-overlay {
@@ -454,6 +516,7 @@
             z-index: 1100;
             padding: 16px;
         }
+
         .modal-window {
             background: white;
             border-radius: 36px;
@@ -463,9 +526,11 @@
             max-height: 85vh;
             overflow-y: auto;
         }
+
         .form-field {
             margin-bottom: 16px;
         }
+
         .form-field label {
             font-weight: 600;
             font-size: 0.75rem;
@@ -473,7 +538,9 @@
             display: block;
             color: #2c5270;
         }
-        .form-input, .form-field select {
+
+        .form-input,
+        .form-field select {
             width: 100%;
             padding: 10px 16px;
             border: 1.5px solid #e2eaff;
@@ -482,17 +549,20 @@
             font-family: inherit;
             background: white;
         }
+
         .modal-actions {
             display: flex;
             gap: 12px;
             margin-top: 20px;
             flex-wrap: wrap;
         }
+
         .row-fields {
             display: flex;
             gap: 12px;
             flex-wrap: wrap;
         }
+
         .row-fields .form-field {
             flex: 1;
         }
@@ -506,7 +576,7 @@
             color: white;
             border-radius: 60px;
             padding: 12px 20px;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
             display: flex;
             align-items: center;
             gap: 12px;
@@ -517,6 +587,7 @@
             font-size: 0.8rem;
             backdrop-filter: blur(8px);
         }
+
         @media (min-width: 640px) {
             .toast-notification {
                 left: auto;
@@ -525,193 +596,214 @@
                 min-width: 280px;
             }
         }
-        .toast-notification.show { transform: translateY(0); }
-        .toast-success { border-left-color: #2dd4bf; }
-        .toast-error { border-left-color: #f87171; }
 
-        button { cursor: pointer; background: none; border: none; }
-        .delete-btn { color: #e05a5a; }
+        .toast-notification.show {
+            transform: translateY(0);
+        }
+
+        .toast-success {
+            border-left-color: #2dd4bf;
+        }
+
+        .toast-error {
+            border-left-color: #f87171;
+        }
+
+        button {
+            cursor: pointer;
+            background: none;
+            border: none;
+        }
+
+        .delete-btn {
+            color: #e05a5a;
+        }
     </style>
 </head>
+
 <body>
-<div class="dashboard">
-    <!-- Sidebar Overlay for mobile -->
-    <div class="sidebar-overlay" id="sidebarOverlay"></div>
-    
-    <!-- Sidebar -->
-    <div class="sidebar" id="sidebar">
-        <div class="sidebar-header">
-            <div class="brand-icon"><i class="fas fa-stethoscope"></i></div>
-            <h2>ClinicCare · Front Desk</h2>
+    <div class="dashboard">
+        <!-- Sidebar Overlay for mobile -->
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+        <!-- Sidebar -->
+        <div class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="brand-icon"><i class="fas fa-stethoscope"></i></div>
+                <h2>ClinicCare · Front Desk</h2>
+            </div>
+            <div class="profile-card" id="profileCard"></div>
+            <nav class="nav-menu">
+                <div class="nav-item active" data-page="dashboard"><i class="fas fa-chart-line"></i>
+                    <span>Dashboard</span></div>
+                <div class="nav-item" data-page="appointments"><i class="fas fa-calendar-check"></i>
+                    <span>Appointments</span></div>
+                <div class="nav-item" data-page="patients"><i class="fas fa-user-friends"></i> <span>Patients</span>
+                </div>
+                <div class="nav-item" data-page="doctors"><i class="fas fa-user-md"></i> <span>Doctors</span></div>
+                <div class="nav-item" data-page="schedule"><i class="fas fa-hourglass-half"></i> <span>Today's
+                        Schedule</span></div>
+                <div class="nav-item" data-page="checkin"><i class="fas fa-fingerprint"></i> <span>Check‑in</span></div>
+                <div class="nav-item" data-page="billing"><i class="fas fa-credit-card"></i> <span>Billing</span></div>
+            </nav>
+            <div class="logout-button" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> <span>Sign out</span></div>
         </div>
-        <div class="profile-card" id="profileCard"></div>
-        <nav class="nav-menu">
-            <div class="nav-item active" data-page="dashboard"><i class="fas fa-chart-line"></i> <span>Dashboard</span></div>
-            <div class="nav-item" data-page="appointments"><i class="fas fa-calendar-check"></i> <span>Appointments</span></div>
-            <div class="nav-item" data-page="patients"><i class="fas fa-user-friends"></i> <span>Patients</span></div>
-            <div class="nav-item" data-page="doctors"><i class="fas fa-user-md"></i> <span>Doctors</span></div>
-            <div class="nav-item" data-page="schedule"><i class="fas fa-hourglass-half"></i> <span>Today's Schedule</span></div>
-            <div class="nav-item" data-page="checkin"><i class="fas fa-fingerprint"></i> <span>Check‑in</span></div>
-            <div class="nav-item" data-page="billing"><i class="fas fa-credit-card"></i> <span>Billing</span></div>
-        </nav>
-        <div class="logout-button" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> <span>Sign out</span></div>
+
+        <!-- Main Panel -->
+        <div class="main-panel">
+            <!-- Mobile Header -->
+            <div class="mobile-header">
+                <button class="menu-toggle" id="menuToggle"><i class="fas fa-bars"></i></button>
+                <span class="page-title-mobile" id="mobileTitle">Dashboard</span>
+                <span class="live-clock" id="liveTime"></span>
+            </div>
+            <!-- Desktop Header -->
+            <div class="desktop-header">
+                <span class="page-title" id="desktopTitle">Reception Dashboard</span>
+                <span class="live-clock" id="desktopClock"></span>
+            </div>
+            <div class="content-area" id="contentArea"></div>
+        </div>
     </div>
+    <div id="modalRoot" style="display:none;"></div>
+    <div class="toast-notification" id="toastMsg"><i class="fas" id="toastIcon"></i><span id="toastText"></span></div>
 
-    <!-- Main Panel -->
-    <div class="main-panel">
-        <!-- Mobile Header -->
-        <div class="mobile-header">
-            <button class="menu-toggle" id="menuToggle"><i class="fas fa-bars"></i></button>
-            <span class="page-title-mobile" id="mobileTitle">Dashboard</span>
-            <span class="live-clock" id="liveTime"></span>
-        </div>
-        <!-- Desktop Header -->
-        <div class="desktop-header">
-            <span class="page-title" id="desktopTitle">Reception Dashboard</span>
-            <span class="live-clock" id="desktopClock"></span>
-        </div>
-        <div class="content-area" id="contentArea"></div>
-    </div>
-</div>
-<div id="modalRoot" style="display:none;"></div>
-<div class="toast-notification" id="toastMsg"><i class="fas" id="toastIcon"></i><span id="toastText"></span></div>
+    <script>
+        (function () {
+            let currentUser = { id: 'R1005', name: 'Emma Watson', email: 'reception@cliniccare.com', phone: '(555) 789-1234', role: 'receptionist' };
+            localStorage.setItem('currentUser', JSON.stringify(currentUser));
 
-<script>
-    (function() {
-        let currentUser = { id: 'R1005', name: 'Emma Watson', email: 'reception@cliniccare.com', phone: '(555) 789-1234', role: 'receptionist' };
-        localStorage.setItem('currentUser', JSON.stringify(currentUser));
+            // Mobile sidebar controls
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebarOverlay');
+            const menuToggle = document.getElementById('menuToggle');
 
-        // Mobile sidebar controls
-        const sidebar = document.getElementById('sidebar');
-        const overlay = document.getElementById('sidebarOverlay');
-        const menuToggle = document.getElementById('menuToggle');
-        
-        function closeSidebar() {
-            sidebar.classList.remove('open');
-            overlay.classList.remove('active');
-        }
-        function openSidebar() {
-            sidebar.classList.add('open');
-            overlay.classList.add('active');
-        }
-        if (menuToggle) {
-            menuToggle.addEventListener('click', openSidebar);
-        }
-        overlay.addEventListener('click', closeSidebar);
-        // Close sidebar on nav item click (mobile)
-        document.querySelectorAll('.nav-item').forEach(item => {
-            item.addEventListener('click', () => {
-                if (window.innerWidth < 1024) closeSidebar();
+            function closeSidebar() {
+                sidebar.classList.remove('open');
+                overlay.classList.remove('active');
+            }
+            function openSidebar() {
+                sidebar.classList.add('open');
+                overlay.classList.add('active');
+            }
+            if (menuToggle) {
+                menuToggle.addEventListener('click', openSidebar);
+            }
+            overlay.addEventListener('click', closeSidebar);
+            // Close sidebar on nav item click (mobile)
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.addEventListener('click', () => {
+                    if (window.innerWidth < 1024) closeSidebar();
+                });
             });
-        });
 
-        function showToast(msg, type = 'success') {
-            const toast = document.getElementById('toastMsg');
-            const icon = document.getElementById('toastIcon');
-            const text = document.getElementById('toastText');
-            icon.className = 'fas ' + (type === 'success' ? 'fa-check-circle' : type === 'error' ? 'fa-exclamation-triangle' : 'fa-info-circle');
-            text.innerText = msg;
-            toast.className = `toast-notification toast-${type}`;
-            toast.classList.add('show');
-            setTimeout(() => toast.classList.remove('show'), 2800);
-        }
-        window.showToast = showToast;
+            function showToast(msg, type = 'success') {
+                const toast = document.getElementById('toastMsg');
+                const icon = document.getElementById('toastIcon');
+                const text = document.getElementById('toastText');
+                icon.className = 'fas ' + (type === 'success' ? 'fa-check-circle' : type === 'error' ? 'fa-exclamation-triangle' : 'fa-info-circle');
+                text.innerText = msg;
+                toast.className = `toast-notification toast-${type}`;
+                toast.classList.add('show');
+                setTimeout(() => toast.classList.remove('show'), 2800);
+            }
+            window.showToast = showToast;
 
-        // Init data
-        if (!localStorage.getItem('users')) {
-            localStorage.setItem('users', JSON.stringify([
-                { id: 'P101', name: 'John Doe', email: 'john.d@example.com', phone: '555-0101', role: 'patient', status: 'active' },
-                { id: 'P102', name: 'Jane Smith', email: 'jane.s@example.com', phone: '555-0102', role: 'patient', status: 'active' },
-                { id: 'P103', name: 'Emily Davis', email: 'emily.d@example.com', phone: '555-0103', role: 'patient', status: 'active' },
-                { id: 'P104', name: 'Michael Brown', email: 'michael.b@example.com', phone: '555-0104', role: 'patient', status: 'active' },
-                { id: 'D201', name: 'Dr. Sarah Chen', email: 's.chen@clinic.com', phone: '555-8201', role: 'doctor', specialization: 'Cardiology', status: 'active' },
-                { id: 'D202', name: 'Dr. James Wilson', email: 'j.wilson@clinic.com', phone: '555-8202', role: 'doctor', specialization: 'Neurology', status: 'active' },
-                { id: 'D203', name: 'Dr. Lisa Ray', email: 'l.ray@clinic.com', phone: '555-8203', role: 'doctor', specialization: 'Dermatology', status: 'active' }
-            ]));
-        }
-        if (!localStorage.getItem('appointments')) {
-            const today = new Date().toISOString().slice(0,10);
-            localStorage.setItem('appointments', JSON.stringify([
-                { id: 'A101', patient: 'John Doe', doctor: 'Dr. Sarah Chen', date: today, time: '09:00', status: 'confirmed', reason: 'Chest discomfort', phone: '555-0101' },
-                { id: 'A102', patient: 'Jane Smith', doctor: 'Dr. James Wilson', date: today, time: '10:30', status: 'checked-in', reason: 'Migraine', phone: '555-0102' },
-                { id: 'A103', patient: 'Emily Davis', doctor: 'Dr. Lisa Ray', date: today, time: '11:45', status: 'confirmed', reason: 'Rash', phone: '555-0103' },
-                { id: 'A104', patient: 'Michael Brown', doctor: 'Dr. Sarah Chen', date: today, time: '14:15', status: 'pending', reason: 'Follow-up', phone: '555-0104' },
-                { id: 'A105', patient: 'John Doe', doctor: 'Dr. James Wilson', date: '2025-04-11', time: '09:30', status: 'confirmed', reason: 'Neurology', phone: '555-0101' },
-                { id: 'A106', patient: 'Emily Davis', doctor: 'Dr. Lisa Ray', date: '2025-04-11', time: '15:00', status: 'pending', reason: 'Acne', phone: '555-0103' }
-            ]));
-        }
-        if (!localStorage.getItem('billing')) {
-            localStorage.setItem('billing', JSON.stringify([
-                { id: 'B1', patient: 'John Doe', date: new Date().toISOString().slice(0,10), amount: 150, status: 'paid' },
-                { id: 'B2', patient: 'Jane Smith', date: new Date().toISOString().slice(0,10), amount: 200, status: 'pending' },
-                { id: 'B3', patient: 'Emily Davis', date: new Date().toISOString().slice(0,10), amount: 120, status: 'pending' }
-            ]));
-        }
+            // Init data
+            if (!localStorage.getItem('users')) {
+                localStorage.setItem('users', JSON.stringify([
+                    { id: 'P101', name: 'John Doe', email: 'john.d@example.com', phone: '555-0101', role: 'patient', status: 'active' },
+                    { id: 'P102', name: 'Jane Smith', email: 'jane.s@example.com', phone: '555-0102', role: 'patient', status: 'active' },
+                    { id: 'P103', name: 'Emily Davis', email: 'emily.d@example.com', phone: '555-0103', role: 'patient', status: 'active' },
+                    { id: 'P104', name: 'Michael Brown', email: 'michael.b@example.com', phone: '555-0104', role: 'patient', status: 'active' },
+                    { id: 'D201', name: 'Dr. Sarah Chen', email: 's.chen@clinic.com', phone: '555-8201', role: 'doctor', specialization: 'Cardiology', status: 'active' },
+                    { id: 'D202', name: 'Dr. James Wilson', email: 'j.wilson@clinic.com', phone: '555-8202', role: 'doctor', specialization: 'Neurology', status: 'active' },
+                    { id: 'D203', name: 'Dr. Lisa Ray', email: 'l.ray@clinic.com', phone: '555-8203', role: 'doctor', specialization: 'Dermatology', status: 'active' }
+                ]));
+            }
+            if (!localStorage.getItem('appointments')) {
+                const today = new Date().toISOString().slice(0, 10);
+                localStorage.setItem('appointments', JSON.stringify([
+                    { id: 'A101', patient: 'John Doe', doctor: 'Dr. Sarah Chen', date: today, time: '09:00', status: 'confirmed', reason: 'Chest discomfort', phone: '555-0101' },
+                    { id: 'A102', patient: 'Jane Smith', doctor: 'Dr. James Wilson', date: today, time: '10:30', status: 'checked-in', reason: 'Migraine', phone: '555-0102' },
+                    { id: 'A103', patient: 'Emily Davis', doctor: 'Dr. Lisa Ray', date: today, time: '11:45', status: 'confirmed', reason: 'Rash', phone: '555-0103' },
+                    { id: 'A104', patient: 'Michael Brown', doctor: 'Dr. Sarah Chen', date: today, time: '14:15', status: 'pending', reason: 'Follow-up', phone: '555-0104' },
+                    { id: 'A105', patient: 'John Doe', doctor: 'Dr. James Wilson', date: '2025-04-11', time: '09:30', status: 'confirmed', reason: 'Neurology', phone: '555-0101' },
+                    { id: 'A106', patient: 'Emily Davis', doctor: 'Dr. Lisa Ray', date: '2025-04-11', time: '15:00', status: 'pending', reason: 'Acne', phone: '555-0103' }
+                ]));
+            }
+            if (!localStorage.getItem('billing')) {
+                localStorage.setItem('billing', JSON.stringify([
+                    { id: 'B1', patient: 'John Doe', date: new Date().toISOString().slice(0, 10), amount: 150, status: 'paid' },
+                    { id: 'B2', patient: 'Jane Smith', date: new Date().toISOString().slice(0, 10), amount: 200, status: 'pending' },
+                    { id: 'B3', patient: 'Emily Davis', date: new Date().toISOString().slice(0, 10), amount: 120, status: 'pending' }
+                ]));
+            }
 
-        function renderProfile() {
-            document.getElementById('profileCard').innerHTML = `
+            function renderProfile() {
+                document.getElementById('profileCard').innerHTML = `
                 <div class="profile-name"><i class="fas fa-user-circle"></i> <span>${currentUser.name}</span></div>
                 <div class="profile-detail"><i class="fas fa-envelope"></i> <span>${currentUser.email}</span></div>
                 <div class="profile-detail"><i class="fas fa-phone"></i> <span>${currentUser.phone}</span></div>
                 <div><span class="role-tag"><i class="fas fa-id-card"></i> Receptionist</span></div>
             `;
-        }
-        renderProfile();
+            }
+            renderProfile();
 
-        function updateClocks() {
-            const now = new Date();
-            const timeStr = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second:'2-digit' });
-            document.getElementById('liveTime').innerText = timeStr;
-            const desktopClock = document.getElementById('desktopClock');
-            if (desktopClock) desktopClock.innerText = timeStr;
-        }
-        updateClocks(); setInterval(updateClocks, 1000);
+            function updateClocks() {
+                const now = new Date();
+                const timeStr = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+                document.getElementById('liveTime').innerText = timeStr;
+                const desktopClock = document.getElementById('desktopClock');
+                if (desktopClock) desktopClock.innerText = timeStr;
+            }
+            updateClocks(); setInterval(updateClocks, 1000);
 
-        function closeModal() { document.getElementById('modalRoot').style.display = 'none'; }
-        window.closeModal = closeModal;
-        function openModal(html) {
-            document.getElementById('modalRoot').style.display = 'flex';
-            document.getElementById('modalRoot').innerHTML = `<div class="modal-overlay" onclick="closeModal()"><div class="modal-window" onclick="event.stopPropagation()">${html}</div></div>`;
-        }
-        window.openModal = openModal;
+            function closeModal() { document.getElementById('modalRoot').style.display = 'none'; }
+            window.closeModal = closeModal;
+            function openModal(html) {
+                document.getElementById('modalRoot').style.display = 'flex';
+                document.getElementById('modalRoot').innerHTML = `<div class="modal-overlay" onclick="closeModal()"><div class="modal-window" onclick="event.stopPropagation()">${html}</div></div>`;
+            }
+            window.openModal = openModal;
 
-        // Navigation
-        const navItems = document.querySelectorAll('.nav-item');
-        navItems.forEach(nav => {
-            nav.addEventListener('click', () => {
-                navItems.forEach(n => n.classList.remove('active'));
-                nav.classList.add('active');
-                const page = nav.dataset.page;
-                const title = nav.querySelector('span')?.innerText || 'Dashboard';
-                document.getElementById('mobileTitle').innerText = title;
-                const desktopTitle = document.getElementById('desktopTitle');
-                if (desktopTitle) desktopTitle.innerText = title;
-                loadPage(page);
+            // Navigation
+            const navItems = document.querySelectorAll('.nav-item');
+            navItems.forEach(nav => {
+                nav.addEventListener('click', () => {
+                    navItems.forEach(n => n.classList.remove('active'));
+                    nav.classList.add('active');
+                    const page = nav.dataset.page;
+                    const title = nav.querySelector('span')?.innerText || 'Dashboard';
+                    document.getElementById('mobileTitle').innerText = title;
+                    const desktopTitle = document.getElementById('desktopTitle');
+                    if (desktopTitle) desktopTitle.innerText = title;
+                    loadPage(page);
+                });
             });
-        });
 
-        window.loadPage = function(page) {
-            const container = document.getElementById('contentArea');
-            if (page === 'dashboard') renderDashboard(container);
-            else if (page === 'appointments') renderAppointments(container);
-            else if (page === 'patients') renderPatients(container);
-            else if (page === 'doctors') renderDoctors(container);
-            else if (page === 'schedule') renderSchedule(container);
-            else if (page === 'checkin') renderCheckIn(container);
-            else if (page === 'billing') renderBilling(container);
-        };
+            window.loadPage = function (page) {
+                const container = document.getElementById('contentArea');
+                if (page === 'dashboard') renderDashboard(container);
+                else if (page === 'appointments') renderAppointments(container);
+                else if (page === 'patients') renderPatients(container);
+                else if (page === 'doctors') renderDoctors(container);
+                else if (page === 'schedule') renderSchedule(container);
+                else if (page === 'checkin') renderCheckIn(container);
+                else if (page === 'billing') renderBilling(container);
+            };
 
-        function getTodayStr() { return new Date().toISOString().slice(0,10); }
+            function getTodayStr() { return new Date().toISOString().slice(0, 10); }
 
-        // Dashboard
-        function renderDashboard(con) {
-            const apps = JSON.parse(localStorage.getItem('appointments')) || [];
-            const today = getTodayStr();
-            const todayApps = apps.filter(a => a.date === today).length;
-            const checkedIn = apps.filter(a => a.date === today && a.status === 'checked-in').length;
-            const pending = apps.filter(a => a.date === today && a.status === 'pending').length;
-            const patientsCount = JSON.parse(localStorage.getItem('users')).filter(u => u.role === 'patient').length;
-            con.innerHTML = `
+            // Dashboard
+            function renderDashboard(con) {
+                const apps = JSON.parse(localStorage.getItem('appointments')) || [];
+                const today = getTodayStr();
+                const todayApps = apps.filter(a => a.date === today).length;
+                const checkedIn = apps.filter(a => a.date === today && a.status === 'checked-in').length;
+                const pending = apps.filter(a => a.date === today && a.status === 'pending').length;
+                const patientsCount = JSON.parse(localStorage.getItem('users')).filter(u => u.role === 'patient').length;
+                con.innerHTML = `
                 <div class="stat-grid">
                     <div class="stat-block"><div class="stat-icon"><i class="fas fa-calendar-week"></i></div><div class="stat-info"><h4>TODAY</h4><div class="figure">${todayApps}</div></div></div>
                     <div class="stat-block"><div class="stat-icon"><i class="fas fa-user-check"></i></div><div class="stat-info"><h4>CHECKED IN</h4><div class="figure">${checkedIn}</div></div></div>
@@ -720,50 +812,51 @@
                 </div>
                 <div class="content-card"><div class="card-header"><h3>📋 Today's agenda</h3><button class="btn-primary" onclick="loadPage('appointments')">Manage</button></div>
                 <div class="table-wrapper"><table><thead><tr><th>Time</th><th>Patient</th><th>Doctor</th><th>Status</th><th></th></tr></thead><tbody>
-                    ${apps.filter(a => a.date === today).sort((a,b)=>a.time.localeCompare(b.time)).map(a => `
-                    <tr><td>${a.time}</td><td>${a.patient}</td><td>${a.doctor}</td><td><span class="status-badge ${a.status==='checked-in'?'badge-checkedin':a.status==='confirmed'?'badge-active':'badge-pending'}">${a.status}</span></td>
+                    ${apps.filter(a => a.date === today).sort((a, b) => a.time.localeCompare(b.time)).map(a => `
+                    <tr><td>${a.time}</td><td>${a.patient}</td><td>${a.doctor}</td><td><span class="status-badge ${a.status === 'checked-in' ? 'badge-checkedin' : a.status === 'confirmed' ? 'badge-active' : 'badge-pending'}">${a.status}</span></td>
                     <td>${a.status !== 'checked-in' ? `<button class="btn-secondary" onclick="quickCheckin('${a.id}')">Check-in</button>` : '<i class="fas fa-check-circle" style="color:#2c7da0;"></i>'}</td></tr>
                     `).join('')}
                 </tbody></table></div></div>`;
-        }
+            }
 
-        window.quickCheckin = function(id) {
-            let apps = JSON.parse(localStorage.getItem('appointments'));
-            let app = apps.find(a => a.id === id);
-            if (app && app.status !== 'cancelled') { app.status = 'checked-in'; localStorage.setItem('appointments', JSON.stringify(apps)); showToast(`${app.patient} checked-in`, 'success'); loadPage('dashboard'); }
-            else showToast('Cannot check-in', 'error');
-        };
+            window.quickCheckin = function (id) {
+                let apps = JSON.parse(localStorage.getItem('appointments'));
+                let app = apps.find(a => a.id === id);
+                if (app && app.status !== 'cancelled') { app.status = 'checked-in'; localStorage.setItem('appointments', JSON.stringify(apps)); showToast(`${app.patient} checked-in`, 'success'); loadPage('dashboard'); }
+                else showToast('Cannot check-in', 'error');
+            };
 
-        // Appointments
-        function renderAppointments(con) {
-            const apps = JSON.parse(localStorage.getItem('appointments'));
-            con.innerHTML = `<div class="content-card"><div class="card-header"><h3>📅 All appointments</h3><button class="btn-primary" onclick="addAppointmentModal()"><i class="fas fa-plus"></i> New</button></div>
+            // Appointments
+            function renderAppointments(con) {
+                const apps = JSON.parse(localStorage.getItem('appointments'));
+                con.innerHTML = `<div class="content-card"><div class="card-header"><h3>📅 All appointments</h3><button class="btn-primary" onclick="addAppointmentModal()"><i class="fas fa-plus"></i> New</button></div>
             <div class="table-wrapper"><table><thead><tr><th>Date</th><th>Time</th><th>Patient</th><th>Doctor</th><th>Status</th><th>Actions</th></tr></thead><tbody>
-            ${apps.map(a => `<tr><td>${a.date}</td><td>${a.time}</td><td>${a.patient}</td><td>${a.doctor}</td><td><span class="status-badge ${a.status==='checked-in'?'badge-checkedin':a.status==='confirmed'?'badge-active':'badge-pending'}">${a.status}</span></td>
+            ${apps.map(a => `<tr><td>${a.date}</td><td>${a.time}</td><td>${a.patient}</td><td>${a.doctor}</td><td><span class="status-badge ${a.status === 'checked-in' ? 'badge-checkedin' : a.status === 'confirmed' ? 'badge-active' : 'badge-pending'}">${a.status}</span></td>
             <td><button class="icon-action" onclick="editAppointment('${a.id}')"><i class="fas fa-pen"></i></button>
             <button class="icon-action" onclick="quickCheckinFromApp('${a.id}')"><i class="fas fa-user-check"></i></button>
             <button class="icon-action delete-btn" onclick="cancelAppointment('${a.id}')"><i class="fas fa-trash-alt"></i></button></td></tr>`).join('')}
             </tbody></table></div></div>`;
-        }
-        window.quickCheckinFromApp = function(id) { let apps = JSON.parse(localStorage.getItem('appointments')); let a = apps.find(x=>x.id===id); if(a && a.status !== 'cancelled'){ a.status='checked-in'; localStorage.setItem('appointments',JSON.stringify(apps)); showToast('Checked in','success'); loadPage('appointments');} };
-        window.cancelAppointment = function(id) { if(confirm('Cancel appointment?')){ let apps = JSON.parse(localStorage.getItem('appointments')); let a = apps.find(x=>x.id===id); if(a) a.status='cancelled'; localStorage.setItem('appointments',JSON.stringify(apps)); showToast('Cancelled','info'); loadPage('appointments');}};
-        window.editAppointment = function(id) { let apps=JSON.parse(localStorage.getItem('appointments')); let a=apps.find(x=>x.id===id); openModal(`<h3>✏️ Edit</h3><div class="form-field"><label>Date</label><input class="form-input" id="editDate" value="${a.date}"></div><div class="form-field"><label>Time</label><input class="form-input" id="editTime" value="${a.time}"></div><div class="form-field"><label>Status</label><select id="editStatus" class="form-input"><option ${a.status==='pending'?'selected':''}>pending</option><option ${a.status==='confirmed'?'selected':''}>confirmed</option><option ${a.status==='checked-in'?'selected':''}>checked-in</option><option ${a.status==='cancelled'?'selected':''}>cancelled</option></select></div><div class="modal-actions"><button class="btn-primary" onclick="saveEditAppt('${id}')">Update</button><button class="btn-secondary" onclick="closeModal()">Cancel</button></div>`); };
-        window.saveEditAppt = function(id) { let apps=JSON.parse(localStorage.getItem('appointments')); let a=apps.find(x=>x.id===id); if(a){ a.date=document.getElementById('editDate')?.value || a.date; a.time=document.getElementById('editTime')?.value || a.time; a.status=document.getElementById('editStatus')?.value; localStorage.setItem('appointments',JSON.stringify(apps)); closeModal(); showToast('Updated','success'); loadPage('appointments');}};
-        window.addAppointmentModal = function() { let patients = JSON.parse(localStorage.getItem('users')).filter(u=>u.role==='patient'); let doctors = JSON.parse(localStorage.getItem('users')).filter(u=>u.role==='doctor'); openModal(`<h3>➕ New appointment</h3><div class="form-field"><label>Patient</label><select id="newPat" class="form-input">${patients.map(p=>`<option>${p.name}</option>`).join('')}</select></div><div class="form-field"><label>Doctor</label><select id="newDoc" class="form-input">${doctors.map(d=>`<option>${d.name}</option>`).join('')}</select></div><div class="row-fields"><div class="form-field"><label>Date</label><input id="newDate" class="form-input" type="date" value="${getTodayStr()}"></div><div class="form-field"><label>Time</label><input id="newTime" class="form-input" type="time" value="11:00"></div></div><div class="form-field"><label>Reason</label><input id="newReason" class="form-input" placeholder="Reason"></div><div class="modal-actions"><button class="btn-primary" onclick="createNewAppt()">Schedule</button><button class="btn-secondary" onclick="closeModal()">Cancel</button></div>`); };
-        window.createNewAppt = function() { let apps=JSON.parse(localStorage.getItem('appointments')); let newId='A'+Date.now(); apps.push({id:newId, patient:document.getElementById('newPat').value, doctor:document.getElementById('newDoc').value, date:document.getElementById('newDate').value, time:document.getElementById('newTime').value, status:'pending', reason:document.getElementById('newReason').value||''}); localStorage.setItem('appointments',JSON.stringify(apps)); closeModal(); showToast('Appointment created','success'); loadPage('appointments'); };
-        function renderPatients(con) { let patients = JSON.parse(localStorage.getItem('users')).filter(u=>u.role==='patient'); con.innerHTML=`<div class="content-card"><div class="card-header"><h3>🧑‍⚕️ Patient registry</h3><button class="btn-primary" onclick="addPatientModal()"><i class="fas fa-user-plus"></i> Register</button></div><div class="table-wrapper"> <table><thead><tr><th>Name</th><th>Email</th><th>Phone</th><th></th></tr></thead><tbody>${patients.map(p=>`<tr><td>${p.name}</td><td>${p.email}</td><td>${p.phone}</td><td><button class="icon-action" onclick="showToast('Patient info','info')"><i class="fas fa-info-circle"></i></button></td></tr>`).join('')}</tbody></table></div></div>`; }
-        window.addPatientModal = function() { openModal(`<h3>Register patient</h3><div class="form-field"><label>Full name</label><input id="patName" class="form-input"></div><div class="form-field"><label>Email</label><input id="patEmail" class="form-input" type="email"></div><div class="form-field"><label>Phone</label><input id="patPhone" class="form-input"></div><div class="modal-actions"><button class="btn-primary" onclick="saveNewPatient()">Register</button><button class="btn-secondary" onclick="closeModal()">Cancel</button></div>`); };
-        window.saveNewPatient = function() { let users=JSON.parse(localStorage.getItem('users')); let newId='P'+Math.floor(Math.random()*900+100); users.push({id:newId, name:document.getElementById('patName').value, email:document.getElementById('patEmail').value, phone:document.getElementById('patPhone').value, role:'patient', status:'active'}); localStorage.setItem('users',JSON.stringify(users)); closeModal(); showToast('Patient added','success'); loadPage('patients'); };
-        function renderDoctors(con) { let docs=JSON.parse(localStorage.getItem('users')).filter(u=>u.role==='doctor'); con.innerHTML=`<div class="content-card"><h3>👩‍⚕️ Medical team</h3><div class="table-wrapper"><table><thead><tr><th>Doctor</th><th>Specialization</th><th>Contact</th></tr></thead><tbody>${docs.map(d=>`<tr><td>${d.name}</td><td>${d.specialization||'General'}</td><td>${d.phone}</td></tr>`).join('')}</tbody></table></div></div>`; }
-        function renderSchedule(con) { let apps=JSON.parse(localStorage.getItem('appointments')); let today=getTodayStr(); let todayApps=apps.filter(a=>a.date===today).sort((a,b)=>a.time.localeCompare(b.time)); con.innerHTML=`<div class="content-card"><div class="card-header"><h3>⏰ Schedule ${today}</h3></div><div class="table-wrapper"><table><thead><tr><th>Time</th><th>Patient</th><th>Doctor</th><th>Reason</th><th>Status</th></tr></thead><tbody>${todayApps.map(a=>`<tr><td>${a.time}</td><td>${a.patient}</td><td>${a.doctor}</td><td>${a.reason||'-'}</td><td><span class="status-badge ${a.status==='checked-in'?'badge-checkedin':a.status==='confirmed'?'badge-active':'badge-pending'}">${a.status}</span></td></tr>`).join('')}</tbody></table></div></div>`; }
-        function renderCheckIn(con) { let apps=JSON.parse(localStorage.getItem('appointments')); let today=getTodayStr(); let pendingApps=apps.filter(a=>a.date===today && a.status!=='checked-in' && a.status!=='cancelled'); con.innerHTML=`<div class="content-card"><div class="card-header"><h3>🖐️ Quick Check‑in</h3></div><div class="table-wrapper"><table><thead><tr><th>Time</th><th>Patient</th><th>Doctor</th><th>Action</th></tr></thead><tbody>${pendingApps.map(a=>`<tr><td>${a.time}</td><td>${a.patient}</td><td>${a.doctor}</td><td><button class="btn-primary" onclick="quickCheckin('${a.id}')">Check-in</button></td></tr>`).join('')}</tbody></table></div></div>`; }
-        function renderBilling(con) { let bills=JSON.parse(localStorage.getItem('billing')); con.innerHTML=`<div class="content-card"><div class="card-header"><h3>💰 Billing</h3><button class="btn-primary" onclick="addBillModal()"><i class="fas fa-plus"></i> New bill</button></div><div class="table-wrapper"><table><thead><tr><th>Patient</th><th>Date</th><th>Amount</th><th>Status</th><th></th></tr></thead><tbody>${bills.map(b=>`<tr><td>${b.patient}</td><td>${b.date}</td><td>$${b.amount}</td><td><span class="status-badge ${b.status==='paid'?'badge-active':'badge-pending'}">${b.status}</span></td><td>${b.status!=='paid'?`<button class="btn-secondary" onclick="payBill('${b.id}')">Pay</button>`:'✔️'}</td></tr>`).join('')}</tbody></table></div></div>`; }
-        window.addBillModal = function() { let patients=JSON.parse(localStorage.getItem('users')).filter(u=>u.role==='patient'); openModal(`<h3>Create invoice</h3><div class="form-field"><label>Patient</label><select id="billPatient" class="form-input">${patients.map(p=>`<option>${p.name}</option>`).join('')}</select></div><div class="form-field"><label>Amount ($)</label><input id="billAmount" class="form-input" type="number"></div><div class="modal-actions"><button class="btn-primary" onclick="saveBill()">Create</button><button class="btn-secondary" onclick="closeModal()">Cancel</button></div>`); };
-        window.saveBill = function() { let bills=JSON.parse(localStorage.getItem('billing')); let newId='B'+Date.now(); bills.push({id:newId, patient:document.getElementById('billPatient').value, date:getTodayStr(), amount:parseFloat(document.getElementById('billAmount').value)||0, status:'pending'}); localStorage.setItem('billing',JSON.stringify(bills)); closeModal(); showToast('Bill created','success'); loadPage('billing'); };
-        window.payBill = function(id) { let bills=JSON.parse(localStorage.getItem('billing')); let b=bills.find(x=>x.id===id); if(b) b.status='paid'; localStorage.setItem('billing',JSON.stringify(bills)); showToast('Payment recorded','success'); loadPage('billing'); };
-        document.getElementById('logoutBtn').addEventListener('click', ()=> { showToast('Logging out...','info'); setTimeout(()=>{ localStorage.removeItem('currentUser'); alert('Logged out'); },800); });
-        loadPage('dashboard');
-    })();
-</script>
+            }
+            window.quickCheckinFromApp = function (id) { let apps = JSON.parse(localStorage.getItem('appointments')); let a = apps.find(x => x.id === id); if (a && a.status !== 'cancelled') { a.status = 'checked-in'; localStorage.setItem('appointments', JSON.stringify(apps)); showToast('Checked in', 'success'); loadPage('appointments'); } };
+            window.cancelAppointment = function (id) { if (confirm('Cancel appointment?')) { let apps = JSON.parse(localStorage.getItem('appointments')); let a = apps.find(x => x.id === id); if (a) a.status = 'cancelled'; localStorage.setItem('appointments', JSON.stringify(apps)); showToast('Cancelled', 'info'); loadPage('appointments'); } };
+            window.editAppointment = function (id) { let apps = JSON.parse(localStorage.getItem('appointments')); let a = apps.find(x => x.id === id); openModal(`<h3>✏️ Edit</h3><div class="form-field"><label>Date</label><input class="form-input" id="editDate" value="${a.date}"></div><div class="form-field"><label>Time</label><input class="form-input" id="editTime" value="${a.time}"></div><div class="form-field"><label>Status</label><select id="editStatus" class="form-input"><option ${a.status === 'pending' ? 'selected' : ''}>pending</option><option ${a.status === 'confirmed' ? 'selected' : ''}>confirmed</option><option ${a.status === 'checked-in' ? 'selected' : ''}>checked-in</option><option ${a.status === 'cancelled' ? 'selected' : ''}>cancelled</option></select></div><div class="modal-actions"><button class="btn-primary" onclick="saveEditAppt('${id}')">Update</button><button class="btn-secondary" onclick="closeModal()">Cancel</button></div>`); };
+            window.saveEditAppt = function (id) { let apps = JSON.parse(localStorage.getItem('appointments')); let a = apps.find(x => x.id === id); if (a) { a.date = document.getElementById('editDate')?.value || a.date; a.time = document.getElementById('editTime')?.value || a.time; a.status = document.getElementById('editStatus')?.value; localStorage.setItem('appointments', JSON.stringify(apps)); closeModal(); showToast('Updated', 'success'); loadPage('appointments'); } };
+            window.addAppointmentModal = function () { let patients = JSON.parse(localStorage.getItem('users')).filter(u => u.role === 'patient'); let doctors = JSON.parse(localStorage.getItem('users')).filter(u => u.role === 'doctor'); openModal(`<h3>➕ New appointment</h3><div class="form-field"><label>Patient</label><select id="newPat" class="form-input">${patients.map(p => `<option>${p.name}</option>`).join('')}</select></div><div class="form-field"><label>Doctor</label><select id="newDoc" class="form-input">${doctors.map(d => `<option>${d.name}</option>`).join('')}</select></div><div class="row-fields"><div class="form-field"><label>Date</label><input id="newDate" class="form-input" type="date" value="${getTodayStr()}"></div><div class="form-field"><label>Time</label><input id="newTime" class="form-input" type="time" value="11:00"></div></div><div class="form-field"><label>Reason</label><input id="newReason" class="form-input" placeholder="Reason"></div><div class="modal-actions"><button class="btn-primary" onclick="createNewAppt()">Schedule</button><button class="btn-secondary" onclick="closeModal()">Cancel</button></div>`); };
+            window.createNewAppt = function () { let apps = JSON.parse(localStorage.getItem('appointments')); let newId = 'A' + Date.now(); apps.push({ id: newId, patient: document.getElementById('newPat').value, doctor: document.getElementById('newDoc').value, date: document.getElementById('newDate').value, time: document.getElementById('newTime').value, status: 'pending', reason: document.getElementById('newReason').value || '' }); localStorage.setItem('appointments', JSON.stringify(apps)); closeModal(); showToast('Appointment created', 'success'); loadPage('appointments'); };
+            function renderPatients(con) { let patients = JSON.parse(localStorage.getItem('users')).filter(u => u.role === 'patient'); con.innerHTML = `<div class="content-card"><div class="card-header"><h3>🧑‍⚕️ Patient registry</h3><button class="btn-primary" onclick="addPatientModal()"><i class="fas fa-user-plus"></i> Register</button></div><div class="table-wrapper"> <table><thead><tr><th>Name</th><th>Email</th><th>Phone</th><th></th></tr></thead><tbody>${patients.map(p => `<tr><td>${p.name}</td><td>${p.email}</td><td>${p.phone}</td><td><button class="icon-action" onclick="showToast('Patient info','info')"><i class="fas fa-info-circle"></i></button></td></tr>`).join('')}</tbody></table></div></div>`; }
+            window.addPatientModal = function () { openModal(`<h3>Register patient</h3><div class="form-field"><label>Full name</label><input id="patName" class="form-input"></div><div class="form-field"><label>Email</label><input id="patEmail" class="form-input" type="email"></div><div class="form-field"><label>Phone</label><input id="patPhone" class="form-input"></div><div class="modal-actions"><button class="btn-primary" onclick="saveNewPatient()">Register</button><button class="btn-secondary" onclick="closeModal()">Cancel</button></div>`); };
+            window.saveNewPatient = function () { let users = JSON.parse(localStorage.getItem('users')); let newId = 'P' + Math.floor(Math.random() * 900 + 100); users.push({ id: newId, name: document.getElementById('patName').value, email: document.getElementById('patEmail').value, phone: document.getElementById('patPhone').value, role: 'patient', status: 'active' }); localStorage.setItem('users', JSON.stringify(users)); closeModal(); showToast('Patient added', 'success'); loadPage('patients'); };
+            function renderDoctors(con) { let docs = JSON.parse(localStorage.getItem('users')).filter(u => u.role === 'doctor'); con.innerHTML = `<div class="content-card"><h3>👩‍⚕️ Medical team</h3><div class="table-wrapper"><table><thead><tr><th>Doctor</th><th>Specialization</th><th>Contact</th></tr></thead><tbody>${docs.map(d => `<tr><td>${d.name}</td><td>${d.specialization || 'General'}</td><td>${d.phone}</td></tr>`).join('')}</tbody></table></div></div>`; }
+            function renderSchedule(con) { let apps = JSON.parse(localStorage.getItem('appointments')); let today = getTodayStr(); let todayApps = apps.filter(a => a.date === today).sort((a, b) => a.time.localeCompare(b.time)); con.innerHTML = `<div class="content-card"><div class="card-header"><h3>⏰ Schedule ${today}</h3></div><div class="table-wrapper"><table><thead><tr><th>Time</th><th>Patient</th><th>Doctor</th><th>Reason</th><th>Status</th></tr></thead><tbody>${todayApps.map(a => `<tr><td>${a.time}</td><td>${a.patient}</td><td>${a.doctor}</td><td>${a.reason || '-'}</td><td><span class="status-badge ${a.status === 'checked-in' ? 'badge-checkedin' : a.status === 'confirmed' ? 'badge-active' : 'badge-pending'}">${a.status}</span></td></tr>`).join('')}</tbody></table></div></div>`; }
+            function renderCheckIn(con) { let apps = JSON.parse(localStorage.getItem('appointments')); let today = getTodayStr(); let pendingApps = apps.filter(a => a.date === today && a.status !== 'checked-in' && a.status !== 'cancelled'); con.innerHTML = `<div class="content-card"><div class="card-header"><h3>🖐️ Quick Check‑in</h3></div><div class="table-wrapper"><table><thead><tr><th>Time</th><th>Patient</th><th>Doctor</th><th>Action</th></tr></thead><tbody>${pendingApps.map(a => `<tr><td>${a.time}</td><td>${a.patient}</td><td>${a.doctor}</td><td><button class="btn-primary" onclick="quickCheckin('${a.id}')">Check-in</button></td></tr>`).join('')}</tbody></table></div></div>`; }
+            function renderBilling(con) { let bills = JSON.parse(localStorage.getItem('billing')); con.innerHTML = `<div class="content-card"><div class="card-header"><h3>💰 Billing</h3><button class="btn-primary" onclick="addBillModal()"><i class="fas fa-plus"></i> New bill</button></div><div class="table-wrapper"><table><thead><tr><th>Patient</th><th>Date</th><th>Amount</th><th>Status</th><th></th></tr></thead><tbody>${bills.map(b => `<tr><td>${b.patient}</td><td>${b.date}</td><td>$${b.amount}</td><td><span class="status-badge ${b.status === 'paid' ? 'badge-active' : 'badge-pending'}">${b.status}</span></td><td>${b.status !== 'paid' ? `<button class="btn-secondary" onclick="payBill('${b.id}')">Pay</button>` : '✔️'}</td></tr>`).join('')}</tbody></table></div></div>`; }
+            window.addBillModal = function () { let patients = JSON.parse(localStorage.getItem('users')).filter(u => u.role === 'patient'); openModal(`<h3>Create invoice</h3><div class="form-field"><label>Patient</label><select id="billPatient" class="form-input">${patients.map(p => `<option>${p.name}</option>`).join('')}</select></div><div class="form-field"><label>Amount ($)</label><input id="billAmount" class="form-input" type="number"></div><div class="modal-actions"><button class="btn-primary" onclick="saveBill()">Create</button><button class="btn-secondary" onclick="closeModal()">Cancel</button></div>`); };
+            window.saveBill = function () { let bills = JSON.parse(localStorage.getItem('billing')); let newId = 'B' + Date.now(); bills.push({ id: newId, patient: document.getElementById('billPatient').value, date: getTodayStr(), amount: parseFloat(document.getElementById('billAmount').value) || 0, status: 'pending' }); localStorage.setItem('billing', JSON.stringify(bills)); closeModal(); showToast('Bill created', 'success'); loadPage('billing'); };
+            window.payBill = function (id) { let bills = JSON.parse(localStorage.getItem('billing')); let b = bills.find(x => x.id === id); if (b) b.status = 'paid'; localStorage.setItem('billing', JSON.stringify(bills)); showToast('Payment recorded', 'success'); loadPage('billing'); };
+            document.getElementById('logoutBtn').addEventListener('click', () => { showToast('Logging out...', 'info'); setTimeout(() => { localStorage.removeItem('currentUser'); alert('Logged out'); }, 800); });
+            loadPage('dashboard');
+        })();
+    </script>
 </body>
+
 </html>
