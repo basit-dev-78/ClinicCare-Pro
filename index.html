@@ -41,16 +41,6 @@
             position: relative;
         }
 
-        /* Hide scrollbar on mobile but keep functionality */
-        @media (max-width: 768px) {
-            body {
-                overflow-x: hidden;
-            }
-            ::-webkit-scrollbar {
-                width: 4px;
-            }
-        }
-
         /* Animated Background */
         .gradient-bg {
             position: fixed;
@@ -70,7 +60,7 @@
             50% { background-position: 100% 50%; }
         }
 
-        /* Navigation - Fully Responsive with Mobile Toggle */
+        /* Navigation - Desktop & Mobile */
         .navbar {
             position: fixed;
             top: 0;
@@ -85,7 +75,6 @@
             transition: all 0.3s ease;
             backdrop-filter: blur(10px);
             background: rgba(255, 255, 255, 0.95);
-            gap: 1rem;
         }
 
         .navbar.scrolled {
@@ -122,63 +111,28 @@
             }
         }
 
-        /* Desktop: auth buttons on right side */
-        .nav-buttons {
+        /* Desktop Navigation Links - Centered with flex and margin auto */
+        .nav-links-desktop {
             display: flex;
-            gap: 0.6rem;
-            flex-shrink: 0;
-            order: 2;
-        }
-
-        /* Mobile Menu Toggle Button - visible only on mobile */
-        .menu-toggle {
-            display: none;
-            background: linear-gradient(135deg, #4158D0, #C850C0);
-            border: none;
-            width: 42px;
-            height: 42px;
-            border-radius: 50%;
-            color: white;
-            font-size: 1.2rem;
-            cursor: pointer;
-            transition: all 0.3s;
-            flex-shrink: 0;
+            gap: 2rem;
             align-items: center;
-            justify-content: center;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
         }
 
-        .menu-toggle:active {
-            transform: scale(0.95);
-        }
-
-        /* Navigation Links - Desktop: inline row */
-        .nav-links {
-            display: flex;
-            gap: 1.5rem;
-            align-items: center;
-            transition: all 0.3s ease;
-            order: 1;
-            margin-right: auto;
-        }
-
-        .nav-links a {
+        .nav-links-desktop a {
             text-decoration: none;
             color: #1a1f2b;
             font-weight: 600;
             position: relative;
             padding: 0.5rem 0;
             transition: color 0.3s;
-            font-size: 0.9rem;
+            font-size: 0.95rem;
             white-space: nowrap;
         }
 
-        @media (min-width: 768px) {
-            .nav-links a {
-                font-size: 0.95rem;
-            }
-        }
-
-        .nav-links a::before {
+        .nav-links-desktop a::before {
             content: '';
             position: absolute;
             bottom: 0;
@@ -190,172 +144,30 @@
             transition: transform 0.3s ease;
         }
 
-        .nav-links a:hover {
+        .nav-links-desktop a:hover {
             color: #4158D0;
         }
 
-        .nav-links a:hover::before {
+        .nav-links-desktop a:hover::before {
             transform: scaleX(1);
         }
 
-        /* Mobile Navigation Styles */
-        @media (max-width: 768px) {
-            .menu-toggle {
-                display: flex;
-                order: 3;
-            }
-            
-            .nav-buttons {
-                order: 2;
-                margin-left: auto;
-            }
-            
-            /* On mobile, nav-links becomes a full-screen sidebar */
-            .nav-links {
-                position: fixed;
-                top: 0;
-                left: -100%;
-                width: 85%;
-                max-width: 320px;
-                height: 100vh;
-                background: white;
-                flex-direction: column;
-                justify-content: flex-start;
-                gap: 0;
-                padding: 5rem 2rem 2rem 2rem;
-                box-shadow: 5px 0 30px rgba(0, 0, 0, 0.15);
-                transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-                z-index: 1001;
-                align-items: flex-start;
-                margin-right: 0;
-                overflow-y: auto;
-            }
-            
-            .nav-links.active {
-                left: 0;
-            }
-            
-            .nav-links a {
-                font-size: 1.2rem;
-                width: 100%;
-                white-space: normal;
-                padding: 1rem 0;
-                border-bottom: 1px solid #eef2ff;
-                margin: 0;
-            }
-            
-            .nav-links a::before {
-                display: none;
-            }
-            
-            .nav-links a:active {
-                color: #4158D0;
-                background: rgba(65, 88, 208, 0.05);
-                padding-left: 0.5rem;
-            }
-            
-            /* Mobile menu: add auth buttons inside the drawer (below nav links) */
-            .mobile-drawer-buttons {
-                display: flex;
-                flex-direction: column;
-                gap: 0.8rem;
-                width: 100%;
-                margin-top: 2rem;
-                padding-top: 1.5rem;
-                border-top: 1px solid #e2e8f0;
-            }
-            
-            .mobile-drawer-buttons .btn-login-mobile,
-            .mobile-drawer-buttons .btn-signup-mobile {
-                width: 100%;
-                padding: 0.8rem 1rem;
-                border-radius: 50px;
-                font-weight: 600;
-                text-align: center;
-                cursor: pointer;
-                transition: all 0.3s;
-                font-size: 1rem;
-            }
-            
-            .mobile-drawer-buttons .btn-login-mobile {
-                border: 2px solid #4158D0;
-                background: transparent;
-                color: #4158D0;
-            }
-            
-            .mobile-drawer-buttons .btn-signup-mobile {
-                background: linear-gradient(90deg, #4158D0, #C850C0);
-                color: white;
-                border: none;
-            }
-            
-            .mobile-drawer-buttons .btn-login-mobile:active,
-            .mobile-drawer-buttons .btn-signup-mobile:active {
-                transform: scale(0.97);
-            }
-            
-            .nav-overlay {
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background: rgba(0, 0, 0, 0.5);
-                backdrop-filter: blur(4px);
-                z-index: 1000;
-                display: none;
-                transition: opacity 0.3s;
-            }
-            
-            .nav-overlay.active {
-                display: block;
-            }
-            
-            .close-menu {
-                position: absolute;
-                top: 1.2rem;
-                right: 1.2rem;
-                background: #f1f5f9;
-                border: none;
-                width: 40px;
-                height: 40px;
-                border-radius: 50%;
-                font-size: 1.2rem;
-                color: #1a1f2b;
-                cursor: pointer;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                transition: all 0.2s;
-            }
-            
-            .close-menu:active {
-                background: #e2e8f0;
-            }
-        }
-        
-        @media (min-width: 769px) {
-            .close-menu,
-            .mobile-drawer-buttons {
-                display: none;
-            }
+        /* Desktop Auth Buttons - positioned on the right */
+        .nav-buttons {
+            display: flex;
+            gap: 0.8rem;
+            flex-shrink: 0;
+            margin-left: auto;
         }
 
         .btn-login, .btn-signup {
-            padding: 0.5rem 1.2rem;
+            padding: 0.6rem 1.5rem;
             border-radius: 50px;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s;
-            font-size: 0.85rem;
+            font-size: 0.9rem;
             white-space: nowrap;
-        }
-
-        @media (min-width: 768px) {
-            .btn-login, .btn-signup {
-                padding: 0.6rem 1.5rem;
-                font-size: 0.9rem;
-            }
         }
 
         .btn-login {
@@ -379,6 +191,241 @@
         .btn-signup:hover {
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(65, 88, 208, 0.3);
+        }
+
+        /* Mobile Toggle Button - visible only on mobile */
+        .menu-toggle {
+            display: none;
+            background: linear-gradient(135deg, #4158D0, #C850C0);
+            border: none;
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            flex-shrink: 0;
+            align-items: center;
+            justify-content: center;
+            z-index: 1002;
+        }
+
+        .menu-toggle:active {
+            transform: scale(0.95);
+        }
+
+        /* Mobile Sidebar - slides from left */
+        .mobile-sidebar {
+            position: fixed;
+            top: 0;
+            left: -100%;
+            width: 85%;
+            max-width: 320px;
+            height: 100vh;
+            background: linear-gradient(180deg, #ffffff 0%, #fef9ff 100%);
+            box-shadow: 5px 0 30px rgba(0, 0, 0, 0.2);
+            z-index: 1003;
+            transition: left 0.35s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+
+        .mobile-sidebar.active {
+            left: 0;
+        }
+
+        /* Sidebar Header */
+        .sidebar-header {
+            padding: 1.8rem 1.5rem 1rem;
+            border-bottom: 1px solid #eef2ff;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .sidebar-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.2rem;
+            font-weight: 800;
+            color: #1a1f2b;
+        }
+
+        .sidebar-logo i {
+            color: #4158D0;
+            font-size: 1.5rem;
+        }
+
+        .close-sidebar {
+            background: #f1f5f9;
+            border: none;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            font-size: 1rem;
+            color: #1a1f2b;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .close-sidebar:active {
+            background: #e2e8f0;
+            transform: scale(0.95);
+        }
+
+        /* Sidebar Navigation Links */
+        .sidebar-nav {
+            flex: 1;
+            padding: 1.5rem 0;
+        }
+
+        .sidebar-nav a {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem 1.5rem;
+            text-decoration: none;
+            color: #1a1f2b;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.25s;
+            border-left: 3px solid transparent;
+        }
+
+        .sidebar-nav a i {
+            width: 24px;
+            color: #4158D0;
+            font-size: 1.1rem;
+        }
+
+        .sidebar-nav a:active {
+            background: linear-gradient(90deg, rgba(65, 88, 208, 0.08), transparent);
+            border-left-color: #4158D0;
+            color: #4158D0;
+        }
+
+        /* Sidebar Auth Buttons Section - appears at bottom */
+        .sidebar-auth {
+            padding: 1rem 1.5rem 2rem;
+            border-top: 1px solid #eef2ff;
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+        }
+
+        .btn-login-sidebar {
+            width: 100%;
+            padding: 0.9rem 1rem;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+            border: 2px solid #4158D0;
+            background: transparent;
+            color: #4158D0;
+        }
+
+        .btn-signup-sidebar {
+            width: 100%;
+            padding: 0.9rem 1rem;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+            border: none;
+            background: linear-gradient(90deg, #4158D0, #C850C0);
+            color: white;
+        }
+
+        .btn-login-sidebar:active, .btn-signup-sidebar:active {
+            transform: scale(0.97);
+        }
+
+        /* Sidebar Overlay */
+        .sidebar-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+            z-index: 1002;
+            display: none;
+            transition: opacity 0.3s;
+        }
+
+        .sidebar-overlay.active {
+            display: block;
+        }
+
+        /* Mobile specific styles */
+        @media (max-width: 768px) {
+            .nav-links-desktop {
+                display: none;
+            }
+            
+            /* Hide auth buttons on mobile header */
+            .nav-buttons {
+                display: none;
+            }
+            
+            .menu-toggle {
+                display: flex;
+                margin-left: auto;
+            }
+            
+            .navbar {
+                padding: 0.9rem 5%;
+                justify-content: space-between;
+            }
+            
+            .logo {
+                margin-right: auto;
+            }
+        }
+
+        /* Desktop specific - ensure proper positioning */
+        @media (min-width: 769px) {
+            .navbar {
+                position: fixed;
+                justify-content: flex-start;
+            }
+            
+            .logo {
+                position: relative;
+                z-index: 2;
+            }
+            
+            .nav-links-desktop {
+                position: absolute;
+                left: 50%;
+                transform: translateX(-50%);
+                white-space: nowrap;
+            }
+            
+            .nav-buttons {
+                margin-left: auto;
+                position: relative;
+                z-index: 2;
+            }
+        }
+
+        /* Hide mobile sidebar on desktop */
+        @media (min-width: 769px) {
+            .mobile-sidebar, .sidebar-overlay {
+                display: none;
+            }
         }
 
         /* Hero Section */
@@ -565,7 +612,7 @@
             }
         }
 
-        /* Features Section */
+        /* Features, Solutions, Pricing, etc - compact styles */
         .features-section, .solutions-section, .pricing-section, .testimonials-section, .contact-section {
             padding: 3rem 5%;
             width: 100%;
@@ -581,12 +628,6 @@
             text-align: center;
             max-width: 700px;
             margin: 0 auto 2rem;
-        }
-
-        @media (min-width: 768px) {
-            .section-header {
-                margin-bottom: 3rem;
-            }
         }
 
         .section-header h2 {
@@ -631,13 +672,6 @@
             border: 1px solid #eef2ff;
         }
 
-        @media (min-width: 768px) {
-            .feature-card {
-                padding: 2rem;
-                border-radius: 30px;
-            }
-        }
-
         .feature-card:hover {
             transform: translateY(-5px);
             box-shadow: 0 15px 30px rgba(65, 88, 208, 0.1);
@@ -654,63 +688,22 @@
             margin-bottom: 1.2rem;
         }
 
-        @media (min-width: 768px) {
-            .feature-icon {
-                width: 70px;
-                height: 70px;
-                border-radius: 20px;
-                margin-bottom: 1.5rem;
-            }
-        }
-
         .feature-icon i {
             font-size: 1.5rem;
             color: #4158D0;
         }
 
-        @media (min-width: 768px) {
-            .feature-icon i {
-                font-size: 2rem;
-            }
-        }
-
         .feature-card h3 {
             font-size: 1.2rem;
             margin-bottom: 0.6rem;
-            color: #1a1f2b;
-        }
-
-        @media (min-width: 768px) {
-            .feature-card h3 {
-                font-size: 1.4rem;
-                margin-bottom: 0.8rem;
-            }
         }
 
         .feature-card p {
             color: #64748b;
-            line-height: 1.5;
+            font-size: 0.85rem;
             margin-bottom: 1rem;
-            font-size: 0.85rem;
         }
 
-        @media (min-width: 768px) {
-            .feature-card p {
-                font-size: 0.9rem;
-            }
-        }
-
-        .feature-link {
-            color: #4158D0;
-            text-decoration: none;
-            font-weight: 600;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.4rem;
-            font-size: 0.85rem;
-        }
-
-        /* Solutions Grid */
         .solutions-grid {
             display: grid;
             grid-template-columns: 1fr;
@@ -729,19 +722,6 @@
             background: #f8fafc;
             padding: 1.5rem;
             border-radius: 24px;
-            transition: all 0.3s;
-        }
-
-        @media (min-width: 768px) {
-            .solution-card {
-                padding: 2rem;
-                border-radius: 30px;
-            }
-        }
-
-        .solution-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 30px rgba(65, 88, 208, 0.1);
         }
 
         .solution-icon {
@@ -755,60 +735,9 @@
             margin-bottom: 1rem;
         }
 
-        @media (min-width: 768px) {
-            .solution-icon {
-                width: 70px;
-                height: 70px;
-                border-radius: 20px;
-                margin-bottom: 1.5rem;
-            }
-        }
-
         .solution-icon i {
             font-size: 1.5rem;
             color: white;
-        }
-
-        @media (min-width: 768px) {
-            .solution-icon i {
-                font-size: 2rem;
-            }
-        }
-
-        .solution-card h3 {
-            font-size: 1.2rem;
-            margin-bottom: 0.8rem;
-        }
-
-        @media (min-width: 768px) {
-            .solution-card h3 {
-                font-size: 1.5rem;
-            }
-        }
-
-        .solution-features {
-            list-style: none;
-            margin: 1rem 0;
-        }
-
-        .solution-features li {
-            display: flex;
-            align-items: center;
-            gap: 0.6rem;
-            margin-bottom: 0.6rem;
-            font-size: 0.8rem;
-        }
-
-        @media (min-width: 768px) {
-            .solution-features li {
-                font-size: 0.9rem;
-                margin-bottom: 0.8rem;
-            }
-        }
-
-        .solution-features li i {
-            color: #4158D0;
-            font-size: 0.8rem;
         }
 
         .btn-solution {
@@ -819,12 +748,9 @@
             border-radius: 50px;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s;
             width: 100%;
-            font-size: 0.85rem;
         }
 
-        /* Pricing Grid */
         .pricing-grid {
             display: grid;
             grid-template-columns: 1fr;
@@ -850,16 +776,8 @@
             padding: 1.5rem;
             border-radius: 24px;
             box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
-            transition: all 0.3s;
             position: relative;
             border: 1px solid #eef2ff;
-        }
-
-        @media (min-width: 768px) {
-            .pricing-card {
-                padding: 2rem;
-                border-radius: 30px;
-            }
         }
 
         .pricing-card.popular {
@@ -875,73 +793,11 @@
             padding: 0.2rem 0.8rem;
             border-radius: 50px;
             font-size: 0.6rem;
-            font-weight: 600;
-        }
-
-        @media (min-width: 768px) {
-            .popular-badge {
-                top: 1rem;
-                right: 1rem;
-                padding: 0.3rem 1rem;
-                font-size: 0.7rem;
-            }
-        }
-
-        .pricing-header {
-            text-align: center;
-            margin-bottom: 1.2rem;
-        }
-
-        .pricing-header h3 {
-            font-size: 1.3rem;
-            margin-bottom: 0.5rem;
-        }
-
-        @media (min-width: 768px) {
-            .pricing-header h3 {
-                font-size: 1.6rem;
-            }
         }
 
         .price {
             font-size: 2rem;
             font-weight: 800;
-            color: #4158D0;
-        }
-
-        @media (min-width: 768px) {
-            .price {
-                font-size: 2.5rem;
-            }
-        }
-
-        .price span {
-            font-size: 0.8rem;
-            font-weight: 400;
-            color: #64748b;
-        }
-
-        .pricing-features {
-            list-style: none;
-            margin: 1rem 0;
-        }
-
-        .pricing-features li {
-            display: flex;
-            align-items: center;
-            gap: 0.6rem;
-            margin-bottom: 0.6rem;
-            font-size: 0.8rem;
-        }
-
-        @media (min-width: 768px) {
-            .pricing-features li {
-                font-size: 0.9rem;
-                margin-bottom: 0.8rem;
-            }
-        }
-
-        .pricing-features li i {
             color: #4158D0;
         }
 
@@ -952,13 +808,9 @@
             color: white;
             border: none;
             border-radius: 50px;
-            font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s;
-            font-size: 0.85rem;
         }
 
-        /* Testimonials */
         .testimonials-grid {
             display: grid;
             grid-template-columns: 1fr;
@@ -983,29 +835,13 @@
             background: #f8fafc;
             padding: 1.5rem;
             border-radius: 24px;
-            transition: all 0.3s;
-        }
-
-        @media (min-width: 768px) {
-            .testimonial-card {
-                padding: 2rem;
-                border-radius: 30px;
-            }
         }
 
         .testimonial-text {
-            font-size: 0.85rem;
+            font-size: 0.9rem;
             line-height: 1.5;
-            color: #1a1f2b;
             margin-bottom: 1rem;
             font-style: italic;
-        }
-
-        @media (min-width: 768px) {
-            .testimonial-text {
-                font-size: 1rem;
-                margin-bottom: 1.5rem;
-            }
         }
 
         .testimonial-author {
@@ -1024,20 +860,8 @@
             justify-content: center;
             color: white;
             font-weight: 700;
-            font-size: 1rem;
         }
 
-        .author-info h4 {
-            font-size: 0.9rem;
-            margin-bottom: 0.2rem;
-        }
-
-        .author-info p {
-            font-size: 0.75rem;
-            color: #64748b;
-        }
-
-        /* Contact Section */
         .contact-container {
             max-width: 1200px;
             margin: 0 auto;
@@ -1053,28 +877,20 @@
         @media (min-width: 768px) {
             .contact-container {
                 grid-template-columns: 1fr 1fr;
-                gap: 3rem;
                 padding: 3rem;
-                border-radius: 40px;
             }
-        }
-
-        .contact-info h3 {
-            font-size: 1.5rem;
-            margin-bottom: 0.8rem;
         }
 
         .contact-details {
             list-style: none;
-            margin: 1.5rem 0;
+            margin: 1rem 0;
         }
 
         .contact-details li {
             display: flex;
             align-items: center;
             gap: 0.8rem;
-            margin-bottom: 1rem;
-            font-size: 0.85rem;
+            margin-bottom: 0.8rem;
         }
 
         .contact-details li i {
@@ -1088,19 +904,13 @@
             color: #4158D0;
         }
 
-        .contact-form .form-group {
-            margin-bottom: 1rem;
-        }
-
-        .contact-form input,
-        .contact-form textarea {
+        .contact-form input, .contact-form textarea {
             width: 100%;
             padding: 0.8rem 1rem;
             border: 2px solid #e2e8f0;
             border-radius: 16px;
             font-family: inherit;
-            font-size: 0.85rem;
-            transition: all 0.3s;
+            margin-bottom: 1rem;
         }
 
         .contact-form textarea {
@@ -1115,29 +925,15 @@
             color: white;
             border: none;
             border-radius: 50px;
-            font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s;
+            font-weight: 600;
         }
 
-        /* CTA Section */
         .cta-section {
             padding: 3rem 5%;
             background: linear-gradient(135deg, #4158D0, #C850C0);
             color: white;
             text-align: center;
-            width: 100%;
-        }
-
-        @media (min-width: 768px) {
-            .cta-section {
-                padding: 5rem 5%;
-            }
-        }
-
-        .cta-content h2 {
-            font-size: clamp(1.3rem, 5vw, 2rem);
-            margin-bottom: 0.8rem;
         }
 
         .btn-cta {
@@ -1147,18 +943,14 @@
             color: #4158D0;
             border: none;
             border-radius: 50px;
-            font-size: 0.9rem;
             font-weight: 700;
             cursor: pointer;
-            transition: all 0.3s;
         }
 
-        /* Footer */
         .footer {
             background: #1a1f2b;
             color: white;
             padding: 3rem 5% 1.5rem;
-            width: 100%;
         }
 
         .footer-content {
@@ -1183,9 +975,8 @@
 
         .footer-section p {
             color: #94a3b8;
-            line-height: 1.5;
-            margin: 0.8rem 0;
             font-size: 0.8rem;
+            margin-top: 0.5rem;
         }
 
         .footer-section h3 {
@@ -1207,15 +998,10 @@
             font-size: 0.8rem;
         }
 
-        .footer-section a:hover {
-            color: #4158D0;
-        }
-
         .social-links {
             display: flex;
             gap: 0.8rem;
             margin-top: 1rem;
-            flex-wrap: wrap;
         }
 
         .social-links a {
@@ -1226,6 +1012,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            color: white;
         }
 
         .footer-bottom {
@@ -1237,7 +1024,6 @@
             font-size: 0.75rem;
         }
 
-        /* Back to Top */
         .back-to-top {
             position: fixed;
             bottom: 1rem;
@@ -1255,7 +1041,6 @@
             visibility: hidden;
             transition: all 0.3s;
             z-index: 100;
-            box-shadow: 0 5px 15px rgba(65, 88, 208, 0.3);
         }
 
         .back-to-top.show {
@@ -1263,7 +1048,6 @@
             visibility: visible;
         }
 
-        /* Toast */
         .toast {
             position: fixed;
             bottom: 1rem;
@@ -1279,16 +1063,6 @@
             z-index: 1100;
             transition: transform 0.3s;
             font-size: 0.8rem;
-            white-space: nowrap;
-        }
-
-        @media (max-width: 640px) {
-            .toast {
-                white-space: normal;
-                max-width: 90%;
-                text-align: center;
-                padding: 0.8rem 1.2rem;
-            }
         }
 
         .toast.show {
@@ -1303,55 +1077,63 @@
 <body>
     <div class="gradient-bg"></div>
 
-    <!-- Navigation: Desktop: logo | nav links | auth buttons (right side). Mobile: logo | auth buttons | toggle button -->
+    <!-- Navigation: Desktop - logo left, nav links centered, auth buttons right -->
     <nav class="navbar" id="navbar">
         <div class="logo">
             <i class="fas fa-clinic-medical"></i>
             <span>ClinicCare Pro</span>
         </div>
-        <div class="nav-links" id="navLinks">
-            <button class="close-menu" id="closeMenuBtn">
-                <i class="fas fa-times"></i>
-            </button>
+        <div class="nav-links-desktop">
             <a href="#home">Home</a>
             <a href="#features">Features</a>
             <a href="#solutions">Solutions</a>
             <a href="#pricing">Pricing</a>
             <a href="#contact">Contact</a>
-            <!-- Mobile drawer: auth buttons appear inside drawer after links (dynamic) -->
-            <div class="mobile-drawer-buttons" id="mobileDrawerButtons">
-                <button class="btn-login-mobile" onclick="openAuth('signin')">Sign In</button>
-                <button class="btn-signup-mobile" onclick="openAuth('signup')">Sign Up</button>
-            </div>
         </div>
         <div class="nav-buttons">
             <button class="btn-login" onclick="openAuth('signin')">Sign In</button>
             <button class="btn-signup" onclick="openAuth('signup')">Sign Up</button>
         </div>
+        <!-- Mobile toggle button -->
         <button class="menu-toggle" id="menuToggleBtn">
             <i class="fas fa-bars"></i>
         </button>
-        <div class="nav-overlay" id="navOverlay"></div>
     </nav>
+
+    <!-- Mobile Sidebar (slides from left) -->
+    <div class="mobile-sidebar" id="mobileSidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-logo">
+                <i class="fas fa-clinic-medical"></i>
+                <span>ClinicCare Pro</span>
+            </div>
+            <button class="close-sidebar" id="closeSidebarBtn">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="sidebar-nav">
+            <a href="#home"><i class="fas fa-home"></i> Home</a>
+            <a href="#features"><i class="fas fa-star"></i> Features</a>
+            <a href="#solutions"><i class="fas fa-chalkboard-user"></i> Solutions</a>
+            <a href="#pricing"><i class="fas fa-tag"></i> Pricing</a>
+            <a href="#contact"><i class="fas fa-envelope"></i> Contact</a>
+        </div>
+        <div class="sidebar-auth">
+            <button class="btn-login-sidebar" onclick="openAuth('signin')">Sign In</button>
+            <button class="btn-signup-sidebar" onclick="openAuth('signup')">Sign Up</button>
+        </div>
+    </div>
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
     <!-- Hero Section -->
     <section class="hero" id="home">
         <div class="hero-content" data-aos="fade-up">
-            <div class="hero-badge">
-                <i class="fas fa-shield-alt"></i> HIPAA Compliant
-            </div>
-            <h1>
-                The Future of<br>
-                <span>Healthcare Management</span>
-            </h1>
+            <div class="hero-badge"><i class="fas fa-shield-alt"></i> HIPAA Compliant</div>
+            <h1>The Future of<br><span>Healthcare Management</span></h1>
             <p>AI-powered platform trusted by 500+ clinics. Streamline operations, enhance patient care, and boost revenue.</p>
             <div class="hero-buttons">
-                <button class="btn-primary" onclick="openAuth('signup')">
-                    <i class="fas fa-rocket"></i> Start Free Trial
-                </button>
-                <button class="btn-secondary" onclick="scrollToDemo()">
-                    <i class="fas fa-play"></i> Watch Demo
-                </button>
+                <button class="btn-primary" onclick="openAuth('signup')"><i class="fas fa-rocket"></i> Start Free Trial</button>
+                <button class="btn-secondary" onclick="scrollToDemo()"><i class="fas fa-play"></i> Watch Demo</button>
             </div>
             <div class="trust-badges">
                 <span><i class="fas fa-check-circle"></i> 50K+ Patients</span>
@@ -1365,96 +1147,137 @@
     <!-- Stats Section -->
     <section class="stats-section">
         <div class="stats-grid">
-            <div class="stat-item" data-aos="zoom-in"><h3>10K+</h3><p>Daily Appointments</p></div>
-            <div class="stat-item" data-aos="zoom-in" data-aos-delay="100"><h3>2.5M+</h3><p>Patient Records</p></div>
-            <div class="stat-item" data-aos="zoom-in" data-aos-delay="200"><h3>99.9%</h3><p>Uptime Guarantee</p></div>
-            <div class="stat-item" data-aos="zoom-in" data-aos-delay="300"><h3>24/7</h3><p>Premium Support</p></div>
+            <div class="stat-item"><h3>10K+</h3><p>Daily Appointments</p></div>
+            <div class="stat-item"><h3>2.5M+</h3><p>Patient Records</p></div>
+            <div class="stat-item"><h3>99.9%</h3><p>Uptime Guarantee</p></div>
+            <div class="stat-item"><h3>24/7</h3><p>Premium Support</p></div>
         </div>
     </section>
 
-    <!-- Features, Solutions, Pricing, Testimonials, Contact Sections (unchanged content) -->
+    <!-- Features Section -->
     <section class="features-section" id="features">
-        <div class="section-header" data-aos="fade-up"><h2>Powerful Features</h2><p>Everything you need to run a successful healthcare practice</p></div>
+        <div class="section-header"><h2>Powerful Features</h2><p>Everything you need to run a successful healthcare practice</p></div>
         <div class="features-grid">
-            <div class="feature-card" data-aos="fade-up"><div class="feature-icon"><i class="fas fa-calendar-check"></i></div><h3>Smart Scheduling</h3><p>AI-powered appointment scheduling with automated reminders.</p><a href="#" class="feature-link">Learn more →</a></div>
-            <div class="feature-card" data-aos="fade-up" data-aos-delay="100"><div class="feature-icon"><i class="fas fa-file-medical"></i></div><h3>EHR System</h3><p>Secure electronic health records with instant access.</p><a href="#" class="feature-link">Learn more →</a></div>
-            <div class="feature-card" data-aos="fade-up" data-aos-delay="200"><div class="feature-icon"><i class="fas fa-video"></i></div><h3>Telemedicine</h3><p>HD video consultations with secure patient portal.</p><a href="#" class="feature-link">Learn more →</a></div>
-            <div class="feature-card" data-aos="fade-up" data-aos-delay="300"><div class="feature-icon"><i class="fas fa-chart-line"></i></div><h3>Advanced Analytics</h3><p>Real-time insights and predictive analytics.</p><a href="#" class="feature-link">Learn more →</a></div>
-            <div class="feature-card" data-aos="fade-up" data-aos-delay="400"><div class="feature-icon"><i class="fas fa-prescription"></i></div><h3>e-Prescriptions</h3><p>Digital prescriptions with pharmacy integration.</p><a href="#" class="feature-link">Learn more →</a></div>
-            <div class="feature-card" data-aos="fade-up" data-aos-delay="500"><div class="feature-icon"><i class="fas fa-credit-card"></i></div><h3>Billing & Payments</h3><p>Automated invoicing and secure payments.</p><a href="#" class="feature-link">Learn more →</a></div>
+            <div class="feature-card"><div class="feature-icon"><i class="fas fa-calendar-check"></i></div><h3>Smart Scheduling</h3><p>AI-powered appointment scheduling with automated reminders.</p></div>
+            <div class="feature-card"><div class="feature-icon"><i class="fas fa-file-medical"></i></div><h3>EHR System</h3><p>Secure electronic health records with instant access.</p></div>
+            <div class="feature-card"><div class="feature-icon"><i class="fas fa-video"></i></div><h3>Telemedicine</h3><p>HD video consultations with secure patient portal.</p></div>
+            <div class="feature-card"><div class="feature-icon"><i class="fas fa-chart-line"></i></div><h3>Advanced Analytics</h3><p>Real-time insights and predictive analytics.</p></div>
+            <div class="feature-card"><div class="feature-icon"><i class="fas fa-prescription"></i></div><h3>e-Prescriptions</h3><p>Digital prescriptions with pharmacy integration.</p></div>
+            <div class="feature-card"><div class="feature-icon"><i class="fas fa-credit-card"></i></div><h3>Billing & Payments</h3><p>Automated invoicing and secure payments.</p></div>
         </div>
     </section>
 
+    <!-- Solutions Section -->
     <section class="solutions-section" id="solutions">
-        <div class="section-header" data-aos="fade-up"><h2>Tailored Solutions</h2><p>Specialized dashboards for every healthcare role</p></div>
+        <div class="section-header"><h2>Tailored Solutions</h2><p>Specialized dashboards for every healthcare role</p></div>
         <div class="solutions-grid">
-            <div class="solution-card" data-aos="fade-right"><div class="solution-icon"><i class="fas fa-user-md"></i></div><h3>For Doctors</h3><ul class="solution-features"><li><i class="fas fa-check-circle"></i> Patient management</li><li><i class="fas fa-check-circle"></i> Digital prescriptions</li><li><i class="fas fa-check-circle"></i> Clinical notes</li></ul><button class="btn-solution" onclick="openAuth('signup','doctor')">Learn More</button></div>
-            <div class="solution-card" data-aos="fade-left"><div class="solution-icon"><i class="fas fa-user"></i></div><h3>For Patients</h3><ul class="solution-features"><li><i class="fas fa-check-circle"></i> Online booking</li><li><i class="fas fa-check-circle"></i> Medical records access</li><li><i class="fas fa-check-circle"></i> Telemedicine visits</li></ul><button class="btn-solution" onclick="openAuth('signup','patient')">Learn More</button></div>
-            <div class="solution-card" data-aos="fade-right"><div class="solution-icon"><i class="fas fa-user-tie"></i></div><h3>For Administrators</h3><ul class="solution-features"><li><i class="fas fa-check-circle"></i> Staff management</li><li><i class="fas fa-check-circle"></i> Financial reporting</li><li><i class="fas fa-check-circle"></i> Revenue analytics</li></ul><button class="btn-solution" onclick="openAuth('signup','admin')">Learn More</button></div>
-            <div class="solution-card" data-aos="fade-left"><div class="solution-icon"><i class="fas fa-user-nurse"></i></div><h3>For Receptionists</h3><ul class="solution-features"><li><i class="fas fa-check-circle"></i> Check-in/out</li><li><i class="fas fa-check-circle"></i> Appointment scheduling</li><li><i class="fas fa-check-circle"></i> Payment collection</li></ul><button class="btn-solution" onclick="openAuth('signup','receptionist')">Learn More</button></div>
+            <div class="solution-card"><div class="solution-icon"><i class="fas fa-user-md"></i></div><h3>For Doctors</h3><button class="btn-solution" onclick="openAuth('signup','doctor')">Learn More</button></div>
+            <div class="solution-card"><div class="solution-icon"><i class="fas fa-user"></i></div><h3>For Patients</h3><button class="btn-solution" onclick="openAuth('signup','patient')">Learn More</button></div>
+            <div class="solution-card"><div class="solution-icon"><i class="fas fa-user-tie"></i></div><h3>For Administrators</h3><button class="btn-solution" onclick="openAuth('signup','admin')">Learn More</button></div>
+            <div class="solution-card"><div class="solution-icon"><i class="fas fa-user-nurse"></i></div><h3>For Receptionists</h3><button class="btn-solution" onclick="openAuth('signup','receptionist')">Learn More</button></div>
         </div>
     </section>
 
+    <!-- Pricing Section -->
     <section class="pricing-section" id="pricing">
-        <div class="section-header" data-aos="fade-up"><h2>Simple Pricing</h2><p>All plans include a 14-day free trial</p></div>
+        <div class="section-header"><h2>Simple Pricing</h2><p>All plans include a 14-day free trial</p></div>
         <div class="pricing-grid">
-            <div class="pricing-card" data-aos="fade-up"><div class="pricing-header"><h3>Starter</h3><div class="price">$49<span>/mo</span></div></div><ul class="pricing-features"><li><i class="fas fa-check"></i> Up to 500 patients</li><li><i class="fas fa-check"></i> Basic EHR system</li><li><i class="fas fa-check"></i> Email support</li></ul><button class="btn-pricing" onclick="openAuth('signup')">Get Started</button></div>
-            <div class="pricing-card popular" data-aos="fade-up" data-aos-delay="100"><div class="popular-badge">Popular</div><div class="pricing-header"><h3>Professional</h3><div class="price">$99<span>/mo</span></div></div><ul class="pricing-features"><li><i class="fas fa-check"></i> Up to 2,000 patients</li><li><i class="fas fa-check"></i> Telemedicine included</li><li><i class="fas fa-check"></i> Priority 24/7 support</li></ul><button class="btn-pricing" onclick="openAuth('signup')">Get Started</button></div>
-            <div class="pricing-card" data-aos="fade-up" data-aos-delay="200"><div class="pricing-header"><h3>Enterprise</h3><div class="price">$199<span>/mo</span></div></div><ul class="pricing-features"><li><i class="fas fa-check"></i> Unlimited patients</li><li><i class="fas fa-check"></i> Custom integrations</li><li><i class="fas fa-check"></i> Dedicated account manager</li></ul><button class="btn-pricing" onclick="openAuth('signup')">Contact Sales</button></div>
+            <div class="pricing-card"><div class="pricing-header"><h3>Starter</h3><div class="price">$49<span>/mo</span></div></div><button class="btn-pricing" onclick="openAuth('signup')">Get Started</button></div>
+            <div class="pricing-card popular"><div class="popular-badge">Popular</div><div class="pricing-header"><h3>Professional</h3><div class="price">$99<span>/mo</span></div></div><button class="btn-pricing" onclick="openAuth('signup')">Get Started</button></div>
+            <div class="pricing-card"><div class="pricing-header"><h3>Enterprise</h3><div class="price">$199<span>/mo</span></div></div><button class="btn-pricing" onclick="openAuth('signup')">Contact Sales</button></div>
         </div>
     </section>
 
+    <!-- Testimonials -->
     <section class="testimonials-section">
-        <div class="section-header" data-aos="fade-up"><h2>Trusted by Professionals</h2><p>See what our clients say</p></div>
+        <div class="section-header"><h2>Trusted by Professionals</h2><p>See what our clients say</p></div>
         <div class="testimonials-grid">
-            <div class="testimonial-card" data-aos="fade-up"><div class="testimonial-text">"ClinicCare Pro transformed our practice. The AI scheduling saved us 20 hours per week."</div><div class="testimonial-author"><div class="author-avatar">DS</div><div class="author-info"><h4>Dr. Sarah Johnson</h4><p>Cardiologist</p></div></div></div>
-            <div class="testimonial-card" data-aos="fade-up" data-aos-delay="100"><div class="testimonial-text">"The EHR system reduced documentation time by 40%. Incredibly intuitive."</div><div class="testimonial-author"><div class="author-avatar">MC</div><div class="author-info"><h4>Dr. Michael Chen</h4><p>Family Medicine</p></div></div></div>
-            <div class="testimonial-card" data-aos="fade-up" data-aos-delay="200"><div class="testimonial-text">"Analytics tools are invaluable. I can track everything in real-time."</div><div class="testimonial-author"><div class="author-avatar">RW</div><div class="author-info"><h4>Rachel Williams</h4><p>Clinic Admin</p></div></div></div>
+            <div class="testimonial-card"><div class="testimonial-text">"ClinicCare Pro transformed our practice. The AI scheduling saved us 20 hours per week."</div><div class="testimonial-author"><div class="author-avatar">DS</div><div><h4>Dr. Sarah Johnson</h4><p>Cardiologist</p></div></div></div>
+            <div class="testimonial-card"><div class="testimonial-text">"The EHR system reduced documentation time by 40%. Incredibly intuitive."</div><div class="testimonial-author"><div class="author-avatar">MC</div><div><h4>Dr. Michael Chen</h4><p>Family Medicine</p></div></div></div>
+            <div class="testimonial-card"><div class="testimonial-text">"Analytics tools are invaluable. I can track everything in real-time."</div><div class="testimonial-author"><div class="author-avatar">RW</div><div><h4>Rachel Williams</h4><p>Clinic Admin</p></div></div></div>
         </div>
     </section>
 
+    <!-- Contact Section -->
     <section class="contact-section" id="contact">
-        <div class="section-header" data-aos="fade-up"><h2>Get In Touch</h2><p>Have questions? We're here to help</p></div>
-        <div class="contact-container" data-aos="fade-up">
+        <div class="section-header"><h2>Get In Touch</h2><p>Have questions? We're here to help</p></div>
+        <div class="contact-container">
             <div class="contact-info"><h3>Let's Talk</h3><p>Need support or want a demo? Our team is ready.</p><ul class="contact-details"><li><i class="fas fa-phone"></i> +1 (888) 123-4567</li><li><i class="fas fa-envelope"></i> hello@cliniccarepro.com</li><li><i class="fas fa-clock"></i> Mon-Fri: 9AM - 6PM PST</li></ul><div class="social-links"><a href="#"><i class="fab fa-linkedin-in"></i></a><a href="#"><i class="fab fa-twitter"></i></a><a href="#"><i class="fab fa-facebook-f"></i></a></div></div>
-            <div class="contact-form"><form onsubmit="handleContact(event)"><div class="form-group"><input type="text" placeholder="Your Name" required></div><div class="form-group"><input type="email" placeholder="Email Address" required></div><div class="form-group"><textarea placeholder="Your Message" required></textarea></div><button type="submit" class="btn-contact">Send Message</button></form></div>
+            <div class="contact-form"><form onsubmit="handleContact(event)"><input type="text" placeholder="Your Name" required><input type="email" placeholder="Email Address" required><textarea placeholder="Your Message" required></textarea><button type="submit" class="btn-contact">Send Message</button></form></div>
         </div>
     </section>
 
+    <!-- CTA Section -->
     <section class="cta-section" id="demo"><div class="cta-content"><h2>Ready to Transform Your Practice?</h2><p>Start your free 14-day trial today.</p><button class="btn-cta" onclick="openAuth('signup')"><i class="fas fa-rocket"></i> Start Free Trial</button></div></section>
 
-    <footer class="footer"><div class="footer-content"><div class="footer-section"><div class="logo" style="color:white;margin-bottom:0.8rem;"><i class="fas fa-clinic-medical"></i><span>ClinicCare Pro</span></div><p>The most advanced healthcare management platform.</p><div class="social-links"><a href="#"><i class="fab fa-linkedin-in"></i></a><a href="#"><i class="fab fa-twitter"></i></a><a href="#"><i class="fab fa-facebook-f"></i></a></div></div><div class="footer-section"><h3>Product</h3><ul><li><a href="#">Features</a></li><li><a href="#">Pricing</a></li><li><a href="#">Security</a></li></ul></div><div class="footer-section"><h3>Solutions</h3><ul><li><a href="#">For Doctors</a></li><li><a href="#">For Patients</a></li><li><a href="#">For Admins</a></li></ul></div><div class="footer-section"><h3>Company</h3><ul><li><a href="#">About Us</a></li><li><a href="#">Careers</a></li><li><a href="#">Contact</a></li></ul></div></div><div class="footer-bottom"><p>&copy; 2024 ClinicCare Pro. All rights reserved.</p></div></footer>
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section"><div class="logo" style="color:white; margin-bottom:0.5rem;"><i class="fas fa-clinic-medical"></i><span>ClinicCare Pro</span></div><p>The most advanced healthcare management platform.</p><div class="social-links"><a href="#"><i class="fab fa-linkedin-in"></i></a><a href="#"><i class="fab fa-twitter"></i></a><a href="#"><i class="fab fa-facebook-f"></i></a></div></div>
+            <div class="footer-section"><h3>Product</h3><ul><li><a href="#">Features</a></li><li><a href="#">Pricing</a></li><li><a href="#">Security</a></li></ul></div>
+            <div class="footer-section"><h3>Solutions</h3><ul><li><a href="#">For Doctors</a></li><li><a href="#">For Patients</a></li><li><a href="#">For Admins</a></li></ul></div>
+            <div class="footer-section"><h3>Company</h3><ul><li><a href="#">About Us</a></li><li><a href="#">Careers</a></li><li><a href="#">Contact</a></li></ul></div>
+        </div>
+        <div class="footer-bottom"><p>&copy; 2024 ClinicCare Pro. All rights reserved.</p></div>
+    </footer>
 
     <div class="back-to-top" onclick="scrollToTop()"><i class="fas fa-arrow-up"></i></div>
     <div class="toast" id="toast"><i class="fas" id="toastIcon"></i><span id="toastMessage"></span></div>
 
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script>
-        AOS.init({ duration: 800, once: true, offset: 50 });
+        AOS.init({ duration: 800, once: true });
 
-        // Mobile Menu Toggle
-        const menuToggleBtn = document.getElementById('menuToggleBtn');
-        const closeMenuBtn = document.getElementById('closeMenuBtn');
-        const navLinks = document.getElementById('navLinks');
-        const navOverlay = document.getElementById('navOverlay');
+        // Mobile Sidebar Controls
+        const menuToggle = document.getElementById('menuToggleBtn');
+        const mobileSidebar = document.getElementById('mobileSidebar');
+        const sidebarOverlay = document.getElementById('sidebarOverlay');
+        const closeSidebarBtn = document.getElementById('closeSidebarBtn');
 
-        function openMobileMenu() {
-            navLinks.classList.add('active');
-            navOverlay.classList.add('active');
+        function openSidebar() {
+            mobileSidebar.classList.add('active');
+            sidebarOverlay.classList.add('active');
             document.body.style.overflow = 'hidden';
         }
 
-        function closeMobileMenu() {
-            navLinks.classList.remove('active');
-            navOverlay.classList.remove('active');
+        function closeSidebar() {
+            mobileSidebar.classList.remove('active');
+            sidebarOverlay.classList.remove('active');
             document.body.style.overflow = '';
         }
 
-        if (menuToggleBtn) menuToggleBtn.addEventListener('click', openMobileMenu);
-        if (closeMenuBtn) closeMenuBtn.addEventListener('click', closeMobileMenu);
-        if (navOverlay) navOverlay.addEventListener('click', closeMobileMenu);
-        document.querySelectorAll('.nav-links a').forEach(link => link.addEventListener('click', closeMobileMenu));
+        if (menuToggle) menuToggle.addEventListener('click', openSidebar);
+        if (closeSidebarBtn) closeSidebarBtn.addEventListener('click', closeSidebar);
+        if (sidebarOverlay) sidebarOverlay.addEventListener('click', closeSidebar);
 
+        // Close sidebar when clicking on any sidebar nav link and scroll to section
+        document.querySelectorAll('.sidebar-nav a').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    closeSidebar();
+                    setTimeout(() => {
+                        targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }, 150);
+                }
+            });
+        });
+
+        // Desktop nav smooth scroll
+        document.querySelectorAll('.nav-links-desktop a, .logo').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                const hash = this.getAttribute('href');
+                if (hash && hash.startsWith('#')) {
+                    e.preventDefault();
+                    const target = document.querySelector(hash);
+                    if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+
+        // Navbar scroll effect
         window.addEventListener('scroll', () => {
             const navbar = document.getElementById('navbar');
             const backToTop = document.querySelector('.back-to-top');
@@ -1497,15 +1320,6 @@
         window.scrollToTop = function() {
             window.scrollTo({ top: 0, behavior: 'smooth' });
         };
-
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function(e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                closeMobileMenu();
-            });
-        });
     </script>
 </body>
 </html>

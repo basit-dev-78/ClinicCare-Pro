@@ -1,20 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport"
-        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
-    <title>ClinicCare Pro · Secure Access Portal</title>
-
-    <!-- Meta & assets -->
-    <meta name="description"
-        content="Secure sign in and account creation for ClinicCare Pro - Intelligent Healthcare Management Platform">
-    <meta name="theme-color" content="#4158D0">
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
-        rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>ClinicCare Pro · Secure Authentication</title>
+    <meta name="description" content="Professional healthcare management platform - Secure login and registration">
+    <meta name="theme-color" content="#0891b2">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-
     <style>
         * {
             margin: 0;
@@ -22,269 +15,191 @@
             box-sizing: border-box;
         }
 
-        body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            min-height: 100vh;
-            height: 100vh;
-            background: linear-gradient(135deg, #4158D0 0%, #C850C0 50%, #FFCC70 100%);
-            position: relative;
+        html, body {
+            width: 100%;
+            height: 100%;
             overflow: hidden;
+            position: fixed;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(145deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
             display: flex;
             align-items: center;
             justify-content: center;
             padding: 0;
+            margin: 0;
+            overflow: hidden;
         }
 
-        /* Hide scrollbar completely */
-        body::-webkit-scrollbar {
-            display: none;
-        }
-
-        body {
-            -ms-overflow-style: none;
-            scrollbar-width: none;
-        }
-
-        /* Animated Background */
-        .background {
+        /* Animated Medical Pattern */
+        .bg-pattern {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            z-index: 0;
+            opacity: 0.03;
             pointer-events: none;
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 5 L35 15 L30 25 L25 15 L30 5z M20 20 L30 15 L40 20 L35 30 L30 40 L25 30 L20 20z' fill='%23ffffff'/%3E%3C/svg%3E");
+            background-repeat: repeat;
         }
 
-        .gradient-sphere {
-            position: absolute;
-            filter: blur(80px);
+        /* Floating Particles */
+        .particle {
+            position: fixed;
+            width: 3px;
+            height: 3px;
+            background: rgba(56, 189, 248, 0.4);
             border-radius: 50%;
-            opacity: 0.5;
-        }
-
-        .sphere1 {
-            top: -20%;
-            left: -10%;
-            width: 500px;
-            height: 500px;
-            background: linear-gradient(135deg, #4158D0, #C850C0);
-            animation: floatSphere 25s infinite;
-        }
-
-        .sphere2 {
-            bottom: -20%;
-            right: -10%;
-            width: 600px;
-            height: 600px;
-            background: linear-gradient(135deg, #C850C0, #FFCC70);
-            animation: floatSphere 30s infinite reverse;
-        }
-
-        .sphere3 {
-            top: 40%;
-            left: 30%;
-            width: 400px;
-            height: 400px;
-            background: linear-gradient(135deg, #FFCC70, #4158D0);
-            animation: floatSphere 20s infinite;
-            opacity: 0.3;
-        }
-
-        @keyframes floatSphere {
-
-            0%,
-            100% {
-                transform: translate(0, 0) scale(1);
-            }
-
-            25% {
-                transform: translate(100px, 100px) scale(1.2);
-            }
-
-            50% {
-                transform: translate(50px, -50px) scale(0.9);
-            }
-
-            75% {
-                transform: translate(-100px, 50px) scale(1.1);
-            }
-        }
-
-        .grid-overlay {
-            position: absolute;
-            inset: 0;
-            background-image:
-                linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
-            background-size: 50px 50px;
             pointer-events: none;
         }
 
-        /* Main Container - Full height without scroll */
-        .auth-wrapper {
+        /* Main Container - Fixed height, no scroll */
+        .auth-container {
             width: 100%;
-            max-width: 1200px;
-            height: 90vh;
-            max-height: 750px;
-            min-height: 600px;
+            max-width: 1300px;
+            height: 92vh;
+            max-height: 820px;
+            min-height: 680px;
+            background: rgba(255, 255, 255, 0.98);
+            border-radius: 44px;
+            display: flex;
+            overflow: hidden;
+            box-shadow: 0 35px 80px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.15);
             position: relative;
             z-index: 10;
-            animation: slideIn 0.8s cubic-bezier(0.2, 0.9, 0.3, 1);
-            padding: 0 20px;
         }
 
-        @keyframes slideIn {
-            0% {
-                opacity: 0;
-                transform: scale(0.9) translateY(30px);
-            }
-
-            100% {
-                opacity: 1;
-                transform: scale(1) translateY(0);
-            }
-        }
-
-        .auth-container {
-            background: rgba(255, 255, 255, 0.98);
-            backdrop-filter: blur(10px);
-            border-radius: 48px;
-            overflow: hidden;
-            display: flex;
-            flex-direction: row;
-            box-shadow: 0 40px 80px rgba(0, 0, 0, 0.25);
-            height: 100%;
-            width: 100%;
-        }
-
-        /* Left Brand Panel */
-        .auth-brand {
-            flex: 1.1;
-            background: linear-gradient(135deg, #4158D0 0%, #C850C0 50%, #FFCC70 100%);
-            padding: 32px 28px;
+        /* Left Panel - Brand Section */
+        .brand-panel {
+            flex: 1;
+            background: linear-gradient(135deg, #0a2a3b 0%, #135e7a 100%);
+            padding: 36px 32px;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
             position: relative;
-            overflow-y: auto;
-            overflow-x: hidden;
+            overflow: hidden;
         }
 
-        .auth-brand::-webkit-scrollbar {
-            display: none;
-        }
-
-        .auth-brand {
-            -ms-overflow-style: none;
-            scrollbar-width: none;
-        }
-
-        .auth-brand::before {
+        .brand-panel::before {
             content: '';
             position: absolute;
-            inset: 0;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none"><path d="M0,0 L100,0 L100,100 L0,100 Z" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="0.5"/></svg>');
-            background-size: 20px 20px;
-            opacity: 0.2;
-            animation: moveGrid 20s linear infinite;
-            pointer-events: none;
+            top: -30%;
+            right: -30%;
+            width: 120%;
+            height: 120%;
+            background: radial-gradient(circle, rgba(56, 189, 248, 0.15) 0%, transparent 70%);
+            animation: rotateSlow 25s linear infinite;
         }
 
-        @keyframes moveGrid {
-            0% {
-                transform: translate(0, 0);
-            }
-
-            100% {
-                transform: translate(20px, 20px);
-            }
+        @keyframes rotateSlow {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
         }
 
-        .brand-content {
+        .brand-logo {
             position: relative;
             z-index: 2;
-            color: white;
         }
 
-        .brand-icon {
-            width: 65px;
-            height: 65px;
-            background: rgba(255, 255, 255, 0.2);
-            backdrop-filter: blur(10px);
+        .logo-icon {
+            width: 64px;
+            height: 64px;
+            background: linear-gradient(135deg, #38bdf8, #0ea5e9);
             border-radius: 20px;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-bottom: 20px;
+            margin-bottom: 28px;
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+        }
+
+        .logo-icon i {
             font-size: 2.2rem;
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            animation: glowPulse 3s infinite;
+            color: white;
         }
 
-        @keyframes glowPulse {
-
-            0%,
-            100% {
-                box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.5);
-            }
-
-            50% {
-                box-shadow: 0 0 25px 8px rgba(255, 255, 255, 0.3);
-            }
-        }
-
-        .brand-content h2 {
-            font-size: 1.8rem;
+        .brand-panel h1 {
+            font-size: 2rem;
             font-weight: 800;
-            margin-bottom: 10px;
+            color: white;
             line-height: 1.2;
+            margin-bottom: 12px;
         }
 
-        .brand-content p {
+        .brand-panel > p {
+            color: rgba(255, 255, 255, 0.85);
             font-size: 0.85rem;
-            opacity: 0.9;
-            margin-bottom: 20px;
-            line-height: 1.5;
+            line-height: 1.45;
+            margin-bottom: 28px;
         }
 
-        .feature-list {
+        .features {
             list-style: none;
-            margin-top: 15px;
+            margin-bottom: 28px;
         }
 
-        .feature-list li {
+        .features li {
             display: flex;
             align-items: center;
-            gap: 10px;
-            margin-bottom: 12px;
-            font-size: 0.8rem;
+            gap: 12px;
+            margin-bottom: 14px;
+            color: white;
+            font-size: 0.85rem;
         }
 
-        .feature-list i {
-            width: 24px;
-            height: 24px;
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 50%;
+        .features li i {
+            width: 26px;
+            height: 26px;
+            background: rgba(56, 189, 248, 0.2);
+            border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 0.7rem;
+            font-size: 0.75rem;
+            color: #38bdf8;
         }
 
-        .testimonial {
+        .stats-row {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
             background: rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(10px);
             border-radius: 18px;
-            padding: 15px;
+            padding: 14px;
+            flex: 1;
             border: 1px solid rgba(255, 255, 255, 0.2);
-            margin-top: 15px;
+        }
+
+        .stat-number {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: white;
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 0.7rem;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .testimonial {
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            padding-top: 16px;
         }
 
         .testimonial p {
             font-style: italic;
-            margin-bottom: 10px;
             font-size: 0.8rem;
+            margin-bottom: 10px;
+            color: rgba(255, 255, 255, 0.9);
         }
 
         .testimonial-author {
@@ -294,636 +209,571 @@
         }
 
         .author-avatar {
-            width: 38px;
-            height: 38px;
-            background: linear-gradient(135deg, #FFCC70, #FFA500);
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, #38bdf8, #0ea5e9);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             font-weight: 700;
-            color: #1a1f2b;
-            font-size: 0.85rem;
-        }
-
-        .author-info h4 {
+            color: white;
             font-size: 0.8rem;
         }
 
-        .author-info p {
-            font-size: 0.65rem;
-            margin: 0;
-        }
-
-        /* Right Panel */
-        .auth-panel {
-            flex: 1.3;
-            padding: 28px 30px;
+        /* Right Panel - Forms (No Scroll) */
+        .form-panel {
+            flex: 1.25;
             background: white;
+            padding: 28px 36px;
             display: flex;
             flex-direction: column;
-            height: 100%;
-            overflow: hidden;
-        }
-
-        .close-btn {
-            align-self: flex-end;
-            width: 34px;
-            height: 34px;
-            background: #f1f5f9;
-            border: none;
-            border-radius: 50%;
-            font-size: 1.2rem;
-            cursor: pointer;
-            color: #64748b;
-            transition: all 0.3s;
-            display: flex;
-            align-items: center;
             justify-content: center;
-            margin-bottom: 8px;
-            flex-shrink: 0;
-        }
-
-        .close-btn:hover {
-            background: linear-gradient(135deg, #4158D0, #C850C0);
-            color: white;
-            transform: rotate(90deg);
-        }
-
-        /* Tabs */
-        .auth-tabs {
-            display: flex;
-            gap: 8px;
-            margin-bottom: 18px;
-            background: #f1f5f9;
-            padding: 4px;
-            border-radius: 50px;
-            flex-shrink: 0;
-        }
-
-        .auth-tab {
-            flex: 1;
-            padding: 8px;
-            text-align: center;
-            cursor: pointer;
-            color: #64748b;
-            font-weight: 700;
-            border-radius: 40px;
-            transition: all 0.3s;
-            font-size: 0.85rem;
-        }
-
-        .auth-tab.active {
-            background: linear-gradient(90deg, #4158D0, #C850C0);
-            color: white;
-            box-shadow: 0 6px 15px rgba(65, 88, 208, 0.25);
-        }
-
-        /* Forms Container - No scroll */
-        .forms-container {
-            flex: 1;
             overflow: hidden;
-            min-height: 0;
         }
 
-        .auth-form {
+        /* Toggle Buttons */
+        .toggle-buttons {
             display: flex;
-            flex-direction: column;
-            height: 100%;
-        }
-
-        .auth-form.hidden {
-            display: none;
-        }
-
-        .auth-header {
-            text-align: center;
-            margin-bottom: 16px;
+            gap: 10px;
+            background: #f1f5f9;
+            padding: 5px;
+            border-radius: 60px;
+            margin-bottom: 28px;
             flex-shrink: 0;
         }
 
-        .auth-header i {
-            font-size: 2rem;
-            background: linear-gradient(135deg, #4158D0, #C850C0);
-            -webkit-background-clip: text;
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
+        .toggle-btn {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            background: transparent;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            border-radius: 50px;
+            transition: all 0.3s;
+            color: #64748b;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .toggle-btn.active {
+            background: linear-gradient(135deg, #0a2a3b, #135e7a);
+            color: white;
+            box-shadow: 0 4px 12px rgba(10, 42, 59, 0.2);
+        }
+
+        /* Forms - Compact and No Scroll */
+        .form {
+            display: none;
+            animation: fadeIn 0.3s ease;
+            height: auto;
+        }
+
+        .form.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .form-header {
+            text-align: center;
+            margin-bottom: 22px;
+        }
+
+        .form-header h2 {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: #0f172a;
             margin-bottom: 6px;
         }
 
-        .auth-header h2 {
-            font-size: 1.4rem;
-            font-weight: 800;
-            color: #1a1f2b;
-            margin-bottom: 3px;
-        }
-
-        .auth-header p {
+        .form-header p {
             color: #64748b;
-            font-size: 0.75rem;
+            font-size: 0.8rem;
         }
 
-        /* Grid Layout for Signup Fields - Side by Side */
+        /* Compact Grid Layout */
         .form-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 12px;
-            margin-bottom: 12px;
-        }
-
-        .form-grid .form-group {
+            gap: 14px;
             margin-bottom: 0;
         }
 
         .form-group {
-            margin-bottom: 12px;
+            margin-bottom: 14px;
         }
 
-        .form-group label {
+        .form-group.full-width {
+            grid-column: span 2;
+        }
+
+        label {
             display: block;
-            margin-bottom: 4px;
-            color: #1a1f2b;
+            margin-bottom: 5px;
             font-weight: 600;
-            font-size: 0.7rem;
+            color: #1e293b;
+            font-size: 0.75rem;
+            letter-spacing: 0.3px;
         }
 
-        .input-wrapper {
+        .input-icon {
             position: relative;
         }
 
-        .input-wrapper i {
+        .input-icon i {
             position: absolute;
-            left: 12px;
+            left: 14px;
             top: 50%;
             transform: translateY(-50%);
             color: #94a3b8;
-            font-size: 0.85rem;
+            font-size: 0.9rem;
             transition: color 0.3s;
             pointer-events: none;
         }
 
-        .input-wrapper input,
-        .input-wrapper select {
+        .input-icon input,
+        .input-icon select {
             width: 100%;
-            padding: 9px 12px 9px 38px;
+            padding: 10px 14px 10px 42px;
             border: 2px solid #e2e8f0;
-            border-radius: 16px;
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            font-size: 0.8rem;
+            border-radius: 14px;
+            font-size: 0.85rem;
+            font-family: 'Inter', sans-serif;
             transition: all 0.3s;
-            background: #f8fafc;
+            background: #fefefe;
         }
 
-        .input-wrapper input:focus,
-        .input-wrapper select:focus {
+        .input-icon select {
+            padding: 10px 14px 10px 42px;
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2394a3b8'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 14px center;
+            background-size: 18px;
+        }
+
+        .input-icon input:focus,
+        .input-icon select:focus {
             outline: none;
-            border-color: #4158D0;
-            background: white;
-            box-shadow: 0 0 0 3px rgba(65, 88, 208, 0.1);
+            border-color: #38bdf8;
+            box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.1);
         }
 
-        .input-wrapper input:focus+i,
-        .input-wrapper select:focus+i {
-            color: #4158D0;
+        .input-icon input:focus + i,
+        .input-icon select:focus + i {
+            color: #38bdf8;
         }
 
-        /* Full width fields */
-        .full-width {
-            grid-column: span 2;
-        }
-
-        /* Button */
-        .btn-auth {
+        .btn-submit {
             width: 100%;
-            padding: 11px;
-            background: linear-gradient(145deg, #4158D0, #C850C0);
+            padding: 12px;
+            background: linear-gradient(135deg, #0a2a3b, #135e7a);
             color: white;
             border: none;
-            border-radius: 32px;
+            border-radius: 40px;
             font-size: 0.9rem;
             font-weight: 700;
             cursor: pointer;
-            position: relative;
-            overflow: hidden;
-            margin: 12px 0 10px;
-            transition: all 0.3s ease;
-            box-shadow: 0 6px 18px rgba(65, 88, 208, 0.3);
+            transition: all 0.3s;
+            margin-top: 8px;
+            margin-bottom: 16px;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 8px;
-            z-index: 1;
-            flex-shrink: 0;
+            position: relative;
+            overflow: hidden;
         }
 
-        .btn-auth::before {
+        .btn-submit::before {
             content: '';
             position: absolute;
             top: 0;
             left: -100%;
             width: 100%;
             height: 100%;
-            background: linear-gradient(145deg, #C850C0, #FF9A5A, #FFCC70);
-            transition: left 0.5s ease;
-            z-index: -1;
+            background: linear-gradient(135deg, #1e6a8a, #0a2a3b);
+            transition: left 0.4s;
         }
 
-        .btn-auth:hover::before {
+        .btn-submit:hover::before {
             left: 0;
         }
 
-        .btn-auth:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 22px rgba(65, 88, 208, 0.4);
+        .btn-submit span {
+            position: relative;
+            z-index: 1;
         }
 
-        .btn-auth:active {
-            transform: translateY(0);
+        .btn-submit:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
         }
 
         .spinner {
-            display: inline-block;
             width: 16px;
             height: 16px;
             border: 2px solid rgba(255, 255, 255, 0.3);
-            border-radius: 50%;
             border-top-color: white;
-            animation: spin 1s linear infinite;
+            border-radius: 50%;
+            animation: spin 0.6s linear infinite;
         }
 
         @keyframes spin {
-            to {
-                transform: rotate(360deg);
-            }
+            to { transform: rotate(360deg); }
         }
 
-        .auth-link {
+        .form-footer {
             text-align: center;
+            font-size: 0.75rem;
             color: #64748b;
-            font-size: 0.7rem;
-            margin-top: 6px;
         }
 
-        .auth-link a {
-            color: #4158D0;
+        .form-footer a {
+            color: #0ea5e9;
             text-decoration: none;
-            font-weight: 700;
+            font-weight: 600;
         }
 
-        .auth-link a:hover {
-            color: #C850C0;
+        .form-footer a:hover {
             text-decoration: underline;
         }
 
-        /* Sign In Form Layout */
-        .signin-form-container {
-            display: flex;
-            flex-direction: column;
-            height: 100%;
+        .demo-credentials {
+            background: #f8fafc;
+            padding: 8px 12px;
+            border-radius: 12px;
+            margin-top: 12px;
+            font-size: 0.7rem;
+            text-align: center;
+            color: #475569;
         }
 
-        /* Toast */
-        .toast {
+        /* Toast Notification */
+        .toast-message {
             position: fixed;
-            bottom: 20px;
-            right: 20px;
+            bottom: 24px;
+            right: 24px;
             background: white;
-            padding: 10px 18px;
+            padding: 12px 20px;
             border-radius: 50px;
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
             display: flex;
             align-items: center;
-            gap: 8px;
-            transform: translateX(400px);
-            transition: transform 0.4s;
-            z-index: 10000;
+            gap: 10px;
+            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.2);
+            transform: translateX(450px);
+            transition: transform 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            z-index: 2000;
             border-left: 4px solid;
-            max-width: 90vw;
-            font-size: 0.8rem;
+            font-weight: 500;
+            font-size: 0.85rem;
+            pointer-events: none;
         }
 
-        .toast.show {
+        .toast-message.show {
             transform: translateX(0);
         }
 
-        .toast.success {
+        .toast-message.success {
             border-left-color: #10b981;
+            background: #f0fdf4;
         }
 
-        .toast.error {
+        .toast-message.error {
             border-left-color: #ef4444;
+            background: #fef2f2;
         }
 
-        .toast i {
-            font-size: 1rem;
-        }
-
-        /* Responsive Design */
-        @media (max-width: 1024px) {
-            .auth-wrapper {
-                height: 85vh;
-                max-height: 700px;
+        /* Responsive - Maintain no scroll */
+        @media (max-width: 1100px) {
+            .auth-container {
+                height: 90vh;
+                max-height: 780px;
             }
-
-            .auth-brand {
-                padding: 25px 20px;
+            .brand-panel {
+                padding: 28px 24px;
             }
-
-            .auth-panel {
-                padding: 25px;
+            .form-panel {
+                padding: 24px 28px;
             }
-
-            .form-grid {
-                gap: 10px;
+            .form-header h2 {
+                font-size: 1.4rem;
             }
         }
 
         @media (max-width: 900px) {
             .auth-container {
                 flex-direction: column;
+                max-width: 550px;
+                height: auto;
+                max-height: 95vh;
+                min-height: auto;
             }
-
-            .auth-brand {
+            .brand-panel {
                 display: none;
             }
-
-            .auth-panel {
-                flex: 1;
-                padding: 24px;
-            }
-
-            .auth-wrapper {
-                height: auto;
-                min-height: auto;
-                max-height: none;
-                padding: 20px;
-            }
-
-            body {
+            .form-panel {
+                padding: 24px 28px;
+                justify-content: flex-start;
                 overflow-y: auto;
+                scrollbar-width: none;
             }
-
-            body::-webkit-scrollbar {
-                width: 4px;
+            .form-panel::-webkit-scrollbar {
+                display: none;
             }
-
-            body {
-                -ms-overflow-style: auto;
-                scrollbar-width: thin;
-            }
-
             .form-grid {
                 grid-template-columns: 1fr;
+                gap: 12px;
             }
-
-            .full-width {
+            .form-group.full-width {
                 grid-column: span 1;
+            }
+            body {
+                overflow: auto;
+                position: relative;
+            }
+            html, body {
+                position: relative;
+                overflow-y: auto;
             }
         }
 
         @media (max-width: 640px) {
-            .auth-panel {
-                padding: 18px;
+            .form-panel {
+                padding: 20px 20px;
             }
-
-            .auth-tabs {
-                margin-bottom: 14px;
+            .toggle-btn {
+                padding: 8px;
+                font-size: 0.85rem;
             }
-
-            .auth-tab {
-                padding: 6px;
+            .form-header h2 {
+                font-size: 1.3rem;
+            }
+            .input-icon input,
+            .input-icon select {
+                padding: 9px 12px 9px 38px;
                 font-size: 0.8rem;
             }
-
-            .auth-header h2 {
-                font-size: 1.2rem;
+            .btn-submit {
+                padding: 11px;
             }
-
-            .form-group {
-                margin-bottom: 10px;
-            }
-
-            .input-wrapper input,
-            .input-wrapper select {
-                padding: 8px 10px 8px 34px;
-                font-size: 0.75rem;
-            }
-
-            .btn-auth {
-                padding: 9px;
-                font-size: 0.85rem;
-                margin: 10px 0 8px;
-            }
-
             .form-grid {
-                gap: 8px;
+                gap: 10px;
             }
         }
 
         @media (max-width: 480px) {
-            .auth-panel {
-                padding: 14px;
+            .form-panel {
+                padding: 16px 16px;
             }
-
-            .close-btn {
-                width: 30px;
-                height: 30px;
-                font-size: 1rem;
+            .toggle-buttons {
+                gap: 6px;
             }
-
-            .auth-header h2 {
-                font-size: 1.1rem;
+            .toggle-btn {
+                padding: 7px;
+                font-size: 0.8rem;
+            }
+            .form-header h2 {
+                font-size: 1.2rem;
             }
         }
     </style>
 </head>
-
 <body>
-    <!-- Animated Background -->
-    <div class="background">
-        <div class="gradient-sphere sphere1"></div>
-        <div class="gradient-sphere sphere2"></div>
-        <div class="gradient-sphere sphere3"></div>
-        <div class="grid-overlay"></div>
-    </div>
+    <div class="bg-pattern"></div>
+    
+    <script>
+        // Generate floating particles
+        for(let i = 0; i < 40; i++) {
+            let particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.left = Math.random() * 100 + '%';
+            particle.style.top = Math.random() * 100 + '%';
+            particle.style.animation = `floatParticle ${15 + Math.random() * 20}s linear infinite`;
+            particle.style.opacity = 0.3 + Math.random() * 0.5;
+            document.body.appendChild(particle);
+        }
+        
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes floatParticle {
+                0% { transform: translateY(0) translateX(0); opacity: 0; }
+                10% { opacity: 0.6; }
+                90% { opacity: 0.6; }
+                100% { transform: translateY(-100vh) translateX(50px); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
 
-    <div class="auth-wrapper">
-        <div class="auth-container">
-            <!-- Left Brand Panel -->
-            <div class="auth-brand">
-                <div class="brand-content">
-                    <div class="brand-icon">
-                        <i class="fas fa-clinic-medical"></i>
+    <div class="auth-container">
+        <!-- Left Brand Panel -->
+        <div class="brand-panel">
+            <div class="brand-logo">
+                <div class="logo-icon">
+                    <i class="fas fa-hospital-user"></i>
+                </div>
+                <h1>ClinicCare<br>Pro</h1>
+                <p>Intelligent healthcare management for modern medical practices</p>
+                <ul class="features">
+                    <li><i class="fas fa-brain"></i> AI-Powered Scheduling</li>
+                    <li><i class="fas fa-shield-alt"></i> HIPAA Compliant Security</li>
+                    <li><i class="fas fa-video"></i> Integrated Telemedicine</li>
+                    <li><i class="fas fa-chart-line"></i> Real-time Analytics</li>
+                </ul>
+            </div>
+            <div>
+                <div class="stats-row">
+                    <div class="stat-card">
+                        <span class="stat-number">10k+</span>
+                        <span class="stat-label">Professionals</span>
                     </div>
-                    <h2>Welcome to<br>ClinicCare Pro</h2>
-                    <p>Join thousands of healthcare professionals who trust our platform</p>
-                    <ul class="feature-list">
-                        <li><i class="fas fa-check"></i> AI-powered scheduling system</li>
-                        <li><i class="fas fa-check"></i> Secure HIPAA-compliant EHR</li>
-                        <li><i class="fas fa-check"></i> Integrated telemedicine</li>
-                        <li><i class="fas fa-check"></i> 24/7 priority support</li>
-                    </ul>
+                    <div class="stat-card">
+                        <span class="stat-number">99.9%</span>
+                        <span class="stat-label">Uptime</span>
+                    </div>
                 </div>
                 <div class="testimonial">
-                    <p>"The most comprehensive healthcare management platform we've ever used. It's transformed our
-                        practice completely."</p>
+                    <p>"Transformed our clinic operations. Patient satisfaction up 45%."</p>
                     <div class="testimonial-author">
-                        <div class="author-avatar">DS</div>
-                        <div class="author-info">
-                            <h4>Dr. Sarah Chen</h4>
-                            <p>Cardiologist, 15+ years</p>
+                        <div class="author-avatar">DR</div>
+                        <div style="color: white;">
+                            <strong>Dr. Rebecca Martinez</strong><br>
+                            <small>Medical Director</small>
                         </div>
                     </div>
                 </div>
             </div>
+        </div>
 
-            <!-- Right Panel -->
-            <div class="auth-panel">
-                <button class="close-btn" onclick="window.location.href='index.html'">&times;</button>
+        <!-- Right Form Panel -->
+        <div class="form-panel">
+            <div class="toggle-buttons">
+                <button class="toggle-btn active" onclick="switchForm('login')">Sign In</button>
+                <button class="toggle-btn" onclick="switchForm('register')">Create Account</button>
+            </div>
 
-                <div class="auth-tabs">
-                    <div class="auth-tab active" id="signinTab" onclick="switchTab('signin')">Sign In</div>
-                    <div class="auth-tab" id="signupTab" onclick="switchTab('signup')">Sign Up</div>
+            <!-- Login Form -->
+            <div id="loginForm" class="form active">
+                <div class="form-header">
+                    <h2>Welcome Back</h2>
+                    <p>Access your ClinicCare Pro dashboard</p>
                 </div>
-
-                <div class="forms-container">
-                    <!-- Sign In Form -->
-                    <form id="signinForm" class="auth-form" onsubmit="handleSignin(event)">
-                        <div class="auth-header">
-                            <i class="fas fa-clinic-medical"></i>
-                            <h2>Welcome Back</h2>
-                            <p>Sign in to access your dashboard</p>
+                <form onsubmit="handleLogin(event)">
+                    <div class="form-group">
+                        <label>Email Address</label>
+                        <div class="input-icon">
+                            <i class="fas fa-envelope"></i>
+                            <input type="email" id="loginEmail" required placeholder="doctor@example.com">
                         </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Password</label>
+                        <div class="input-icon">
+                            <i class="fas fa-lock"></i>
+                            <input type="password" id="loginPassword" required placeholder="Enter your password">
+                        </div>
+                    </div>
+                    <button type="submit" class="btn-submit" id="loginBtn">
+                        <span><i class="fas fa-arrow-right-to-bracket"></i> Sign In</span>
+                    </button>
+                    <div class="demo-credentials">
+                        <i class="fas fa-flask"></i> Demo: doctor@example.com / doctor123
+                    </div>
+                    <div class="form-footer">
+                        <p>Don't have an account? <a href="#" onclick="switchForm('register'); return false;">Create one</a></p>
+                    </div>
+                </form>
+            </div>
 
+            <!-- Register Form - Compact, all fields visible without scroll -->
+            <div id="registerForm" class="form">
+                <div class="form-header">
+                    <h2>Start Your Journey</h2>
+                    <p>Join the future of digital healthcare</p>
+                </div>
+                <form onsubmit="handleRegister(event)">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Full Name</label>
+                            <div class="input-icon">
+                                <i class="fas fa-user"></i>
+                                <input type="text" id="regName" required placeholder="Dr. John Smith">
+                            </div>
+                        </div>
                         <div class="form-group">
                             <label>Email Address</label>
-                            <div class="input-wrapper">
+                            <div class="input-icon">
                                 <i class="fas fa-envelope"></i>
-                                <input type="email" id="signinEmail" required placeholder="doctor@clinic.com">
+                                <input type="email" id="regEmail" required placeholder="john@clinic.com">
                             </div>
                         </div>
-
+                        <div class="form-group">
+                            <label>Phone Number</label>
+                            <div class="input-icon">
+                                <i class="fas fa-phone-alt"></i>
+                                <input type="tel" id="regPhone" required placeholder="+1 (555) 123-4567">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Role</label>
+                            <div class="input-icon">
+                                <i class="fas fa-user-tag"></i>
+                                <select id="regRole" required onchange="toggleSpecializationField()">
+                                    <option value="">Select role</option>
+                                    <option value="admin">Administrator</option>
+                                    <option value="doctor">Doctor / Physician</option>
+                                    <option value="patient">Patient</option>
+                                    <option value="receptionist">Receptionist</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group full-width" id="specializationField" style="display: none;">
+                            <label>Medical Specialization</label>
+                            <div class="input-icon">
+                                <i class="fas fa-stethoscope"></i>
+                                <input type="text" id="regSpecialization" placeholder="e.g., Cardiology, Pediatrics">
+                            </div>
+                        </div>
                         <div class="form-group">
                             <label>Password</label>
-                            <div class="input-wrapper">
+                            <div class="input-icon">
                                 <i class="fas fa-lock"></i>
-                                <input type="password" id="signinPassword" required placeholder="••••••••">
+                                <input type="password" id="regPassword" required placeholder="Min. 6 characters">
                             </div>
                         </div>
-
-                        <button type="submit" class="btn-auth" id="signinBtn">
-                            <span><i class="fas fa-arrow-right-to-bracket"></i> Sign In</span>
-                        </button>
-
-                        <p class="auth-link">
-                            Don't have an account? <a href="#" onclick="switchTab('signup'); return false;">Create
-                                account</a>
-                        </p>
-                        <p class="auth-link">
-                            <a href="index.html">← Back to Home</a>
-                        </p>
-                    </form>
-
-                    <!-- Sign Up Form with Side by Side Fields -->
-                    <form id="signupForm" class="auth-form hidden" onsubmit="handleSignup(event)">
-                        <div class="auth-header">
-                            <i class="fas fa-clinic-medical"></i>
-                            <h2>Create Account</h2>
-                            <p>Join ClinicCare Pro today</p>
-                        </div>
-
-                        <!-- Grid Layout for side-by-side fields -->
-                        <div class="form-grid">
-                            <div class="form-group">
-                                <label>Full Name</label>
-                                <div class="input-wrapper">
-                                    <i class="fas fa-user"></i>
-                                    <input type="text" id="signupName" required placeholder="John Smith">
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label>Email Address</label>
-                                <div class="input-wrapper">
-                                    <i class="fas fa-envelope"></i>
-                                    <input type="email" id="signupEmail" required placeholder="john@clinic.com">
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label>Phone Number</label>
-                                <div class="input-wrapper">
-                                    <i class="fas fa-phone"></i>
-                                    <input type="tel" id="signupPhone" required placeholder="+1 (555) 123-4567">
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label>I am a</label>
-                                <div class="input-wrapper">
-                                    <i class="fas fa-user-tag"></i>
-                                    <select id="signupRole" required onchange="toggleSpecialization()">
-                                        <option value="">Select role</option>
-                                        <option value="admin">Administrator</option>
-                                        <option value="doctor">Doctor</option>
-                                        <option value="patient">Patient</option>
-                                        <option value="receptionist">Receptionist</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div class="form-group" id="specializationGroup" style="display: none;">
-                                <label>Specialization</label>
-                                <div class="input-wrapper">
-                                    <i class="fas fa-stethoscope"></i>
-                                    <input type="text" id="signupSpecialization" placeholder="e.g., Cardiology">
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label>Password</label>
-                                <div class="input-wrapper">
-                                    <i class="fas fa-lock"></i>
-                                    <input type="password" id="signupPassword" required placeholder="Min. 6 characters">
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label>Confirm Password</label>
-                                <div class="input-wrapper">
-                                    <i class="fas fa-lock"></i>
-                                    <input type="password" id="signupConfirmPassword" required
-                                        placeholder="Confirm password">
-                                </div>
+                        <div class="form-group">
+                            <label>Confirm Password</label>
+                            <div class="input-icon">
+                                <i class="fas fa-check-circle"></i>
+                                <input type="password" id="regConfirmPassword" required placeholder="Confirm password">
                             </div>
                         </div>
-
-                        <button type="submit" class="btn-auth" id="signupBtn">
-                            <span><i class="fas fa-user-plus"></i> Create Account</span>
-                        </button>
-
-                        <p class="auth-link">
-                            Already have an account? <a href="#" onclick="switchTab('signin'); return false;">Sign
-                                in</a>
-                        </p>
-                        <p class="auth-link">
-                            <a href="index.html">← Back to Home</a>
-                        </p>
-                    </form>
-                </div>
+                    </div>
+                    <button type="submit" class="btn-submit" id="registerBtn">
+                        <span><i class="fas fa-user-plus"></i> Create Account</span>
+                    </button>
+                    <div class="form-footer">
+                        <p>Already have an account? <a href="#" onclick="switchForm('login'); return false;">Sign in here</a></p>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
 
-    <!-- Toast Notification -->
-    <div class="toast" id="toast">
-        <i class="fas" id="toastIcon"></i>
-        <span id="toastMessage"></span>
-    </div>
+    <!-- Toast Container -->
+    <div id="toast" class="toast-message"></div>
 
     <script>
-        // Initialize user data
+        // User database
         let users = JSON.parse(localStorage.getItem('users')) || [];
+        
         if (users.length === 0) {
             users = [
                 { id: '1', name: 'Dr. John Smith', email: 'doctor@example.com', password: 'doctor123', role: 'doctor', phone: '+1 (555) 123-4567', specialization: 'Cardiology' },
@@ -934,114 +784,97 @@
             localStorage.setItem('users', JSON.stringify(users));
         }
 
-        // Check URL params
-        const urlParams = new URLSearchParams(window.location.search);
-        if (urlParams.get('signup') === 'true') switchTab('signup');
-
-        // Toast function
-        const toast = document.getElementById('toast');
-        const toastIcon = document.getElementById('toastIcon');
-        const toastMsg = document.getElementById('toastMessage');
-
         function showToast(message, type = 'success') {
-            toast.className = 'toast ' + type;
-            toastIcon.className = 'fas ' + (type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle');
-            toastMsg.textContent = message;
-            toast.classList.add('show');
-            setTimeout(() => toast.classList.remove('show'), 3000);
+            const toast = document.getElementById('toast');
+            const icon = type === 'success' ? 'fa-check-circle' : 'fa-exclamation-triangle';
+            toast.innerHTML = `<i class="fas ${icon}"></i> ${message}`;
+            toast.className = `toast-message ${type} show`;
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 2800);
         }
 
-        // Switch tabs
-        window.switchTab = function (tab) {
-            const signinForm = document.getElementById('signinForm');
-            const signupForm = document.getElementById('signupForm');
-            const signinTab = document.getElementById('signinTab');
-            const signupTab = document.getElementById('signupTab');
-
-            if (tab === 'signin') {
-                signinForm.classList.remove('hidden');
-                signupForm.classList.add('hidden');
-                signinTab.classList.add('active');
-                signupTab.classList.remove('active');
+        window.switchForm = function(formType) {
+            const loginForm = document.getElementById('loginForm');
+            const registerForm = document.getElementById('registerForm');
+            const loginBtn = document.querySelector('.toggle-buttons button:first-child');
+            const registerBtn = document.querySelector('.toggle-buttons button:last-child');
+            
+            if (formType === 'login') {
+                loginForm.classList.add('active');
+                registerForm.classList.remove('active');
+                loginBtn.classList.add('active');
+                registerBtn.classList.remove('active');
             } else {
-                signinForm.classList.add('hidden');
-                signupForm.classList.remove('hidden');
-                signupTab.classList.add('active');
-                signinTab.classList.remove('active');
+                loginForm.classList.remove('active');
+                registerForm.classList.add('active');
+                registerBtn.classList.add('active');
+                loginBtn.classList.remove('active');
             }
         };
 
-        // Toggle specialization for doctors
-        window.toggleSpecialization = function () {
-            const role = document.getElementById('signupRole').value;
-            const specGroup = document.getElementById('specializationGroup');
-            if (role === 'doctor') {
-                specGroup.style.display = 'block';
-                // Make it take full width in grid
-                specGroup.classList.add('full-width');
-            } else {
-                specGroup.style.display = 'none';
-            }
+        window.toggleSpecializationField = function() {
+            const role = document.getElementById('regRole').value;
+            const specField = document.getElementById('specializationField');
+            specField.style.display = role === 'doctor' ? 'block' : 'none';
         };
 
-        // Handle Sign In
-        window.handleSignin = function (e) {
+        window.handleLogin = function(e) {
             e.preventDefault();
-            const email = document.getElementById('signinEmail').value;
-            const password = document.getElementById('signinPassword').value;
-            const btn = document.getElementById('signinBtn');
-
-            btn.innerHTML = '<span class="spinner"></span> Signing in...';
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            const btn = document.getElementById('loginBtn');
+            
+            btn.innerHTML = '<span class="spinner"></span> Authenticating...';
             btn.disabled = true;
-
+            
             setTimeout(() => {
                 const user = users.find(u => u.email === email && u.password === password);
                 if (user) {
                     localStorage.setItem('currentUser', JSON.stringify(user));
-                    showToast('Login successful! Redirecting...', 'success');
+                    showToast(`Welcome back, ${user.name}!`, 'success');
                     setTimeout(() => {
                         window.location.href = `${user.role}-dashboard.html`;
-                    }, 1500);
+                    }, 1200);
                 } else {
-                    showToast('Invalid email or password!', 'error');
+                    showToast('Invalid email or password.', 'error');
                     btn.innerHTML = '<span><i class="fas fa-arrow-right-to-bracket"></i> Sign In</span>';
                     btn.disabled = false;
                 }
-            }, 800);
+            }, 700);
         };
 
-        // Handle Sign Up
-        window.handleSignup = function (e) {
+        window.handleRegister = function(e) {
             e.preventDefault();
-            const name = document.getElementById('signupName').value;
-            const email = document.getElementById('signupEmail').value;
-            const phone = document.getElementById('signupPhone').value;
-            const password = document.getElementById('signupPassword').value;
-            const confirm = document.getElementById('signupConfirmPassword').value;
-            const role = document.getElementById('signupRole').value;
-            const specialization = document.getElementById('signupSpecialization')?.value || '';
-            const btn = document.getElementById('signupBtn');
-
-            if (!name || !email || !phone || !password || !confirm || !role) {
-                showToast('Please fill in all required fields!', 'error');
+            const name = document.getElementById('regName').value;
+            const email = document.getElementById('regEmail').value;
+            const phone = document.getElementById('regPhone').value;
+            const role = document.getElementById('regRole').value;
+            const password = document.getElementById('regPassword').value;
+            const confirm = document.getElementById('regConfirmPassword').value;
+            const specialization = document.getElementById('regSpecialization')?.value || '';
+            const btn = document.getElementById('registerBtn');
+            
+            if (!name || !email || !phone || !role || !password) {
+                showToast('Please fill all required fields.', 'error');
                 return;
             }
             if (password !== confirm) {
-                showToast('Passwords do not match!', 'error');
+                showToast('Passwords do not match.', 'error');
                 return;
             }
             if (password.length < 6) {
-                showToast('Password must be at least 6 characters!', 'error');
+                showToast('Password must be at least 6 characters.', 'error');
                 return;
             }
             if (users.find(u => u.email === email)) {
-                showToast('Email already exists!', 'error');
+                showToast('Email already registered.', 'error');
                 return;
             }
-
+            
             btn.innerHTML = '<span class="spinner"></span> Creating account...';
             btn.disabled = true;
-
+            
             setTimeout(() => {
                 const newUser = {
                     id: Date.now().toString(),
@@ -1050,24 +883,22 @@
                     password,
                     phone,
                     role,
-                    ...(role === 'doctor' && { specialization })
+                    specialization: role === 'doctor' ? specialization : undefined
                 };
                 users.push(newUser);
                 localStorage.setItem('users', JSON.stringify(users));
                 localStorage.setItem('currentUser', JSON.stringify(newUser));
-                showToast('Account created successfully! Redirecting...', 'success');
+                showToast('Account created successfully!', 'success');
                 setTimeout(() => {
                     window.location.href = `${role}-dashboard.html`;
-                }, 1500);
-            }, 800);
+                }, 1200);
+            }, 700);
         };
 
-        // Auto redirect if already logged in
         const currentUser = JSON.parse(localStorage.getItem('currentUser'));
         if (currentUser && window.location.pathname.includes('auth.html')) {
             window.location.href = `${currentUser.role}-dashboard.html`;
         }
     </script>
 </body>
-
 </html>
