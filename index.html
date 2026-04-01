@@ -215,7 +215,7 @@
             transform: scale(0.95);
         }
 
-        /* Mobile Sidebar - slides from left */
+        /* Mobile Sidebar - slides from left - IMPROVED: Auth buttons at TOP immediately visible */
         .mobile-sidebar {
             position: fixed;
             top: 0;
@@ -236,9 +236,9 @@
             left: 0;
         }
 
-        /* Sidebar Header */
+        /* Sidebar Header - keep compact but clean */
         .sidebar-header {
-            padding: 1.8rem 1.5rem 1rem;
+            padding: 1.5rem 1.5rem 0.8rem 1.5rem;
             border-bottom: 1px solid #eef2ff;
             display: flex;
             align-items: center;
@@ -279,21 +279,58 @@
             transform: scale(0.95);
         }
 
-        /* Sidebar Navigation Links */
+        /* SIDEBAR AUTH BUTTONS - PLACED AT TOP (immediately below header) to avoid scrolling */
+        .sidebar-auth-top {
+            padding: 1.2rem 1.5rem 0.8rem 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+            border-bottom: 1px solid #eef2ff;
+            background: white;
+        }
+
+        .btn-login-sidebar-top, .btn-signup-sidebar-top {
+            width: 100%;
+            padding: 0.9rem 1rem;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+        }
+
+        .btn-login-sidebar-top {
+            border: 2px solid #4158D0;
+            background: transparent;
+            color: #4158D0;
+        }
+
+        .btn-signup-sidebar-top {
+            border: none;
+            background: linear-gradient(90deg, #4158D0, #C850C0);
+            color: white;
+        }
+
+        .btn-login-sidebar-top:active, .btn-signup-sidebar-top:active {
+            transform: scale(0.97);
+        }
+
+        /* Sidebar Navigation Links - appears after auth buttons */
         .sidebar-nav {
             flex: 1;
-            padding: 1.5rem 0;
+            padding: 1rem 0 1rem 0;
         }
 
         .sidebar-nav a {
             display: flex;
             align-items: center;
             gap: 1rem;
-            padding: 1rem 1.5rem;
+            padding: 0.9rem 1.5rem;
             text-decoration: none;
             color: #1a1f2b;
             font-weight: 600;
-            font-size: 1.1rem;
+            font-size: 1rem;
             transition: all 0.25s;
             border-left: 3px solid transparent;
         }
@@ -310,44 +347,9 @@
             color: #4158D0;
         }
 
-        /* Sidebar Auth Buttons Section - appears at bottom */
+        /* Remove old bottom auth section since we moved auth to top */
         .sidebar-auth {
-            padding: 1rem 1.5rem 2rem;
-            border-top: 1px solid #eef2ff;
-            display: flex;
-            gap: 0.8rem;
-        }
-
-        .btn-login-sidebar {
-            width: 100%;
-            padding: 0.9rem 1rem;
-            border-radius: 50px;
-            font-weight: 700;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: all 0.3s;
-            text-align: center;
-            border: 2px solid #4158D0;
-            background: transparent;
-            color: #4158D0;
-        }
-
-        .btn-signup-sidebar {
-            width: 100%;
-            padding: 0.9rem 1rem;
-            border-radius: 50px;
-            font-weight: 700;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: all 0.3s;
-            text-align: center;
-            border: none;
-            background: linear-gradient(90deg, #4158D0, #C850C0);
-            color: white;
-        }
-
-        .btn-login-sidebar:active, .btn-signup-sidebar:active {
-            transform: scale(0.97);
+            display: none;
         }
 
         /* Sidebar Overlay */
@@ -1099,7 +1101,7 @@
         </button>
     </nav>
 
-    <!-- Mobile Sidebar (slides from left) -->
+    <!-- Mobile Sidebar (slides from left) - AUTH BUTTONS AT TOP (immediately visible without scroll) -->
     <div class="mobile-sidebar" id="mobileSidebar">
         <div class="sidebar-header">
             <div class="sidebar-logo">
@@ -1110,16 +1112,17 @@
                 <i class="fas fa-times"></i>
             </button>
         </div>
+        <!-- AUTH BUTTONS RIGHT AT THE TOP, NO SCROLL NEEDED -->
+        <div class="sidebar-auth-top">
+            <button class="btn-login-sidebar-top" onclick="openAuth('signin')">Sign In</button>
+            <button class="btn-signup-sidebar-top" onclick="openAuth('signup')">Sign Up</button>
+        </div>
         <div class="sidebar-nav">
             <a href="#home"><i class="fas fa-home"></i> Home</a>
             <a href="#features"><i class="fas fa-star"></i> Features</a>
             <a href="#solutions"><i class="fas fa-chalkboard-user"></i> Solutions</a>
             <a href="#pricing"><i class="fas fa-tag"></i> Pricing</a>
             <a href="#contact"><i class="fas fa-envelope"></i> Contact</a>
-        </div>
-        <div class="sidebar-auth">
-            <button class="btn-login-sidebar" onclick="openAuth('signin')">Sign In</button>
-            <button class="btn-signup-sidebar" onclick="openAuth('signup')">Sign Up</button>
         </div>
     </div>
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
