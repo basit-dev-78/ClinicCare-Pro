@@ -48,7 +48,7 @@
             transform: translateX(0);
         }
 
-        /* Mobile styles - sidebar hidden by default */
+        /* Mobile styles - sidebar hidden by default, toggle button fixed and non-overlapping */
         @media (max-width: 768px) {
             .sidebar {
                 transform: translateX(-100%);
@@ -62,20 +62,54 @@
                 margin-left: 0 !important;
                 width: 100%;
                 padding: 16px !important;
+                padding-top: 16px !important;
             }
             .menu-toggle-btn {
                 display: flex !important;
+                position: relative;
+                background: white;
+                border: none;
+                width: 44px;
+                height: 44px;
+                border-radius: 30px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+                cursor: pointer;
+                align-items: center;
+                justify-content: center;
+                font-size: 1.3rem;
+                color: #2563eb;
+                transition: all 0.2s;
+                background: white;
+                flex-shrink: 0;
             }
+            .menu-toggle-btn:hover {
+                background: #2563eb;
+                color: white;
+                transform: scale(1.02);
+            }
+            /* Mobile header redesign - toggle left, title right, no clock */
             .header-bar {
-                padding: 10px 16px !important;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                background: white;
+                padding: 10px 18px !important;
+                border-radius: 60px;
                 margin-bottom: 20px !important;
+                border: 1px solid #e6edfa;
+                gap: 12px;
             }
             .page-title {
-                font-size: 1.25rem !important;
+                margin-left: 0 !important;
+                background: linear-gradient(135deg, #142b54, #1f46b0);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                font-weight: 700;
+                text-align: center;
+                flex: 1;
             }
             .live-clock {
-                font-size: 0.7rem !important;
-                padding: 5px 12px !important;
+                display: none !important; /* Remove time/date on mobile */
             }
             .stat-grid {
                 grid-template-columns: 1fr 1fr !important;
@@ -175,27 +209,6 @@
         /* Desktop styles - toggle button hidden */
         .menu-toggle-btn {
             display: none;
-            position: fixed;
-            top: 16px;
-            left: 16px;
-            z-index: 1100;
-            background: white;
-            border: none;
-            width: 44px;
-            height: 44px;
-            border-radius: 30px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-            cursor: pointer;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.3rem;
-            color: #2563eb;
-            transition: all 0.2s;
-        }
-        .menu-toggle-btn:hover {
-            background: #2563eb;
-            color: white;
-            transform: scale(1.02);
         }
 
         /* Sidebar inner elements */
@@ -328,7 +341,7 @@
             margin-left: 280px;
             padding: 24px 32px;
             background: #f5f9ff;
-            transition: margin-left 0.3s ease;
+            transition: margin-left 0.3s ease, padding-top 0.2s ease;
         }
 
         .header-bar {
@@ -341,6 +354,7 @@
             box-shadow: 0 4px 14px rgba(0,20,50,0.04);
             margin-bottom: 28px;
             border: 1px solid #e6edfa;
+            position: relative;
         }
 
         .page-title {
@@ -562,9 +576,6 @@
 </head>
 <body>
 <div class="dashboard">
-    <button class="menu-toggle-btn" id="menuToggleBtn">
-        <i class="fas fa-bars"></i>
-    </button>
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
     
     <!-- SIDEBAR -->
@@ -592,6 +603,9 @@
     <!-- MAIN CONTENT -->
     <div class="main-panel">
         <div class="header-bar">
+            <button class="menu-toggle-btn" id="menuToggleBtn" aria-label="Toggle menu">
+                <i class="fas fa-bars"></i>
+            </button>
             <span class="page-title" id="headerTitle">Dashboard</span>
             <span class="live-clock" id="liveTime"></span>
         </div>
@@ -675,7 +689,8 @@
 
         function tick() {
             const d = new Date();
-            document.getElementById('liveTime').innerText = d.toLocaleString('en-US', { weekday:'short', month:'short', day:'numeric', hour:'2-digit', minute:'2-digit', second:'2-digit' });
+            const timeString = d.toLocaleString('en-US', { weekday:'short', month:'short', day:'numeric', hour:'2-digit', minute:'2-digit', second:'2-digit' });
+            document.getElementById('liveTime').innerText = timeString;
         }
         tick(); setInterval(tick, 1000);
 
@@ -700,13 +715,16 @@
             overlay.classList.add('active');
         }
         
-        toggleBtn.addEventListener('click', () => {
-            if (sidebar.classList.contains('mobile-open')) {
-                closeSidebar();
-            } else {
-                openSidebar();
-            }
-        });
+        if (toggleBtn) {
+            toggleBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                if (sidebar.classList.contains('mobile-open')) {
+                    closeSidebar();
+                } else {
+                    openSidebar();
+                }
+            });
+        }
         
         overlay.addEventListener('click', closeSidebar);
         
@@ -771,9 +789,10 @@
                 <div class="content-card">
                     <div class="card-header"><h3>Recent Activity</h3><button class="btn-primary" onclick="loadPage('users')"><i class="fas fa-arrow-right"></i> Manage</button></div>
                     <table class="activity-table">
-                        <thead><tr><th>User</th><th>Action</th><th>Timestamp</th></tr></thead>
-                        <tbody><tr><td>Dr. Adams</td><td>Updated user directory</td><td>${new Date().toLocaleTimeString()}</td></tr>
-                        <tr><td>System</td><td>Appointment sync</td><td>${new Date(Date.now()-1800000).toLocaleTimeString()}</td></tr></tbody>
+                        <thead>汽<th>User</th><th>Action</th><th>Timestamp</th> </thead>
+                        <tbody>汽<td>Dr. Adams</td><td>Updated user directory</td><td>${new Date().toLocaleTimeString()}</td> </tr>
+                        汽<td>System</td><td>Appointment sync</td><td>${new Date(Date.now()-1800000).toLocaleTimeString()}</td> </tr>
+                        </tbody>
                     </table>
                 </div>
                 <div class="content-card"><div class="card-header"><h3>Weekly Consultations</h3></div><div class="chart-box"><canvas id="dashChart"></canvas></div></div>
@@ -789,9 +808,9 @@
         function renderUsers(container) {
             const users = JSON.parse(localStorage.getItem('users'));
             container.innerHTML = `<div class="content-card"><div class="card-header"><h3>User Management</h3><button class="btn-primary" onclick="addUserModal()"><i class="fas fa-plus"></i> New user</button></div>
-            <table class="users-table"><thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Status</th><th>Actions</th></tr></thead>
-            <tbody>${users.map(u => `<tr><td>${u.name}</td><td>${u.email}</td><td><span class="status-badge badge-role">${u.role}</span></td><td><span class="status-badge ${u.status==='active'?'badge-active':'badge-pending'}">${u.status}</span></td>
-            <td><button class="icon-action" onclick="editUser('${u.id}')"><i class="fas fa-edit"></i></button><button class="icon-action delete" onclick="deleteUser('${u.id}')"><i class="fas fa-trash"></i></button></td></tr>`).join('')}</tbody></table></div>`;
+            <table class="users-table"><thead>汽<th>Name</th><th>Email</th><th>Role</th><th>Status</th><th>Actions</th> </thead>
+            <tbody>${users.map(u => `汽<td>${u.name}</td><td>${u.email}</td><td><span class="status-badge badge-role">${u.role}</span></td><td><span class="status-badge ${u.status==='active'?'badge-active':'badge-pending'}">${u.status}</span></td>
+            <td><button class="icon-action" onclick="editUser('${u.id}')"><i class="fas fa-edit"></i></button><button class="icon-action delete" onclick="deleteUser('${u.id}')"><i class="fas fa-trash"></i></button></td> </tr>`).join('')}</tbody> </table></div>`;
             setTimeout(() => {
                 const table = document.querySelector('.users-table');
                 if (table && window.innerWidth <= 768) makeTableResponsive(table);
@@ -813,17 +832,17 @@
         window.updateUserSimple = (id) => { let users=JSON.parse(localStorage.getItem('users')); let u=users.find(x=>x.id===id); if(u) u.name=document.getElementById('editName')?.value||u.name; localStorage.setItem('users',JSON.stringify(users)); closeModal(); showToast('Updated','success'); loadPage('users'); };
         window.deleteUser = (id) => { if(confirm('Delete user?')){ let users=JSON.parse(localStorage.getItem('users')).filter(u=>u.id!==id); localStorage.setItem('users',JSON.stringify(users)); showToast('Deleted','warning'); loadPage('users'); } };
         
-        function renderDoctors(container) { const docs = JSON.parse(localStorage.getItem('users')).filter(u=>u.role==='doctor'); container.innerHTML=`<div class="content-card"><h3>Doctors Directory</h3><table class="doctors-table"><thead><tr><th>Name</th><th>Specialization</th><th>Email</th></tr></thead><tbody>${docs.map(d=>`<tr><td>${d.name}</td><td>${d.specialization||'General'}</td><td>${d.email}</td></tr>`).join('')}</tbody></table></div>`; setTimeout(()=>{const tbl=document.querySelector('.doctors-table'); if(tbl && window.innerWidth<=768) makeTableResponsive(tbl);},10); }
-        function renderAppointments(container) { const apps = JSON.parse(localStorage.getItem('appointments')); container.innerHTML=`<div class="content-card"><h3>Appointments Schedule</h3><table class="app-table"><thead><tr><th>Patient</th><th>Doctor</th><th>Date</th><th>Time</th><th>Status</th></tr></thead><tbody>${apps.map(a=>`<tr><td>${a.patient}</td><td>${a.doctor}</td><td>${a.date}</td><td>${a.time}</td><td><span class="status-badge ${a.status==='confirmed'?'badge-active':'badge-pending'}">${a.status}</span></td></tr>`).join('')}</tbody></table></div>`; setTimeout(()=>{const tbl=document.querySelector('.app-table'); if(tbl && window.innerWidth<=768) makeTableResponsive(tbl);},10); }
-        function renderDepartments(container) { const depts=JSON.parse(localStorage.getItem('departments')); container.innerHTML=`<div class="content-card"><h3>Departments</h3><table class="dept-table"><thead><tr><th>Name</th><th>Head</th><th>Staff</th></tr></thead><tbody>${depts.map(d=>`<tr><td>${d.name}</td><td>${d.head}</td><td>${d.staffCount}</td></tr>`).join('')}</tbody></table></div>`; setTimeout(()=>{const tbl=document.querySelector('.dept-table'); if(tbl && window.innerWidth<=768) makeTableResponsive(tbl);},10); }
+        function renderDoctors(container) { const docs = JSON.parse(localStorage.getItem('users')).filter(u=>u.role==='doctor'); container.innerHTML=`<div class="content-card"><h3>Doctors Directory</h3><table class="doctors-table"><thead>汽<th>Name</th><th>Specialization</th><th>Email</th> </thead><tbody>${docs.map(d=>`<tr><td>${d.name}</td><td>${d.specialization||'General'}</td><td>${d.email}</td></tr>`).join('')}</tbody></table></div>`; setTimeout(()=>{const tbl=document.querySelector('.doctors-table'); if(tbl && window.innerWidth<=768) makeTableResponsive(tbl);},10); }
+        function renderAppointments(container) { const apps = JSON.parse(localStorage.getItem('appointments')); container.innerHTML=`<div class="content-card"><h3>Appointments Schedule</h3><table class="app-table"><thead>汽<th>Patient</th><th>Doctor</th><th>Date</th><th>Time</th><th>Status</th> </thead><tbody>${apps.map(a=>`<tr><td>${a.patient}</td><td>${a.doctor}</td><td>${a.date}</td><td>${a.time}</td><td><span class="status-badge ${a.status==='confirmed'?'badge-active':'badge-pending'}">${a.status}</span></td></tr>`).join('')}</tbody></table></div>`; setTimeout(()=>{const tbl=document.querySelector('.app-table'); if(tbl && window.innerWidth<=768) makeTableResponsive(tbl);},10); }
+        function renderDepartments(container) { const depts=JSON.parse(localStorage.getItem('departments')); container.innerHTML=`<div class="content-card"><h3>Departments</h3><table class="dept-table"><thead>汽<th>Name</th><th>Head</th><th>Staff</th> </thead><tbody>${depts.map(d=>`<tr><td>${d.name}</td><td>${d.head}</td><td>${d.staffCount}</td></tr>`).join('')}</tbody></table></div>`; setTimeout(()=>{const tbl=document.querySelector('.dept-table'); if(tbl && window.innerWidth<=768) makeTableResponsive(tbl);},10); }
         function renderReports(container) { container.innerHTML=`<div class="content-card"><h3>Performance Analytics</h3><div class="chart-box"><canvas id="reportChart"></canvas></div></div>`; setTimeout(()=>{ const ctx=document.getElementById('reportChart')?.getContext('2d'); if(ctx) new Chart(ctx,{type:'bar',data:{labels:['Jan','Feb','Mar','Apr','May'],datasets:[{label:'Consultations',data:[32,41,58,62,78],backgroundColor:'#3b82f6'}]}}); },50); }
-        function renderAudit(container) { const log=JSON.parse(localStorage.getItem('auditLog')); container.innerHTML=`<div class="content-card"><h3>Audit Trail</h3><table class="audit-table"><thead><tr><th>User</th><th>Action</th><th>Timestamp</th></tr></thead><tbody>${log.map(l=>`<tr><td>${l.user}</td><td>${l.action}</td><td>${l.timestamp}</td></tr>`).join('')}</tbody></table></div>`; setTimeout(()=>{const tbl=document.querySelector('.audit-table'); if(tbl && window.innerWidth<=768) makeTableResponsive(tbl);},10); }
+        function renderAudit(container) { const log=JSON.parse(localStorage.getItem('auditLog')); container.innerHTML=`<div class="content-card"><h3>Audit Trail</h3><table class="audit-table"><thead>汽<th>User</th><th>Action</th><th>Timestamp</th> </thead><tbody>${log.map(l=>`<tr><td>${l.user}</td><td>${l.action}</td><td>${l.timestamp}</td></tr>`).join('')}</tbody></table></div>`; setTimeout(()=>{const tbl=document.querySelector('.audit-table'); if(tbl && window.innerWidth<=768) makeTableResponsive(tbl);},10); }
         function renderSettings(container) { container.innerHTML=`<div class="content-card"><h3>System Preferences</h3><div class="form-field"><label>Organization name</label><input class="form-input" id="clinicName" value="ClinicCare Pro Medical Center"></div><button class="btn-primary" onclick="showToast('Preferences saved','success')">Save Changes</button></div>`; }
 
         document.getElementById('logoutBtn').addEventListener('click', () => { showToast('Logging out securely...','info'); setTimeout(()=>{ localStorage.removeItem('currentUser'); window.location.reload(); }, 1000); });
         loadPage('dashboard');
         
-        // Handle resize to adjust table styles
+        // Handle resize to close sidebar on desktop
         window.addEventListener('resize', () => {
             if (window.innerWidth > 768 && sidebar.classList.contains('mobile-open')) {
                 closeSidebar();
