@@ -621,33 +621,8 @@
     </style>
 </head>
 
-<body>
+<body data-sidebar-role="receptionist">
     <div class="dashboard">
-        <!-- Sidebar Overlay for mobile -->
-        <div class="sidebar-overlay" id="sidebarOverlay"></div>
-
-        <!-- Sidebar -->
-        <div class="sidebar" id="sidebar">
-            <div class="sidebar-header">
-                <div class="brand-icon"><i class="fas fa-stethoscope"></i></div>
-                <h2>ClinicCare · Front Desk</h2>
-            </div>
-            <div class="profile-card" id="profileCard"></div>
-            <nav class="nav-menu">
-                <div class="nav-item active" data-page="dashboard"><i class="fas fa-chart-line"></i>
-                    <span>Dashboard</span></div>
-                <div class="nav-item" data-page="appointments"><i class="fas fa-calendar-check"></i>
-                    <span>Appointments</span></div>
-                <div class="nav-item" data-page="patients"><i class="fas fa-user-friends"></i> <span>Patients</span>
-                </div>
-                <div class="nav-item" data-page="doctors"><i class="fas fa-user-md"></i> <span>Doctors</span></div>
-                <div class="nav-item" data-page="schedule"><i class="fas fa-hourglass-half"></i> <span>Today's
-                        Schedule</span></div>
-                <div class="nav-item" data-page="checkin"><i class="fas fa-fingerprint"></i> <span>Check‑in</span></div>
-                <div class="nav-item" data-page="billing"><i class="fas fa-credit-card"></i> <span>Billing</span></div>
-            </nav>
-            <div class="logout-button" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> <span>Sign out</span></div>
-        </div>
 
         <!-- Main Panel -->
         <div class="main-panel">
@@ -669,33 +644,19 @@
     <div class="toast-notification" id="toastMsg"><i class="fas" id="toastIcon"></i><span id="toastText"></span></div>
 
     <script>
-        (function () {
-            let currentUser = { id: 'R1005', name: 'Emma Watson', email: 'reception@cliniccare.com', phone: '(555) 789-1234', role: 'receptionist' };
-            localStorage.setItem('currentUser', JSON.stringify(currentUser));
+        (async function () {
+            // Check authentication
+            let currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            const token = localStorage.getItem('authToken');
+            
+            if (!currentUser || !token || currentUser.role !== 'receptionist') {
+                window.location.href = 'Frontend/Auth/login.html';
+                return;
+            }
 
-            // Mobile sidebar controls
-            const sidebar = document.getElementById('sidebar');
-            const overlay = document.getElementById('sidebarOverlay');
-            const menuToggle = document.getElementById('menuToggle');
-
-            function closeSidebar() {
-                sidebar.classList.remove('open');
-                overlay.classList.remove('active');
-            }
-            function openSidebar() {
-                sidebar.classList.add('open');
-                overlay.classList.add('active');
-            }
-            if (menuToggle) {
-                menuToggle.addEventListener('click', openSidebar);
-            }
-            overlay.addEventListener('click', closeSidebar);
-            // Close sidebar on nav item click (mobile)
-            document.querySelectorAll('.nav-item').forEach(item => {
-                item.addEventListener('click', () => {
-                    if (window.innerWidth < 1024) closeSidebar();
-                });
-            });
+            let globalUsers = [];
+            let globalAppointments = [];
+            let globalBilling = [];
 
             function showToast(msg, type = 'success') {
                 const toast = document.getElementById('toastMsg');
@@ -709,46 +670,31 @@
             }
             window.showToast = showToast;
 
-            // Init data
-            if (!localStorage.getItem('users')) {
-                localStorage.setItem('users', JSON.stringify([
-                    { id: 'P101', name: 'John Doe', email: 'john.d@example.com', phone: '555-0101', role: 'patient', status: 'active' },
-                    { id: 'P102', name: 'Jane Smith', email: 'jane.s@example.com', phone: '555-0102', role: 'patient', status: 'active' },
-                    { id: 'P103', name: 'Emily Davis', email: 'emily.d@example.com', phone: '555-0103', role: 'patient', status: 'active' },
-                    { id: 'P104', name: 'Michael Brown', email: 'michael.b@example.com', phone: '555-0104', role: 'patient', status: 'active' },
-                    { id: 'D201', name: 'Dr. Sarah Chen', email: 's.chen@clinic.com', phone: '555-8201', role: 'doctor', specialization: 'Cardiology', status: 'active' },
-                    { id: 'D202', name: 'Dr. James Wilson', email: 'j.wilson@clinic.com', phone: '555-8202', role: 'doctor', specialization: 'Neurology', status: 'active' },
-                    { id: 'D203', name: 'Dr. Lisa Ray', email: 'l.ray@clinic.com', phone: '555-8203', role: 'doctor', specialization: 'Dermatology', status: 'active' }
-                ]));
-            }
-            if (!localStorage.getItem('appointments')) {
-                const today = new Date().toISOString().slice(0, 10);
-                localStorage.setItem('appointments', JSON.stringify([
-                    { id: 'A101', patient: 'John Doe', doctor: 'Dr. Sarah Chen', date: today, time: '09:00', status: 'confirmed', reason: 'Chest discomfort', phone: '555-0101' },
-                    { id: 'A102', patient: 'Jane Smith', doctor: 'Dr. James Wilson', date: today, time: '10:30', status: 'checked-in', reason: 'Migraine', phone: '555-0102' },
-                    { id: 'A103', patient: 'Emily Davis', doctor: 'Dr. Lisa Ray', date: today, time: '11:45', status: 'confirmed', reason: 'Rash', phone: '555-0103' },
-                    { id: 'A104', patient: 'Michael Brown', doctor: 'Dr. Sarah Chen', date: today, time: '14:15', status: 'pending', reason: 'Follow-up', phone: '555-0104' },
-                    { id: 'A105', patient: 'John Doe', doctor: 'Dr. James Wilson', date: '2025-04-11', time: '09:30', status: 'confirmed', reason: 'Neurology', phone: '555-0101' },
-                    { id: 'A106', patient: 'Emily Davis', doctor: 'Dr. Lisa Ray', date: '2025-04-11', time: '15:00', status: 'pending', reason: 'Acne', phone: '555-0103' }
-                ]));
-            }
-            if (!localStorage.getItem('billing')) {
-                localStorage.setItem('billing', JSON.stringify([
-                    { id: 'B1', patient: 'John Doe', date: new Date().toISOString().slice(0, 10), amount: 150, status: 'paid' },
-                    { id: 'B2', patient: 'Jane Smith', date: new Date().toISOString().slice(0, 10), amount: 200, status: 'pending' },
-                    { id: 'B3', patient: 'Emily Davis', date: new Date().toISOString().slice(0, 10), amount: 120, status: 'pending' }
-                ]));
+            async function handleProtectedResponse(response) {
+                if (response.status === 401 || response.status === 403) {
+                    localStorage.removeItem('authToken');
+                    localStorage.removeItem('currentUser');
+                    window.location.href = 'Frontend/Auth/login.html';
+                    return null;
+                }
+                return response.json();
             }
 
-            function renderProfile() {
-                document.getElementById('profileCard').innerHTML = `
-                <div class="profile-name"><i class="fas fa-user-circle"></i> <span>${currentUser.name}</span></div>
-                <div class="profile-detail"><i class="fas fa-envelope"></i> <span>${currentUser.email}</span></div>
-                <div class="profile-detail"><i class="fas fa-phone"></i> <span>${currentUser.phone}</span></div>
-                <div><span class="role-tag"><i class="fas fa-id-card"></i> Receptionist</span></div>
-            `;
+            async function loadData() {
+                try {
+                    const uRes = await fetch('http://localhost:5000/api/users', { headers: { 'Authorization': `Bearer ${token}` } });
+                    const uData = await handleProtectedResponse(uRes);
+                    if (uData && uData.success) globalUsers = uData.users;
+
+                    const aRes = await fetch('http://localhost:5000/api/appointments', { headers: { 'Authorization': `Bearer ${token}` } });
+                    const aData = await handleProtectedResponse(aRes);
+                    if (aData) globalAppointments = aData;
+
+                    const bRes = await fetch('http://localhost:5000/api/billing', { headers: { 'Authorization': `Bearer ${token}` } });
+                    const bData = await handleProtectedResponse(bRes);
+                    if (bData) globalBilling = bData;
+                } catch(e) { showToast('Error connecting to backend API', 'error'); }
             }
-            renderProfile();
 
             function updateClocks() {
                 const now = new Date();
@@ -766,23 +712,8 @@
                 document.getElementById('modalRoot').innerHTML = `<div class="modal-overlay" onclick="closeModal()"><div class="modal-window" onclick="event.stopPropagation()">${html}</div></div>`;
             }
             window.openModal = openModal;
-
-            // Navigation
-            const navItems = document.querySelectorAll('.nav-item');
-            navItems.forEach(nav => {
-                nav.addEventListener('click', () => {
-                    navItems.forEach(n => n.classList.remove('active'));
-                    nav.classList.add('active');
-                    const page = nav.dataset.page;
-                    const title = nav.querySelector('span')?.innerText || 'Dashboard';
-                    document.getElementById('mobileTitle').innerText = title;
-                    const desktopTitle = document.getElementById('desktopTitle');
-                    if (desktopTitle) desktopTitle.innerText = title;
-                    loadPage(page);
-                });
-            });
-
-            window.loadPage = function (page) {
+            window.loadPage = async function (page) {
+                await loadData();
                 const container = document.getElementById('contentArea');
                 if (page === 'dashboard') renderDashboard(container);
                 else if (page === 'appointments') renderAppointments(container);
@@ -791,18 +722,19 @@
                 else if (page === 'schedule') renderSchedule(container);
                 else if (page === 'checkin') renderCheckIn(container);
                 else if (page === 'billing') renderBilling(container);
+                window.currentDashboardPage = page;
+                window.updateSharedSidebarState?.(page);
             };
 
             function getTodayStr() { return new Date().toISOString().slice(0, 10); }
 
-            // Dashboard
             function renderDashboard(con) {
-                const apps = JSON.parse(localStorage.getItem('appointments')) || [];
+                const apps = globalAppointments;
                 const today = getTodayStr();
                 const todayApps = apps.filter(a => a.date === today).length;
                 const checkedIn = apps.filter(a => a.date === today && a.status === 'checked-in').length;
                 const pending = apps.filter(a => a.date === today && a.status === 'pending').length;
-                const patientsCount = JSON.parse(localStorage.getItem('users')).filter(u => u.role === 'patient').length;
+                const patientsCount = globalUsers.filter(u => u.role === 'patient').length;
                 con.innerHTML = `
                 <div class="stat-grid">
                     <div class="stat-block"><div class="stat-icon"><i class="fas fa-calendar-week"></i></div><div class="stat-info"><h4>TODAY</h4><div class="figure">${todayApps}</div></div></div>
@@ -819,16 +751,15 @@
                 </tbody></table></div></div>`;
             }
 
-            window.quickCheckin = function (id) {
-                let apps = JSON.parse(localStorage.getItem('appointments'));
-                let app = apps.find(a => a.id === id);
-                if (app && app.status !== 'cancelled') { app.status = 'checked-in'; localStorage.setItem('appointments', JSON.stringify(apps)); showToast(`${app.patient} checked-in`, 'success'); loadPage('dashboard'); }
-                else showToast('Cannot check-in', 'error');
+            window.quickCheckin = async function (id) {
+                try {
+                    await fetch(`http://localhost:5000/api/appointments/${id}`, { method: 'PUT', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` }, body: JSON.stringify({ status: 'checked-in' }) });
+                    showToast(`Checked-in`, 'success'); loadPage('dashboard');
+                } catch(e) {}
             };
 
-            // Appointments
             function renderAppointments(con) {
-                const apps = JSON.parse(localStorage.getItem('appointments'));
+                const apps = globalAppointments;
                 con.innerHTML = `<div class="content-card"><div class="card-header"><h3>📅 All appointments</h3><button class="btn-primary" onclick="addAppointmentModal()"><i class="fas fa-plus"></i> New</button></div>
             <div class="table-wrapper"><table><thead><tr><th>Date</th><th>Time</th><th>Patient</th><th>Doctor</th><th>Status</th><th>Actions</th></tr></thead><tbody>
             ${apps.map(a => `<tr><td>${a.date}</td><td>${a.time}</td><td>${a.patient}</td><td>${a.doctor}</td><td><span class="status-badge ${a.status === 'checked-in' ? 'badge-checkedin' : a.status === 'confirmed' ? 'badge-active' : 'badge-pending'}">${a.status}</span></td>
@@ -837,25 +768,64 @@
             <button class="icon-action delete-btn" onclick="cancelAppointment('${a.id}')"><i class="fas fa-trash-alt"></i></button></td></tr>`).join('')}
             </tbody></table></div></div>`;
             }
-            window.quickCheckinFromApp = function (id) { let apps = JSON.parse(localStorage.getItem('appointments')); let a = apps.find(x => x.id === id); if (a && a.status !== 'cancelled') { a.status = 'checked-in'; localStorage.setItem('appointments', JSON.stringify(apps)); showToast('Checked in', 'success'); loadPage('appointments'); } };
-            window.cancelAppointment = function (id) { if (confirm('Cancel appointment?')) { let apps = JSON.parse(localStorage.getItem('appointments')); let a = apps.find(x => x.id === id); if (a) a.status = 'cancelled'; localStorage.setItem('appointments', JSON.stringify(apps)); showToast('Cancelled', 'info'); loadPage('appointments'); } };
-            window.editAppointment = function (id) { let apps = JSON.parse(localStorage.getItem('appointments')); let a = apps.find(x => x.id === id); openModal(`<h3>✏️ Edit</h3><div class="form-field"><label>Date</label><input class="form-input" id="editDate" value="${a.date}"></div><div class="form-field"><label>Time</label><input class="form-input" id="editTime" value="${a.time}"></div><div class="form-field"><label>Status</label><select id="editStatus" class="form-input"><option ${a.status === 'pending' ? 'selected' : ''}>pending</option><option ${a.status === 'confirmed' ? 'selected' : ''}>confirmed</option><option ${a.status === 'checked-in' ? 'selected' : ''}>checked-in</option><option ${a.status === 'cancelled' ? 'selected' : ''}>cancelled</option></select></div><div class="modal-actions"><button class="btn-primary" onclick="saveEditAppt('${id}')">Update</button><button class="btn-secondary" onclick="closeModal()">Cancel</button></div>`); };
-            window.saveEditAppt = function (id) { let apps = JSON.parse(localStorage.getItem('appointments')); let a = apps.find(x => x.id === id); if (a) { a.date = document.getElementById('editDate')?.value || a.date; a.time = document.getElementById('editTime')?.value || a.time; a.status = document.getElementById('editStatus')?.value; localStorage.setItem('appointments', JSON.stringify(apps)); closeModal(); showToast('Updated', 'success'); loadPage('appointments'); } };
-            window.addAppointmentModal = function () { let patients = JSON.parse(localStorage.getItem('users')).filter(u => u.role === 'patient'); let doctors = JSON.parse(localStorage.getItem('users')).filter(u => u.role === 'doctor'); openModal(`<h3>➕ New appointment</h3><div class="form-field"><label>Patient</label><select id="newPat" class="form-input">${patients.map(p => `<option>${p.name}</option>`).join('')}</select></div><div class="form-field"><label>Doctor</label><select id="newDoc" class="form-input">${doctors.map(d => `<option>${d.name}</option>`).join('')}</select></div><div class="row-fields"><div class="form-field"><label>Date</label><input id="newDate" class="form-input" type="date" value="${getTodayStr()}"></div><div class="form-field"><label>Time</label><input id="newTime" class="form-input" type="time" value="11:00"></div></div><div class="form-field"><label>Reason</label><input id="newReason" class="form-input" placeholder="Reason"></div><div class="modal-actions"><button class="btn-primary" onclick="createNewAppt()">Schedule</button><button class="btn-secondary" onclick="closeModal()">Cancel</button></div>`); };
-            window.createNewAppt = function () { let apps = JSON.parse(localStorage.getItem('appointments')); let newId = 'A' + Date.now(); apps.push({ id: newId, patient: document.getElementById('newPat').value, doctor: document.getElementById('newDoc').value, date: document.getElementById('newDate').value, time: document.getElementById('newTime').value, status: 'pending', reason: document.getElementById('newReason').value || '' }); localStorage.setItem('appointments', JSON.stringify(apps)); closeModal(); showToast('Appointment created', 'success'); loadPage('appointments'); };
-            function renderPatients(con) { let patients = JSON.parse(localStorage.getItem('users')).filter(u => u.role === 'patient'); con.innerHTML = `<div class="content-card"><div class="card-header"><h3>🧑‍⚕️ Patient registry</h3><button class="btn-primary" onclick="addPatientModal()"><i class="fas fa-user-plus"></i> Register</button></div><div class="table-wrapper"> <table><thead><tr><th>Name</th><th>Email</th><th>Phone</th><th></th></tr></thead><tbody>${patients.map(p => `<tr><td>${p.name}</td><td>${p.email}</td><td>${p.phone}</td><td><button class="icon-action" onclick="showToast('Patient info','info')"><i class="fas fa-info-circle"></i></button></td></tr>`).join('')}</tbody></table></div></div>`; }
-            window.addPatientModal = function () { openModal(`<h3>Register patient</h3><div class="form-field"><label>Full name</label><input id="patName" class="form-input"></div><div class="form-field"><label>Email</label><input id="patEmail" class="form-input" type="email"></div><div class="form-field"><label>Phone</label><input id="patPhone" class="form-input"></div><div class="modal-actions"><button class="btn-primary" onclick="saveNewPatient()">Register</button><button class="btn-secondary" onclick="closeModal()">Cancel</button></div>`); };
-            window.saveNewPatient = function () { let users = JSON.parse(localStorage.getItem('users')); let newId = 'P' + Math.floor(Math.random() * 900 + 100); users.push({ id: newId, name: document.getElementById('patName').value, email: document.getElementById('patEmail').value, phone: document.getElementById('patPhone').value, role: 'patient', status: 'active' }); localStorage.setItem('users', JSON.stringify(users)); closeModal(); showToast('Patient added', 'success'); loadPage('patients'); };
-            function renderDoctors(con) { let docs = JSON.parse(localStorage.getItem('users')).filter(u => u.role === 'doctor'); con.innerHTML = `<div class="content-card"><h3>👩‍⚕️ Medical team</h3><div class="table-wrapper"><table><thead><tr><th>Doctor</th><th>Specialization</th><th>Contact</th></tr></thead><tbody>${docs.map(d => `<tr><td>${d.name}</td><td>${d.specialization || 'General'}</td><td>${d.phone}</td></tr>`).join('')}</tbody></table></div></div>`; }
-            function renderSchedule(con) { let apps = JSON.parse(localStorage.getItem('appointments')); let today = getTodayStr(); let todayApps = apps.filter(a => a.date === today).sort((a, b) => a.time.localeCompare(b.time)); con.innerHTML = `<div class="content-card"><div class="card-header"><h3>⏰ Schedule ${today}</h3></div><div class="table-wrapper"><table><thead><tr><th>Time</th><th>Patient</th><th>Doctor</th><th>Reason</th><th>Status</th></tr></thead><tbody>${todayApps.map(a => `<tr><td>${a.time}</td><td>${a.patient}</td><td>${a.doctor}</td><td>${a.reason || '-'}</td><td><span class="status-badge ${a.status === 'checked-in' ? 'badge-checkedin' : a.status === 'confirmed' ? 'badge-active' : 'badge-pending'}">${a.status}</span></td></tr>`).join('')}</tbody></table></div></div>`; }
-            function renderCheckIn(con) { let apps = JSON.parse(localStorage.getItem('appointments')); let today = getTodayStr(); let pendingApps = apps.filter(a => a.date === today && a.status !== 'checked-in' && a.status !== 'cancelled'); con.innerHTML = `<div class="content-card"><div class="card-header"><h3>🖐️ Quick Check‑in</h3></div><div class="table-wrapper"><table><thead><tr><th>Time</th><th>Patient</th><th>Doctor</th><th>Action</th></tr></thead><tbody>${pendingApps.map(a => `<tr><td>${a.time}</td><td>${a.patient}</td><td>${a.doctor}</td><td><button class="btn-primary" onclick="quickCheckin('${a.id}')">Check-in</button></td></tr>`).join('')}</tbody></table></div></div>`; }
-            function renderBilling(con) { let bills = JSON.parse(localStorage.getItem('billing')); con.innerHTML = `<div class="content-card"><div class="card-header"><h3>💰 Billing</h3><button class="btn-primary" onclick="addBillModal()"><i class="fas fa-plus"></i> New bill</button></div><div class="table-wrapper"><table><thead><tr><th>Patient</th><th>Date</th><th>Amount</th><th>Status</th><th></th></tr></thead><tbody>${bills.map(b => `<tr><td>${b.patient}</td><td>${b.date}</td><td>$${b.amount}</td><td><span class="status-badge ${b.status === 'paid' ? 'badge-active' : 'badge-pending'}">${b.status}</span></td><td>${b.status !== 'paid' ? `<button class="btn-secondary" onclick="payBill('${b.id}')">Pay</button>` : '✔️'}</td></tr>`).join('')}</tbody></table></div></div>`; }
-            window.addBillModal = function () { let patients = JSON.parse(localStorage.getItem('users')).filter(u => u.role === 'patient'); openModal(`<h3>Create invoice</h3><div class="form-field"><label>Patient</label><select id="billPatient" class="form-input">${patients.map(p => `<option>${p.name}</option>`).join('')}</select></div><div class="form-field"><label>Amount ($)</label><input id="billAmount" class="form-input" type="number"></div><div class="modal-actions"><button class="btn-primary" onclick="saveBill()">Create</button><button class="btn-secondary" onclick="closeModal()">Cancel</button></div>`); };
-            window.saveBill = function () { let bills = JSON.parse(localStorage.getItem('billing')); let newId = 'B' + Date.now(); bills.push({ id: newId, patient: document.getElementById('billPatient').value, date: getTodayStr(), amount: parseFloat(document.getElementById('billAmount').value) || 0, status: 'pending' }); localStorage.setItem('billing', JSON.stringify(bills)); closeModal(); showToast('Bill created', 'success'); loadPage('billing'); };
-            window.payBill = function (id) { let bills = JSON.parse(localStorage.getItem('billing')); let b = bills.find(x => x.id === id); if (b) b.status = 'paid'; localStorage.setItem('billing', JSON.stringify(bills)); showToast('Payment recorded', 'success'); loadPage('billing'); };
-            document.getElementById('logoutBtn').addEventListener('click', () => { showToast('Logging out...', 'info'); setTimeout(() => { localStorage.removeItem('currentUser'); alert('Logged out'); }, 800); });
+
+            window.quickCheckinFromApp = async function (id) { 
+                try { await fetch(`http://localhost:5000/api/appointments/${id}`, { method: 'PUT', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` }, body: JSON.stringify({ status: 'checked-in' }) }); showToast('Checked in', 'success'); loadPage('appointments'); } catch(e){}
+            };
+            window.cancelAppointment = async function (id) { 
+                if (confirm('Cancel appointment?')) { try { await fetch(`http://localhost:5000/api/appointments/${id}`, { method: 'DELETE', headers: { 'Authorization': `Bearer ${token}` } }); showToast('Cancelled', 'info'); loadPage('appointments'); } catch(e){} } 
+            };
+            window.editAppointment = function (id) { 
+                let a = globalAppointments.find(x => x.id === id); 
+                openModal(`<h3>✏️ Edit</h3><div class="form-field"><label>Date</label><input class="form-input" id="editDate" value="${a.date}"></div><div class="form-field"><label>Time</label><input class="form-input" id="editTime" value="${a.time}"></div><div class="form-field"><label>Status</label><select id="editStatus" class="form-input"><option ${a.status === 'pending' ? 'selected' : ''}>pending</option><option ${a.status === 'confirmed' ? 'selected' : ''}>confirmed</option><option ${a.status === 'checked-in' ? 'selected' : ''}>checked-in</option><option ${a.status === 'cancelled' ? 'selected' : ''}>cancelled</option></select></div><div class="modal-actions"><button class="btn-primary" onclick="saveEditAppt('${id}')">Update</button><button class="btn-secondary" onclick="closeModal()">Cancel</button></div>`); 
+            };
+            window.saveEditAppt = async function (id) { 
+                try { await fetch(`http://localhost:5000/api/appointments/${id}`, { method: 'PUT', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` }, body: JSON.stringify({ date: document.getElementById('editDate').value, time: document.getElementById('editTime').value, status: document.getElementById('editStatus').value }) }); closeModal(); showToast('Updated', 'success'); loadPage('appointments'); } catch(e){} 
+            };
+            window.addAppointmentModal = function () { 
+                let patients = globalUsers.filter(u => u.role === 'patient'); let doctors = globalUsers.filter(u => u.role === 'doctor'); 
+                openModal(`<h3>➕ New appointment</h3><div class="form-field"><label>Patient</label><select id="newPat" class="form-input">${patients.map(p => `<option>${p.name}</option>`).join('')}</select></div><div class="form-field"><label>Doctor</label><select id="newDoc" class="form-input">${doctors.map(d => `<option>${d.name}</option>`).join('')}</select></div><div class="row-fields"><div class="form-field"><label>Date</label><input id="newDate" class="form-input" type="date" value="${getTodayStr()}"></div><div class="form-field"><label>Time</label><input id="newTime" class="form-input" type="time" value="11:00"></div></div><div class="form-field"><label>Reason</label><input id="newReason" class="form-input" placeholder="Reason"></div><div class="modal-actions"><button class="btn-primary" onclick="createNewAppt()">Schedule</button><button class="btn-secondary" onclick="closeModal()">Cancel</button></div>`); 
+            };
+            window.createNewAppt = async function () { 
+                try { await fetch('http://localhost:5000/api/appointments', { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` }, body: JSON.stringify({ patient: document.getElementById('newPat').value, doctor: document.getElementById('newDoc').value, date: document.getElementById('newDate').value, time: document.getElementById('newTime').value, status: 'pending', reason: document.getElementById('newReason').value || '' }) }); closeModal(); showToast('Appointment created', 'success'); loadPage('appointments'); } catch(e){} 
+            };
+            
+            function renderPatients(con) {
+                let patients = globalUsers.filter(u => u.role === 'patient');
+                con.innerHTML = `<div class="content-card"><div class="card-header"><h3>🧑‍⚕️ Patient registry</h3><button class="btn-primary" onclick="addPatientModal()"><i class="fas fa-user-plus"></i> Register</button></div><div class="table-wrapper"> <table><thead><tr><th>Name</th><th>Email</th><th>Phone</th><th></th></tr></thead><tbody>${patients.map(p => `<tr><td>${p.name}</td><td>${p.email}</td><td>${p.phone}</td><td><button class="icon-action" onclick="showToast('Patient info','info')"><i class="fas fa-info-circle"></i></button></td></tr>`).join('')}</tbody></table></div></div>`;
+            }
+            window.addPatientModal = function () { openModal(`<h3>Register patient</h3><div class="form-field"><label>Full name</label><input id="patName" class="form-input"></div><div class="form-field"><label>Email</label><input id="patEmail" class="form-input" type="email"></div><div class="form-field"><label>Phone</label><input id="patPhone" class="form-input"></div><div class="form-field"><label>Password</label><input id="patPass" class="form-input" type="password" value="patient123"></div><div class="modal-actions"><button class="btn-primary" onclick="saveNewPatient()">Register</button><button class="btn-secondary" onclick="closeModal()">Cancel</button></div>`); };
+            window.saveNewPatient = async function () { 
+                try { await fetch('http://localhost:5000/api/signup', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name: document.getElementById('patName').value, email: document.getElementById('patEmail').value, phone: document.getElementById('patPhone').value, role: 'patient', password: document.getElementById('patPass').value }) }); closeModal(); showToast('Patient added', 'success'); loadPage('patients'); } catch(e){} 
+            };
+            function renderDoctors(con) { let docs = globalUsers.filter(u => u.role === 'doctor'); con.innerHTML = `<div class="content-card"><h3>👩‍⚕️ Medical team</h3><div class="table-wrapper"><table><thead><tr><th>Doctor</th><th>Specialization</th><th>Contact</th></tr></thead><tbody>${docs.map(d => `<tr><td>${d.name}</td><td>${d.specialization || 'General'}</td><td>${d.phone}</td></tr>`).join('')}</tbody></table></div></div>`; }
+            function renderSchedule(con) { let apps = globalAppointments; let today = getTodayStr(); let todayApps = apps.filter(a => a.date === today).sort((a, b) => a.time.localeCompare(b.time)); con.innerHTML = `<div class="content-card"><div class="card-header"><h3>⏰ Schedule ${today}</h3></div><div class="table-wrapper"><table><thead><tr><th>Time</th><th>Patient</th><th>Doctor</th><th>Reason</th><th>Status</th></tr></thead><tbody>${todayApps.map(a => `<tr><td>${a.time}</td><td>${a.patient}</td><td>${a.doctor}</td><td>${a.reason || '-'}</td><td><span class="status-badge ${a.status === 'checked-in' ? 'badge-checkedin' : a.status === 'confirmed' ? 'badge-active' : 'badge-pending'}">${a.status}</span></td></tr>`).join('')}</tbody></table></div></div>`; }
+            function renderCheckIn(con) { let apps = globalAppointments; let today = getTodayStr(); let pendingApps = apps.filter(a => a.date === today && a.status !== 'checked-in' && a.status !== 'cancelled'); con.innerHTML = `<div class="content-card"><div class="card-header"><h3>🖐️ Quick Check‑in</h3></div><div class="table-wrapper"><table><thead><tr><th>Time</th><th>Patient</th><th>Doctor</th><th>Action</th></tr></thead><tbody>${pendingApps.map(a => `<tr><td>${a.time}</td><td>${a.patient}</td><td>${a.doctor}</td><td><button class="btn-primary" onclick="quickCheckin('${a.id}')">Check-in</button></td></tr>`).join('')}</tbody></table></div></div>`; }
+            function renderBilling(con) { let bills = globalBilling; con.innerHTML = `<div class="content-card"><div class="card-header"><h3>💰 Billing</h3><button class="btn-primary" onclick="addBillModal()"><i class="fas fa-plus"></i> New bill</button></div><div class="table-wrapper"><table><thead><tr><th>Patient</th><th>Date</th><th>Amount</th><th>Status</th><th></th></tr></thead><tbody>${bills.map(b => `<tr><td>${b.patient}</td><td>${b.date}</td><td>$${b.amount}</td><td><span class="status-badge ${b.status === 'paid' ? 'badge-active' : 'badge-pending'}">${b.status}</span></td><td>${b.status !== 'paid' ? `<button class="btn-secondary" onclick="payBill('${b.id}')">Pay</button>` : '✔️'}</td></tr>`).join('')}</tbody></table></div></div>`; }
+            window.addBillModal = function () { let patients = globalUsers.filter(u => u.role === 'patient'); openModal(`<h3>Create invoice</h3><div class="form-field"><label>Patient</label><select id="billPatient" class="form-input">${patients.map(p => `<option>${p.name}</option>`).join('')}</select></div><div class="form-field"><label>Amount ($)</label><input id="billAmount" class="form-input" type="number"></div><div class="modal-actions"><button class="btn-primary" onclick="saveBill()">Create</button><button class="btn-secondary" onclick="closeModal()">Cancel</button></div>`); };
+            window.saveBill = async function () { 
+                try { await fetch('http://localhost:5000/api/billing', { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` }, body: JSON.stringify({ patient: document.getElementById('billPatient').value, date: getTodayStr(), amount: parseFloat(document.getElementById('billAmount').value) || 0, status: 'pending' }) }); closeModal(); showToast('Bill created', 'success'); loadPage('billing'); } catch(e){} 
+            };
+            window.payBill = async function (id) { 
+                try { await fetch(`http://localhost:5000/api/billing/${id}`, { method: 'PUT', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` }, body: JSON.stringify({ status: 'paid' }) }); showToast('Payment recorded', 'success'); loadPage('billing'); } catch(e){} 
+            };
             loadPage('dashboard');
         })();
+    </script>
+    <script>
+        fetch('Frontend/components/sidebar.html')
+            .then(response => response.text())
+            .then(html => {
+                const wrapper = document.createElement('div');
+                wrapper.innerHTML = html;
+                wrapper.querySelectorAll('script').forEach(scriptNode => {
+                    const script = document.createElement('script');
+                    script.textContent = scriptNode.textContent;
+                    document.body.appendChild(script);
+                    script.remove();
+                });
+            })
+            .catch(error => console.error('Sidebar failed:', error));
     </script>
 </body>
 

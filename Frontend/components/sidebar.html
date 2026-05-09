@@ -1,0 +1,386 @@
+<script>
+    (function () {
+        const role = document.body.dataset.sidebarRole;
+        const dashboard = document.querySelector('.dashboard');
+
+        if (!role || !dashboard || document.getElementById('sidebar')) {
+            return;
+        }
+
+        if (!document.getElementById('sharedSidebarHoverStyles')) {
+            const style = document.createElement('style');
+            style.id = 'sharedSidebarHoverStyles';
+            style.textContent = `
+            @media (min-width: 1024px) {
+                .dashboard {
+                    --sidebar-collapsed-width: 88px;
+                    --sidebar-expanded-width: 230px;
+                }
+                body[data-sidebar-role="admin"] .dashboard {
+                    --sidebar-expanded-width: 250px;
+                }
+                .dashboard .sidebar,
+                .dashboard .main-panel,
+                .dashboard .sidebar-header h2,
+                .dashboard .nav-item span,
+                .dashboard .logout-button span,
+                .dashboard #sidebarUserMeta {
+                    transition: all 0.22s ease;
+                }
+                .dashboard.sidebar-compact .sidebar {
+                    width: var(--sidebar-collapsed-width) !important;
+                }
+                .dashboard.sidebar-expanded .sidebar {
+                    width: var(--sidebar-expanded-width) !important;
+                }
+                .dashboard.sidebar-compact > .main-panel {
+                    margin-left: var(--sidebar-collapsed-width) !important;
+                }
+                .dashboard.sidebar-expanded > .main-panel {
+                    margin-left: var(--sidebar-expanded-width) !important;
+                }
+                .dashboard.sidebar-compact .sidebar-header {
+                    padding-left: 16px !important;
+                    padding-right: 16px !important;
+                    justify-content: center;
+                }
+                .dashboard.sidebar-compact .sidebar-header h2,
+                .dashboard.sidebar-compact .nav-item span,
+                .dashboard.sidebar-compact .logout-button span,
+                .dashboard.sidebar-compact #sidebarUserMeta {
+                    opacity: 0;
+                    width: 0;
+                    max-width: 0;
+                    overflow: hidden;
+                    pointer-events: none;
+                }
+                .dashboard.sidebar-compact .sidebar-logo-img {
+                    margin: 0 auto;
+                }
+                .dashboard.sidebar-compact .nav-menu {
+                    padding-left: 10px !important;
+                    padding-right: 10px !important;
+                }
+                .dashboard.sidebar-compact .nav-item {
+                    justify-content: center;
+                    padding-left: 0 !important;
+                    padding-right: 0 !important;
+                }
+                .dashboard.sidebar-compact .nav-item i {
+                    margin: 0 !important;
+                    width: auto !important;
+                }
+                .dashboard.sidebar-compact .logout-button {
+                    justify-content: center;
+                    padding-left: 0 !important;
+                    padding-right: 0 !important;
+                }
+                .dashboard.sidebar-compact #sidebarUserMeta {
+                    margin-top: 0 !important;
+                    margin-bottom: 12px !important;
+                    padding-top: 0 !important;
+                    border-top: none !important;
+                }
+            }
+        `;
+            document.head.appendChild(style);
+        }
+
+        const configs = {
+            admin: {
+                title: 'ClinicCare Pro',
+                headerIcon: 'fas fa-stethoscope',
+                logoutLabel: 'Secure logout',
+                userRoleLabel: 'System Admin',
+                expandedWidth: 250,
+                items: [
+                    { page: 'dashboard', icon: 'fas fa-chart-pie', label: 'Dashboard' },
+                    { page: 'users', icon: 'fas fa-users', label: 'User management' },
+                    { page: 'doctors', icon: 'fas fa-user-md', label: 'Doctors' },
+                    { page: 'appointments', icon: 'fas fa-calendar-check', label: 'Appointments' },
+                    { page: 'departments', icon: 'fas fa-building', label: 'Departments' },
+                    { page: 'login-history', icon: 'fas fa-sign-in-alt', label: 'Login History' },
+                    { page: 'reports', icon: 'fas fa-chart-line', label: 'Analytics' },
+                    { page: 'audit', icon: 'fas fa-history', label: 'Audit trail' },
+                    { page: 'settings', icon: 'fas fa-sliders-h', label: 'Settings' }
+                ],
+                logout() {
+                    if (window.addAuditLog) {
+                        window.addAuditLog('User logged out');
+                    }
+                    if (window.showToast) {
+                        window.showToast('Logging out securely...', 'info');
+                    }
+                    setTimeout(() => {
+                        localStorage.removeItem('currentUser');
+                        localStorage.removeItem('authToken');
+                        window.location.href = 'Frontend/Auth/login.html';
+                    }, 800);
+                }
+            },
+            doctor: {
+                title: 'ClinicCare · Doctor',
+                headerIcon: 'fas fa-stethoscope',
+                logoutLabel: 'Logout',
+                expandedWidth: 230,
+                userRoleLabel(currentUser) {
+                    return currentUser.specialization || currentUser.role || 'Doctor';
+                },
+                items: [
+                    { page: 'dashboard', icon: 'fas fa-chart-pie', label: 'Dashboard' },
+                    { page: 'appointments', icon: 'fas fa-calendar-check', label: 'My Appointments' },
+                    { page: 'patients', icon: 'fas fa-users', label: 'My Patients' },
+                    { page: 'records', icon: 'fas fa-notes-medical', label: 'Medical Records' },
+                    { page: 'prescriptions', icon: 'fas fa-prescription', label: 'Prescriptions' },
+                    { page: 'schedule', icon: 'fas fa-clock', label: "Today's Schedule" },
+                    { page: 'settings', icon: 'fas fa-cog', label: 'Settings' }
+                ],
+                logout() {
+                    if (window.showToast) {
+                        window.showToast('Logging out...', 'info');
+                    }
+                    setTimeout(() => {
+                        localStorage.removeItem('currentUser');
+                        localStorage.removeItem('authToken');
+                        window.location.href = 'Frontend/Auth/login.html';
+                    }, 800);
+                }
+            },
+            patient: {
+                title: '',
+                headerIcon: './Frontend/assets/logo.png',
+                logoutLabel: 'Sign out',
+                userRoleLabel: 'Patient',
+                expandedWidth: 230,
+                items: [
+                    { page: 'dashboard', icon: 'fas fa-chart-pie', label: 'Dashboard' },
+                    { page: 'appointments', icon: 'fas fa-calendar-check', label: 'Appointments' },
+                    { page: 'records', icon: 'fas fa-notes-medical', label: 'Medical Records' },
+                    { page: 'prescriptions', icon: 'fas fa-prescription', label: 'Prescriptions' },
+                    { page: 'billing', icon: 'fas fa-file-invoice-dollar', label: 'Billing' },
+                    { page: 'profile', icon: 'fas fa-id-card', label: 'My Profile' }
+                ],
+                logout() {
+                    if (window.showToast) {
+                        window.showToast('Logging out...', 'info');
+                    }
+                    setTimeout(() => {
+                        localStorage.removeItem('currentUser');
+                        alert('Logged out');
+                    }, 800);
+                }
+            },
+            receptionist: {
+                title: 'ClinicCare · Front Desk',
+                headerIcon: 'fas fa-stethoscope',
+                logoutLabel: 'Sign out',
+                userRoleLabel: 'Receptionist',
+                expandedWidth: 230,
+                items: [
+                    { page: 'dashboard', icon: 'fas fa-chart-line', label: 'Dashboard' },
+                    { page: 'appointments', icon: 'fas fa-calendar-check', label: 'Appointments' },
+                    { page: 'patients', icon: 'fas fa-user-friends', label: 'Patients' },
+                    { page: 'doctors', icon: 'fas fa-user-md', label: 'Doctors' },
+                    { page: 'schedule', icon: 'fas fa-hourglass-half', label: "Today's Schedule" },
+                    { page: 'checkin', icon: 'fas fa-fingerprint', label: 'Checkin' },
+                    { page: 'billing', icon: 'fas fa-credit-card', label: 'Billing' }
+                ],
+                logout() {
+                    if (window.showToast) {
+                        window.showToast('Logging out...', 'info');
+                    }
+                    setTimeout(() => {
+                        localStorage.removeItem('currentUser');
+                        alert('Logged out');
+                    }, 800);
+                }
+            }
+        };
+
+        const config = configs[role];
+        if (!config) {
+            return;
+        }
+
+        dashboard.style.setProperty('--sidebar-expanded-width', `${config.expandedWidth || 230}px`);
+        dashboard.style.setProperty('--sidebar-collapsed-width', '88px');
+
+        const navHtml = config.items.map((item, index) => `
+        <div class="nav-item${index === 0 ? ' active' : ''}" data-page="${item.page}">
+            <i class="${item.icon}"></i> <span>${item.label}</span>
+        </div>
+    `).join('');
+
+        dashboard.insertAdjacentHTML('afterbegin', `
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
+        <div class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="brand-icon"><img src="./assets/logo.png" alt="" style="width:auto;height:65.2px;margin-left:10px;border-radius: 0%; margin-left:144px;margin-top:-20px;"></div>
+                
+            </div>
+            <nav class="nav-menu">${navHtml}</nav>
+            <div class="logout-button" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> <span>${config.logoutLabel}</span></div>
+            <div id="sidebarUserMeta" style="display:flex; align-items:center; gap:12px; margin:0 16px 20px; font-size:0.72rem; line-height:1.3; color:rgba(255,255,255,0.72); padding-top:16px; border-top:1px solid rgba(255,255,255,0.08);">
+                <img id="sidebarUserPic" src="" style="width:34px; height:34px; border-radius:50%; object-fit:cover; border:1.5px solid rgba(255,255,255,0.2);">
+                <div style="min-width:0; flex:1;">
+                    <div id="sidebarUserName" style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-weight:600; color:#fff;"></div>
+                    <div id="sidebarUserRole" style="color:#9ec5ff; font-size:0.65rem;"></div>
+                </div>
+            </div>
+        </div>
+    `);
+
+        function renderSidebarProfile() {
+            const currentUser = JSON.parse(localStorage.getItem('currentUser') || 'null');
+            const nameEl = document.getElementById('sidebarUserName');
+            const roleEl = document.getElementById('sidebarUserRole');
+            if (!currentUser || !nameEl || !roleEl) {
+                return;
+            }
+
+            const roleLabel = typeof config.userRoleLabel === 'function'
+                ? config.userRoleLabel(currentUser)
+                : (config.userRoleLabel || currentUser.role || '');
+
+            nameEl.textContent = currentUser.name || '';
+            roleEl.textContent = roleLabel;
+
+            const picEl = document.getElementById('sidebarUserPic');
+            if (picEl) {
+                picEl.src = currentUser.profilePic || `https://ui-avatars.com/api/?name=${encodeURIComponent(currentUser.name || 'User')}&background=2c7da0&color=fff`;
+            }
+        }
+
+        function syncTitles(page) {
+            const currentItem = document.querySelector(`.nav-item[data-page="${page}"] span`);
+            const title = currentItem ? currentItem.innerText : page;
+            const headerTitle = document.getElementById('headerTitle');
+            const mobileTitle = document.getElementById('mobileTitle');
+            const desktopTitle = document.getElementById('desktopTitle');
+
+            if (headerTitle) {
+                headerTitle.innerText = title;
+            }
+            if (mobileTitle) {
+                mobileTitle.innerText = title;
+            }
+            if (desktopTitle) {
+                desktopTitle.innerText = title;
+            }
+        }
+
+        function setActive(page) {
+            document.querySelectorAll('.nav-item').forEach((item) => {
+                item.classList.toggle('active', item.dataset.page === page);
+            });
+            syncTitles(page);
+        }
+
+        function closeSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebarOverlay');
+            if (sidebar) {
+                sidebar.classList.remove('open');
+                sidebar.classList.remove('mobile-open');
+            }
+            if (overlay) {
+                overlay.classList.remove('active');
+            }
+            document.body.style.overflow = '';
+        }
+
+        function isHoverCollapseDesktop() {
+            return window.matchMedia('(min-width: 1024px)').matches;
+        }
+
+        function setDesktopSidebarState(expanded) {
+            if (!isHoverCollapseDesktop()) {
+                dashboard.classList.remove('sidebar-compact');
+                dashboard.classList.remove('sidebar-expanded');
+                return;
+            }
+            dashboard.classList.toggle('sidebar-expanded', expanded);
+            dashboard.classList.toggle('sidebar-compact', !expanded);
+        }
+
+        function openSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebarOverlay');
+            if (sidebar) {
+                if (role === 'admin') {
+                    sidebar.classList.add('mobile-open');
+                } else {
+                    sidebar.classList.add('open');
+                }
+            }
+            if (overlay) {
+                overlay.classList.add('active');
+            }
+            document.body.style.overflow = 'hidden';
+        }
+
+        const menuToggle = document.querySelector('.menu-toggle-btn, .menu-toggle');
+        if (menuToggle) {
+            menuToggle.addEventListener('click', function (event) {
+                event.stopPropagation();
+                const sidebar = document.getElementById('sidebar');
+                if (!sidebar) {
+                    return;
+                }
+                const isOpen = role === 'admin'
+                    ? sidebar.classList.contains('mobile-open')
+                    : sidebar.classList.contains('open');
+
+                if (isOpen) {
+                    closeSidebar();
+                } else {
+                    openSidebar();
+                }
+            });
+        }
+
+        const overlay = document.getElementById('sidebarOverlay');
+        if (overlay) {
+            overlay.addEventListener('click', closeSidebar);
+        }
+
+        const sidebar = document.getElementById('sidebar');
+        // Hover logic removed as per user request for permanently open sidebar
+
+        window.addEventListener('resize', function () {
+            if (isHoverCollapseDesktop()) {
+                setDesktopSidebarState(true);
+            }
+        });
+
+        document.querySelectorAll('.nav-item').forEach((item) => {
+            item.addEventListener('click', function () {
+                const page = this.dataset.page;
+                setActive(page);
+                window.currentDashboardPage = page;
+                if (window.loadPage) {
+                    window.loadPage(page);
+                }
+                if (window.innerWidth < 1024) {
+                    closeSidebar();
+                }
+            });
+        });
+
+        const logoutBtn = document.getElementById('logoutBtn');
+        if (logoutBtn) {
+            logoutBtn.addEventListener('click', function () {
+                config.logout();
+            });
+        }
+
+        window.renderSidebarProfile = renderSidebarProfile;
+        window.updateSharedSidebarState = function (page) {
+            setActive(page);
+        };
+
+        setDesktopSidebarState(true);
+        renderSidebarProfile();
+        setActive(window.currentDashboardPage || 'dashboard');
+    })();
+</script>

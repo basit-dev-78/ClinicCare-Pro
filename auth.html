@@ -682,7 +682,11 @@
                         <span><i class="fas fa-arrow-right-to-bracket"></i> Sign In</span>
                     </button>
                     <div class="demo-credentials">
-                        <i class="fas fa-flask"></i> Demo: doctor@example.com / doctor123
+                        <i class="fas fa-flask"></i> Demo Accounts:<br>
+                        Admin: admin@example.com / admin123<br>
+                        Doctor: doctor@example.com / doctor123<br>
+                        Patient: patient@example.com / patient123<br>
+                        Receptionist: receptionist@example.com / receptionist123
                     </div>
                     <div class="form-footer">
                         <p>Don't have an account? <a href="#" onclick="switchForm('register'); return false;">Create one</a></p>
@@ -769,18 +773,18 @@
     <div id="toast" class="toast-message"></div>
 
     <script>
-        // User database
-        let users = JSON.parse(localStorage.getItem('users')) || [];
-        
-        if (users.length === 0) {
-            users = [
-                { id: '1', name: 'Dr. John Smith', email: 'doctor@example.com', password: 'doctor123', role: 'doctor', phone: '+1 (555) 123-4567', specialization: 'Cardiology' },
-                { id: '2', name: 'Jane Doe', email: 'patient@example.com', password: 'patient123', role: 'patient', phone: '+1 (555) 234-5678' },
-                { id: '3', name: 'Admin User', email: 'admin@example.com', password: 'admin123', role: 'admin', phone: '+1 (555) 345-6789' },
-                { id: '4', name: 'Sarah Wilson', email: 'receptionist@example.com', password: 'reception123', role: 'receptionist', phone: '+1 (555) 456-7890' }
-            ];
-            localStorage.setItem('users', JSON.stringify(users));
-        }
+        // ============================================================================
+        // LOCAL AUTHENTICATION SYSTEM - No Server Required
+        // ============================================================================
+
+        // ============================================================================
+        // API CONFIGURATION
+        // ============================================================================
+        const API_URL = 'http://localhost:5000/api';
+
+        // ============================================================================
+        // UI FUNCTIONS
+        // ============================================================================
 
         function showToast(message, type = 'success') {
             const toast = document.getElementById('toast');
@@ -817,7 +821,11 @@
             specField.style.display = role === 'doctor' ? 'block' : 'none';
         };
 
-        window.handleLogin = function(e) {
+        // ============================================================================
+        // AUTHENTICATION HANDLERS - Connected to Express API
+        // ============================================================================
+
+        window.handleLogin = async function(e) {
             e.preventDefault();
             const email = document.getElementById('loginEmail').value;
             const password = document.getElementById('loginPassword').value;
@@ -826,23 +834,42 @@
             btn.innerHTML = '<span class="spinner"></span> Authenticating...';
             btn.disabled = true;
             
-            setTimeout(() => {
-                const user = users.find(u => u.email === email && u.password === password);
-                if (user) {
+            try {
+                const response = await fetch(`${API_URL}/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    const token = result.token;
+                    const user = result.user;
+
+                    // Save auth token and user info
+                    localStorage.setItem('authToken', token);
                     localStorage.setItem('currentUser', JSON.stringify(user));
+
                     showToast(`Welcome back, ${user.name}!`, 'success');
+                    
                     setTimeout(() => {
                         window.location.href = `${user.role}-dashboard.html`;
                     }, 1200);
                 } else {
-                    showToast('Invalid email or password.', 'error');
+                    showToast(result.message || 'Login failed', 'error');
                     btn.innerHTML = '<span><i class="fas fa-arrow-right-to-bracket"></i> Sign In</span>';
                     btn.disabled = false;
                 }
-            }, 700);
+            } catch (error) {
+                console.error('Login error:', error);
+                showToast('Unable to connect to server. Is the backend running?', 'error');
+                btn.innerHTML = '<span><i class="fas fa-arrow-right-to-bracket"></i> Sign In</span>';
+                btn.disabled = false;
+            }
         };
 
-        window.handleRegister = function(e) {
+        window.handleRegister = async function(e) {
             e.preventDefault();
             const name = document.getElementById('regName').value;
             const email = document.getElementById('regEmail').value;
@@ -853,6 +880,7 @@
             const specialization = document.getElementById('regSpecialization')?.value || '';
             const btn = document.getElementById('registerBtn');
             
+            // Validation
             if (!name || !email || !phone || !role || !password) {
                 showToast('Please fill all required fields.', 'error');
                 return;
@@ -865,38 +893,59 @@
                 showToast('Password must be at least 6 characters.', 'error');
                 return;
             }
-            if (users.find(u => u.email === email)) {
-                showToast('Email already registered.', 'error');
-                return;
-            }
             
             btn.innerHTML = '<span class="spinner"></span> Creating account...';
             btn.disabled = true;
             
-            setTimeout(() => {
-                const newUser = {
-                    id: Date.now().toString(),
-                    name,
-                    email,
-                    password,
-                    phone,
-                    role,
-                    specialization: role === 'doctor' ? specialization : undefined
-                };
-                users.push(newUser);
-                localStorage.setItem('users', JSON.stringify(users));
-                localStorage.setItem('currentUser', JSON.stringify(newUser));
-                showToast('Account created successfully!', 'success');
-                setTimeout(() => {
-                    window.location.href = `${role}-dashboard.html`;
-                }, 1200);
-            }, 700);
+            try {
+                const response = await fetch(`${API_URL}/signup`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        name,
+                        email,
+                        phone,
+                        role,
+                        password,
+                        specialization: role === 'doctor' ? specialization : ''
+                    })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    showToast('Account created successfully! Please sign in.', 'success');
+                    setTimeout(() => {
+                        switchForm('login');
+                        btn.innerHTML = '<span><i class="fas fa-user-plus"></i> Create Account</span>';
+                        btn.disabled = false;
+                    }, 1500);
+                } else {
+                    showToast(result.message || 'Registration failed', 'error');
+                    btn.innerHTML = '<span><i class="fas fa-user-plus"></i> Create Account</span>';
+                    btn.disabled = false;
+                }
+            } catch (error) {
+                console.error('Registration error:', error);
+                showToast('Unable to connect to server. Is the backend running?', 'error');
+                btn.innerHTML = '<span><i class="fas fa-user-plus"></i> Create Account</span>';
+                btn.disabled = false;
+            }
         };
 
-        const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-        if (currentUser && window.location.pathname.includes('auth.html')) {
-            window.location.href = `${currentUser.role}-dashboard.html`;
-        }
+        // ============================================================================
+        // CHECK AUTHENTICATION ON PAGE LOAD
+        // ============================================================================
+
+        window.addEventListener('load', () => {
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            const token = localStorage.getItem('authToken');
+
+            if (currentUser && token) {
+                // User is already authenticated, redirect to their dashboard
+                window.location.href = `${currentUser.role}-dashboard.html`;
+            }
+        });
     </script>
 </body>
-</html>
+</html>c

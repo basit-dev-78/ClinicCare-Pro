@@ -656,38 +656,8 @@
     </style>
 </head>
 
-<body>
+<body data-sidebar-role="doctor">
     <div class="dashboard">
-        <!-- Sidebar Overlay -->
-        <div class="sidebar-overlay" id="sidebarOverlay"></div>
-
-        <!-- Sidebar -->
-        <div class="sidebar" id="sidebar">
-            <div class="sidebar-header">
-                <div class="brand-icon"><i class="fas fa-stethoscope"></i></div>
-                <h2>ClinicCare · Doctor</h2>
-            </div>
-            <div class="profile-card" id="profileCard"></div>
-            <nav class="nav-menu">
-                <div class="nav-item active" data-page="dashboard"><i class="fas fa-chart-pie"></i>
-                    <span>Dashboard</span>
-                </div>
-                <div class="nav-item" data-page="appointments"><i class="fas fa-calendar-check"></i> <span>My
-                        Appointments</span></div>
-                <div class="nav-item" data-page="patients"><i class="fas fa-users"></i> <span>My Patients</span></div>
-                <div class="nav-item" data-page="records"><i class="fas fa-notes-medical"></i> <span>Medical
-                        Records</span></div>
-                <div class="nav-item" data-page="prescriptions"><i class="fas fa-prescription"></i>
-                    <span>Prescriptions</span>
-                </div>
-                <div class="nav-item" data-page="schedule"><i class="fas fa-clock"></i> <span>Today's Schedule</span>
-                </div>
-            </nav>
-            <div class="logout-button" id="logoutBtn">
-                <i class="fas fa-sign-out-alt"></i> <span>Logout</span>
-            </div>
-        </div>
-
         <!-- Main Panel -->
         <div class="main-panel">
             <!-- Mobile Header -->
@@ -716,49 +686,14 @@
 
     <script>
         (function () {
-            // Current Doctor User
-            let currentUser = {
-                id: 'D1',
-                name: 'Dr. Sarah Chen',
-                email: 'sarah.chen@clinic.com',
-                phone: '555-8234',
-                role: 'doctor',
-                specialization: 'Cardiology'
-            };
-            localStorage.setItem('currentUser', JSON.stringify(currentUser));
+            // Check authentication
+            let currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            const token = localStorage.getItem('authToken');
 
-            // Mobile Sidebar Controls
-            const sidebar = document.getElementById('sidebar');
-            const overlay = document.getElementById('sidebarOverlay');
-            const menuToggle = document.getElementById('menuToggleBtn');
-
-            function closeSidebar() {
-                sidebar.classList.remove('open');
-                overlay.classList.remove('active');
-                document.body.style.overflow = '';
+            if (!currentUser || !token || currentUser.role !== 'doctor') {
+                window.location.href = 'Frontend/Auth/login.html';
+                return;
             }
-
-            function openSidebar() {
-                sidebar.classList.add('open');
-                overlay.classList.add('active');
-                document.body.style.overflow = 'hidden';
-            }
-
-            if (menuToggle) {
-                menuToggle.addEventListener('click', openSidebar);
-            }
-            if (overlay) {
-                overlay.addEventListener('click', closeSidebar);
-            }
-
-            // Close sidebar when clicking nav items on mobile
-            document.querySelectorAll('.nav-item').forEach(item => {
-                item.addEventListener('click', () => {
-                    if (window.innerWidth < 1024) {
-                        closeSidebar();
-                    }
-                });
-            });
 
             // Mobile Popup
             const popup = document.getElementById('mobilePopup');
@@ -795,11 +730,15 @@
             // Initialize Storage
             if (!localStorage.getItem('users')) {
                 localStorage.setItem('users', JSON.stringify([
-                    { id: 'P1', name: 'John Doe', email: 'john@ex.com', phone: '555-2301', role: 'patient', status: 'active', dob: '1985-06-15' },
-                    { id: 'P2', name: 'Jane Smith', email: 'jane@ex.com', phone: '555-6712', role: 'patient', status: 'active', dob: '1990-09-22' },
-                    { id: 'P3', name: 'Emily Davis', email: 'emily@ex.com', phone: '555-1122', role: 'patient', status: 'active', dob: '1978-03-10' },
-                    { id: 'P4', name: 'Michael Brown', email: 'michael@ex.com', phone: '555-3344', role: 'patient', status: 'active', dob: '1965-12-02' },
-                    { id: 'D1', name: 'Dr. Sarah Chen', email: 'sarah.chen@clinic.com', phone: '555-8234', role: 'doctor', specialization: 'Cardiology', status: 'active' }
+                    { id: 'P101', name: 'John Doe', email: 'john.d@example.com', phone: '555-0101', role: 'patient', status: 'active', dob: '1985-06-15' },
+                    { id: 'P102', name: 'Jane Smith', email: 'jane.s@example.com', phone: '555-0102', role: 'patient', status: 'active', dob: '1990-09-22' },
+                    { id: 'P103', name: 'Emily Davis', email: 'emily.d@example.com', phone: '555-0103', role: 'patient', status: 'active', dob: '1978-03-10' },
+                    { id: 'P104', name: 'Michael Brown', email: 'michael.b@example.com', phone: '555-0104', role: 'patient', status: 'active', dob: '1965-12-02' },
+                    { id: 'P105', name: 'Ali', email: 'ali@example.com', phone: '555-0105', role: 'patient', status: 'active', dob: '2000-01-01' },
+                    { id: 'D201', name: 'Dr. Sarah Chen', email: 'sarah.chen@clinic.com', phone: '555-8234', role: 'doctor', specialization: 'Cardiology', status: 'active' },
+                    { id: 'D202', name: 'Dr. James Wilson', email: 'j.wilson@clinic.com', phone: '555-8202', role: 'doctor', specialization: 'Neurology', status: 'active' },
+                    { id: 'D203', name: 'Dr. Lisa Ray', email: 'l.ray@clinic.com', phone: '555-8203', role: 'doctor', specialization: 'Dermatology', status: 'active' },
+                    { id: 'D204', name: 'Dr. Abdul Basit Afaq', email: 'abdulbasit@clinic.com', phone: '555-8204', role: 'doctor', specialization: 'General Physician', status: 'active' }
                 ]));
             }
             if (!localStorage.getItem('appointments')) {
@@ -808,7 +747,8 @@
                     { id: 'A101', patient: 'John Doe', doctor: 'Dr. Sarah Chen', date: today, time: '09:00', status: 'confirmed', reason: 'Chest pain', notes: '' },
                     { id: 'A102', patient: 'Jane Smith', doctor: 'Dr. Sarah Chen', date: today, time: '10:30', status: 'checked-in', reason: 'Heart palpitations', notes: '' },
                     { id: 'A103', patient: 'Emily Davis', doctor: 'Dr. Sarah Chen', date: today, time: '14:15', status: 'pending', reason: 'Follow-up', notes: '' },
-                    { id: 'A104', patient: 'Michael Brown', doctor: 'Dr. Sarah Chen', date: '2025-04-11', time: '09:30', status: 'confirmed', reason: 'ECG review', notes: '' }
+                    { id: 'A104', patient: 'Michael Brown', doctor: 'Dr. Sarah Chen', date: '2025-04-11', time: '09:30', status: 'confirmed', reason: 'ECG review', notes: '' },
+                    { id: 'A107', patient: 'Ali', doctor: 'Dr. Abdul Basit Afaq', date: today, time: '14:00', status: 'confirmed', reason: 'General Checkup', notes: '' }
                 ]));
             }
             if (!localStorage.getItem('medicalRecords')) {
@@ -821,24 +761,6 @@
                     { id: 'R1', patient: 'John Doe', doctor: 'Dr. Sarah Chen', date: '2025-03-15', medication: 'Lisinopril 10mg', instructions: 'Once daily', refills: 2 }
                 ]));
             }
-
-            // Render Profile
-            function renderProfile() {
-                const u = currentUser;
-                document.getElementById('profileCard').innerHTML = `
-            <div class="profile-name" onclick="showMobilePopup(event, '${u.name}')">
-                <i class="fas fa-user-md"></i> <span>Dr. ${u.name.split(' ')[1] || 'Chen'}</span>
-            </div>
-            <div class="profile-detail" onclick="showMobilePopup(event, '${u.email}')">
-                <i class="fas fa-envelope"></i> <span>${u.email}</span>
-            </div>
-            <div class="profile-detail" onclick="showMobilePopup(event, '${u.specialization}')">
-                <i class="fas fa-stethoscope"></i> <span>${u.specialization}</span>
-            </div>
-            <div><span class="role-tag" onclick="showMobilePopup(event, 'Cardiologist')"><i class="fas fa-id-badge"></i> Cardiologist</span></div>
-        `;
-            }
-            renderProfile();
 
             // Clock
             function updateClocks() {
@@ -862,21 +784,6 @@
             }
             window.openModal = openModal;
 
-            // Navigation
-            const navItems = document.querySelectorAll('.nav-item');
-            navItems.forEach(item => {
-                item.addEventListener('click', () => {
-                    navItems.forEach(n => n.classList.remove('active'));
-                    item.classList.add('active');
-                    const page = item.dataset.page;
-                    const title = item.querySelector('span')?.innerText || 'Dashboard';
-                    document.getElementById('mobileTitle').innerText = title;
-                    const desktopTitle = document.getElementById('desktopTitle');
-                    if (desktopTitle) desktopTitle.innerText = title;
-                    loadPage(page);
-                });
-            });
-
             window.loadPage = function (page) {
                 const container = document.getElementById('contentArea');
                 if (page === 'dashboard') renderDashboard(container);
@@ -885,6 +792,9 @@
                 else if (page === 'records') renderRecords(container);
                 else if (page === 'prescriptions') renderPrescriptions(container);
                 else if (page === 'schedule') renderSchedule(container);
+                else if (page === 'settings') renderSettings(container);
+                window.currentDashboardPage = page;
+                window.updateSharedSidebarState?.(page);
             };
 
             function getTodayStr() { return new Date().toISOString().slice(0, 10); }
@@ -1139,18 +1049,518 @@
                 showToast('Edit feature coming soon', 'info');
             };
 
-            // Logout
-            document.getElementById('logoutBtn').addEventListener('click', () => {
-                showToast('Logging out...', 'info');
-                setTimeout(() => {
-                    localStorage.removeItem('currentUser');
-                    window.location.href = 'index.html';
-                }, 800);
-            });
+        function renderSettings(container) {
+            const user = JSON.parse(localStorage.getItem('currentUser'));
+            container.innerHTML = `
+                <div style="display: grid; grid-template-columns: 250px 1fr; gap: 24px;">
+                    <!-- Settings Sidebar -->
+                    <div style="background: white; border-radius: 24px; padding: 12px; height: fit-content; border: 1px solid #e2e8f0; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);">
+                        <div class="settings-nav-item active" onclick="switchSettingsTab('account', this)">
+                            <i class="fas fa-user-circle"></i> Account Profile
+                        </div>
+                        <div class="settings-nav-item" onclick="switchSettingsTab('professional', this)">
+                            <i class="fas fa-user-md"></i> Professional Info
+                        </div>
+                        <div class="settings-nav-item" onclick="switchSettingsTab('availability', this)">
+                            <i class="fas fa-clock"></i> Availability & Shift
+                        </div>
+                        <div class="settings-nav-item" onclick="switchSettingsTab('fees', this)">
+                            <i class="fas fa-hand-holding-usd"></i> Fees & Payments
+                        </div>
+                        <div class="settings-nav-item" onclick="switchSettingsTab('security', this)">
+                            <i class="fas fa-shield-alt"></i> Security
+                        </div>
+                        <div class="settings-nav-item" onclick="switchSettingsTab('general', this)">
+                            <i class="fas fa-sliders-h"></i> General Settings
+                        </div>
+                        <div class="settings-nav-item" onclick="switchSettingsTab('notifications', this)">
+                            <i class="fas fa-bell"></i> Notifications
+                        </div>
+                    </div>
+
+                    <!-- Settings Content -->
+                    <div id="settingsContentArea">
+                        ${getAccountSettingsHtml(user)}
+                    </div>
+                </div>
+
+                <style>
+                    .settings-nav-item {
+                        display: flex;
+                        align-items: center;
+                        gap: 12px;
+                        padding: 12px 16px;
+                        border-radius: 12px;
+                        color: #64748b;
+                        font-weight: 500;
+                        font-size: 0.9rem;
+                        cursor: pointer;
+                        transition: all 0.2s;
+                        margin-bottom: 4px;
+                    }
+                    .settings-nav-item i {
+                        width: 20px;
+                        font-size: 1.1rem;
+                    }
+                    .settings-nav-item:hover {
+                        background: #f8fafc;
+                        color: #1e40af;
+                    }
+                    .settings-nav-item.active {
+                        background: #eff6ff;
+                        color: #2563eb;
+                    }
+                    .settings-section-card {
+                        background: white;
+                        border-radius: 24px;
+                        padding: 32px;
+                        border: 1px solid #e2e8f0;
+                        box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+                    }
+                    .settings-section-title {
+                        font-size: 1.25rem;
+                        font-weight: 700;
+                        color: #1e293b;
+                        margin-bottom: 24px;
+                        display: flex;
+                        align-items: center;
+                        gap: 12px;
+                    }
+                    .settings-section-title i {
+                        color: #3b82f6;
+                    }
+                </style>
+            `;
+        }
+
+        window.switchSettingsTab = function(tab, element) {
+            const container = document.getElementById('settingsContentArea');
+            const user = JSON.parse(localStorage.getItem('currentUser'));
+            
+            // Update active state in nav
+            document.querySelectorAll('.settings-nav-item').forEach(el => el.classList.remove('active'));
+            element.classList.add('active');
+
+            if (tab === 'account') container.innerHTML = getAccountSettingsHtml(user);
+            else if (tab === 'professional') container.innerHTML = getProfessionalSettingsHtml(user);
+            else if (tab === 'availability') container.innerHTML = getAvailabilitySettingsHtml();
+            else if (tab === 'fees') container.innerHTML = getFeesSettingsHtml(user);
+            else if (tab === 'security') container.innerHTML = getSecuritySettingsHtml();
+            else if (tab === 'general') container.innerHTML = getGeneralSettingsHtml(user);
+            else if (tab === 'notifications') container.innerHTML = getNotificationSettingsHtml(user);
+        };
+
+        function getAccountSettingsHtml(user) {
+            return `
+                <div class="settings-section-card">
+                    <h3 class="settings-section-title"><i class="fas fa-user-circle"></i> Account Profile</h3>
+                    <form onsubmit="saveDoctorSettings(event, 'account')">
+                        <div style="grid-column: span 2; display: flex; align-items: center; gap: 24px; margin-bottom: 24px; padding-bottom: 24px; border-bottom: 1px solid #f1f5f9;">
+                            <div style="position: relative;">
+                                <img id="profilePicPreview" src="${user.profilePic || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(user.name) + '&background=2c7da0&color=fff'}" style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 3px solid #fff; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
+                                <label for="profilePicInput" style="position: absolute; bottom: 0; right: 0; width: 32px; height: 32px; background: #2c7da0; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; border: 2px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.2);">
+                                    <i class="fas fa-camera" style="font-size: 0.8rem;"></i>
+                                </label>
+                                <input type="file" id="profilePicInput" style="display: none;" accept="image/*" onchange="handleProfilePicChange(event)">
+                            </div>
+                            <div>
+                                <h4 style="font-size: 0.9rem; font-weight: 600; color: #1e293b; margin-bottom: 4px;">Profile Photo</h4>
+                                <p style="font-size: 0.75rem; color: #64748b; margin-bottom: 10px;">JPG, GIF or PNG. Max size 2MB</p>
+                                <button type="button" class="btn-secondary" onclick="document.getElementById('profilePicInput').click()" style="padding: 5px 12px; font-size: 0.7rem;">Change Photo</button>
+                            </div>
+                        </div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                            <div class="form-field">
+                                <label>Full Name</label>
+                                <input type="text" class="form-input" id="setDocName" value="${user.name}" required>
+                            </div>
+                            <div class="form-field">
+                                <label>Email Address</label>
+                                <input type="email" class="form-input" value="${user.email}" disabled style="background: #f8fafc; border-color: #e2e8f0;">
+                            </div>
+                            <div class="form-field">
+                                <label>Medical Role</label>
+                                <input type="text" class="form-input" value="${user.role}" disabled style="background: #f8fafc; border-color: #e2e8f0; text-transform: capitalize;">
+                            </div>
+                            <div class="form-field">
+                                <label>Phone Number</label>
+                                <input type="text" class="form-input" id="setDocPhone" value="${user.phone || ''}" placeholder="555-0000">
+                            <div class="form-field" style="grid-column: span 2;">
+                                <label>Bio / Professional Summary</label>
+                                <textarea class="form-textarea" id="setDocBio" placeholder="Tell patients about your expertise..." style="min-height: 120px;">${user.bio || ''}</textarea>
+                            </div>
+                        </div>
+                        <div style="margin-top: 32px; display: flex; justify-content: flex-end;">
+                            <button type="submit" class="btn-primary" style="padding: 12px 32px; font-size: 0.9rem;">Save Profile Changes</button>
+                        </div>
+                    </form>
+                </div>
+            `;
+        }
+
+        function getProfessionalSettingsHtml(user) {
+            return `
+                <div class="settings-section-card">
+                    <h3 class="settings-section-title"><i class="fas fa-user-md"></i> Professional Information</h3>
+                    <form onsubmit="saveDoctorSettings(event, 'professional')">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                            <div class="form-field" style="grid-column: span 2;">
+                                <label>Medical Education / Degrees</label>
+                                <input type="text" class="form-input" id="setDocEdu" value="${user.education || ''}" placeholder="e.g. MBBS, MD - Cardiology">
+                            </div>
+                            <div class="form-field">
+                                <label>Years of Experience</label>
+                                <input type="number" class="form-input" id="setDocExp" value="${user.experience || ''}" placeholder="e.g. 12">
+                            </div>
+                            <div class="form-field">
+                                <label>Languages Spoken</label>
+                                <input type="text" class="form-input" id="setDocLang" value="${user.languages || ''}" placeholder="e.g. English, Spanish, Hindi">
+                            </div>
+                        </div>
+                        <div style="margin-top: 32px; display: flex; justify-content: flex-end;">
+                            <button type="submit" class="btn-primary" style="padding: 12px 32px; font-size: 0.9rem;">Update Professional Info</button>
+                        </div>
+                    </form>
+                </div>
+            `;
+        }
+
+        function getAvailabilitySettingsHtml() {
+            const user = JSON.parse(localStorage.getItem('currentUser'));
+            const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+            const availability = user.availability || {};
+            
+            return `
+                <div class="settings-section-card">
+                    <h3 class="settings-section-title"><i class="fas fa-clock"></i> Availability & Shift Timing</h3>
+                    <form onsubmit="saveDoctorSettings(event, 'availability')">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 32px; padding-bottom: 24px; border-bottom: 1px solid #f1f5f9;">
+                            <div class="form-field">
+                                <label>Medical Specialty</label>
+                                <select class="form-input" id="setDocSpecSelect">
+                                    <option value="General Medicine" ${user.specialization === 'General Medicine' ? 'selected' : ''}>General Medicine</option>
+                                    <option value="Cardiology" ${user.specialization === 'Cardiology' ? 'selected' : ''}>Cardiology</option>
+                                    <option value="Pediatrics" ${user.specialization === 'Pediatrics' ? 'selected' : ''}>Pediatrics</option>
+                                    <option value="Orthopedics" ${user.specialization === 'Orthopedics' ? 'selected' : ''}>Orthopedics</option>
+                                    <option value="Neurology" ${user.specialization === 'Neurology' ? 'selected' : ''}>Neurology</option>
+                                    <option value="Dermatology" ${user.specialization === 'Dermatology' ? 'selected' : ''}>Dermatology</option>
+                                </select>
+                            </div>
+                            <div class="form-field">
+                                <label>Consultation Duration (per patient)</label>
+                                <select class="form-input" id="setDocDuration">
+                                    <option value="15" ${user.appointmentDuration == 15 ? 'selected' : ''}>15 Minutes</option>
+                                    <option value="30" ${user.appointmentDuration == 30 ? 'selected' : ''}>30 Minutes</option>
+                                    <option value="45" ${user.appointmentDuration == 45 ? 'selected' : ''}>45 Minutes</option>
+                                    <option value="60" ${user.appointmentDuration == 60 ? 'selected' : ''}>60 Minutes</option>
+                                </select>
+                            </div>
+                            <div class="form-field">
+                                <label>Buffer Time (between appointments)</label>
+                                <select class="form-input" id="setDocBuffer">
+                                    <option value="0" ${user.bufferTime == 0 ? 'selected' : ''}>No Buffer</option>
+                                    <option value="5" ${user.bufferTime == 5 ? 'selected' : ''}>5 Minutes</option>
+                                    <option value="10" ${user.bufferTime == 10 ? 'selected' : ''}>10 Minutes</option>
+                                    <option value="15" ${user.bufferTime == 15 ? 'selected' : ''}>15 Minutes</option>
+                                </select>
+                            </div>
+                            <div class="form-field">
+                                <label>Max Patients per Day</label>
+                                <input type="number" class="form-input" id="setDocMaxPatients" value="${user.maxPatients || 20}" min="1" max="100">
+                            </div>
+                        </div>
+
+                        <div style="display: grid; gap: 16px;">
+                            <label style="font-weight: 600; font-size: 0.85rem; color: #475569; margin-bottom: 8px; display: block;">Weekly Working Hours</label>
+                            ${days.map(day => {
+                                const dayData = availability[day] || { active: false, from: '09:00', to: '17:00' };
+                                return `
+                                    <div style="display: grid; grid-template-columns: 150px 1fr 1fr 1fr; align-items: center; gap: 20px; padding: 12px 16px; background: #f8fafc; border-radius: 12px;">
+                                        <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; font-weight: 500;">
+                                            <input type="checkbox" class="day-active" data-day="${day}" ${dayData.active ? 'checked' : ''} style="width: 18px; height: 18px;">
+                                            ${day}
+                                        </label>
+                                        <div style="font-size: 0.75rem; color: #64748b;">Shift Time:</div>
+                                        <input type="time" class="form-input day-from" data-day="${day}" value="${dayData.from}" style="padding: 6px 12px; height: 36px;">
+                                        <input type="time" class="form-input day-to" data-day="${day}" value="${dayData.to}" style="padding: 6px 12px; height: 36px;">
+                                    </div>
+                                `;
+                            }).join('')}
+                        </div>
+
+                        <div style="margin-top: 32px; display: flex; justify-content: flex-end;">
+                            <button type="submit" class="btn-primary" style="padding: 12px 32px; font-size: 0.9rem;">Save Availability Settings</button>
+                        </div>
+                    </form>
+                </div>
+            `;
+        }
+
+        function getFeesSettingsHtml(user) {
+            const fees = user.fees || { online: 0, inPerson: 0, followUp: 0 };
+            return `
+                <div class="settings-section-card">
+                    <h3 class="settings-section-title"><i class="fas fa-hand-holding-usd"></i> Consultation Fees & Payments</h3>
+                    <form onsubmit="saveDoctorSettings(event, 'fees')">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+                            <div class="form-field">
+                                <label>Online Consultation Fee ($)</label>
+                                <input type="number" class="form-input" id="feeOnline" value="${fees.online}" placeholder="0.00">
+                            </div>
+                            <div class="form-field">
+                                <label>In-Person Visit Fee ($)</label>
+                                <input type="number" class="form-input" id="feeInPerson" value="${fees.inPerson}" placeholder="0.00">
+                            </div>
+                            <div class="form-field">
+                                <label>Follow-up Consultation Fee ($)</label>
+                                <input type="number" class="form-input" id="feeFollowUp" value="${fees.followUp}" placeholder="0.00">
+                            </div>
+                            <div class="form-field">
+                                <label>Currency Preference</label>
+                                <select class="form-input">
+                                    <option value="USD" selected>USD - US Dollar</option>
+                                    <option value="EUR">EUR - Euro</option>
+                                    <option value="GBP">GBP - British Pound</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div style="margin-top: 32px; display: flex; justify-content: flex-end;">
+                            <button type="submit" class="btn-primary" style="padding: 12px 32px; font-size: 0.9rem;">Save Fee Structure</button>
+                        </div>
+                    </form>
+                </div>
+            `;
+        }
+
+        function getSecuritySettingsHtml() {
+            return `
+                <div class="settings-section-card">
+                    <h3 class="settings-section-title"><i class="fas fa-shield-alt"></i> Security & Password</h3>
+                    <form onsubmit="saveDoctorSettings(event, 'security')">
+                        <div style="max-width: 500px;">
+                            <div class="form-field">
+                                <label>Current Password</label>
+                                <input type="password" class="form-input" id="setDocCurrPass" placeholder="••••••••">
+                            </div>
+                            <div class="form-field" style="margin-top: 20px;">
+                                <label>New Password</label>
+                                <input type="password" class="form-input" id="setDocNewPass" placeholder="••••••••">
+                            </div>
+                            <div class="form-field">
+                                <label>Confirm New Password</label>
+                                <input type="password" class="form-input" id="setDocConfirmPass" placeholder="••••••••">
+                            </div>
+                        </div>
+                        <div style="margin-top: 32px; display: flex; justify-content: flex-end;">
+                            <button type="submit" class="btn-primary" style="padding: 12px 32px; font-size: 0.9rem;">Update Password</button>
+                        </div>
+                    </form>
+                </div>
+            `;
+        }
+
+        function getGeneralSettingsHtml(user) {
+            return `
+                <div class="settings-section-card">
+                    <h3 class="settings-section-title"><i class="fas fa-sliders-h"></i> General Preferences</h3>
+                    <div style="display: grid; gap: 24px;">
+                        <form onsubmit="saveDoctorSettings(event, 'general')">
+                            <div style="display: flex; justify-content: space-between; align-items: center; padding-bottom: 20px; border-bottom: 1px solid #f1f5f9;">
+                                <div>
+                                    <div style="font-weight: 600; color: #1e293b;">Interface Language</div>
+                                    <div style="font-size: 0.8rem; color: #64748b;">Select your preferred language for the dashboard</div>
+                                </div>
+                                <select class="form-input" style="width: 200px;">
+                                    <option value="en" selected>English (US)</option>
+                                    <option value="es">Spanish</option>
+                                    <option value="fr">French</option>
+                                    <option value="ar">Arabic</option>
+                                </select>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; align-items: center; padding-bottom: 20px; border-bottom: 1px solid #f1f5f9; margin-top: 20px;">
+                                <div>
+                                    <div style="font-weight: 600; color: #1e293b;">Time Zone</div>
+                                    <div style="font-size: 0.8rem; color: #64748b;">Current system time: ${new Date().toLocaleTimeString()}</div>
+                                </div>
+                                <select class="form-input" style="width: 200px;">
+                                    <option value="utc">UTC (Greenwich)</option>
+                                    <option value="est" selected>Eastern Time (US)</option>
+                                    <option value="pst">Pacific Time (US)</option>
+                                </select>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 20px;">
+                                <div>
+                                    <div style="font-weight: 600; color: #1e293b;">Dark Mode</div>
+                                    <div style="font-size: 0.8rem; color: #64748b;">Switch between light and dark interface</div>
+                                </div>
+                                <div style="width: 44px; height: 24px; background: #e2e8f0; border-radius: 20px; position: relative; cursor: pointer;" onclick="showToast('Dark mode coming soon', 'info')">
+                                    <div style="width: 18px; height: 18px; background: white; border-radius: 50%; position: absolute; top: 3px; left: 3px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);"></div>
+                                </div>
+                            </div>
+                            <div style="margin-top: 32px; display: flex; justify-content: flex-end;">
+                                <button type="submit" class="btn-primary" style="padding: 10px 24px; font-size: 0.85rem;">Apply Preferences</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            `;
+        }
+
+        function getNotificationSettingsHtml(user) {
+            const n = user.notifications || { email: true, sms: true, browser: false };
+            return `
+                <div class="settings-section-card">
+                    <h3 class="settings-section-title"><i class="fas fa-bell"></i> Notification Preferences</h3>
+                    <form onsubmit="saveDoctorSettings(event, 'notifications')">
+                        <div style="display: grid; gap: 20px;">
+                            <label style="display: flex; align-items: center; gap: 12px; cursor: pointer;">
+                                <input type="checkbox" id="notifEmail" ${n.email ? 'checked' : ''} style="width: 18px; height: 18px;">
+                                <div>
+                                    <div style="font-weight: 600; color: #1e293b;">Email Notifications</div>
+                                    <div style="font-size: 0.8rem; color: #64748b;">Receive daily appointment summaries</div>
+                                </div>
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 12px; cursor: pointer;">
+                                <input type="checkbox" id="notifSms" ${n.sms ? 'checked' : ''} style="width: 18px; height: 18px;">
+                                <div>
+                                    <div style="font-weight: 600; color: #1e293b;">SMS Alerts</div>
+                                    <div style="font-size: 0.8rem; color: #64748b;">Emergency patient check-in alerts</div>
+                                </div>
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 12px; cursor: pointer;">
+                                <input type="checkbox" id="notifBrowser" ${n.browser ? 'checked' : ''} style="width: 18px; height: 18px;">
+                                <div>
+                                    <div style="font-weight: 600; color: #1e293b;">Browser Notifications</div>
+                                    <div style="font-size: 0.8rem; color: #64748b;">Real-time desktop alerts for new records</div>
+                                </div>
+                            </label>
+                        </div>
+                        <div style="margin-top: 32px; display: flex; justify-content: flex-end;">
+                            <button type="submit" class="btn-primary" style="padding: 12px 32px; font-size: 0.9rem;">Save Notification Settings</button>
+                        </div>
+                    </form>
+                </div>
+            `;
+        }
+
+        window.handleProfilePicChange = function(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            if (file.size > 2 * 1024 * 1024) {
+                showToast('Image size must be less than 2MB', 'error');
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById('profilePicPreview').src = e.target.result;
+                const sidebarPic = document.getElementById('sidebarUserPic');
+                if (sidebarPic) sidebarPic.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        };
+
+        window.saveDoctorSettings = async function(event, type) {
+            if (event) event.preventDefault();
+            
+            let updateData = {};
+            
+            if (type === 'account') {
+                const name = document.getElementById('setDocName').value;
+                const phone = document.getElementById('setDocPhone').value;
+                const bio = document.getElementById('setDocBio').value;
+                const profilePic = document.getElementById('profilePicPreview').src;
+                updateData = { name, phone, bio, profilePic };
+            } else if (type === 'professional') {
+                const education = document.getElementById('setDocEdu').value;
+                const experience = document.getElementById('setDocExp').value;
+                const languages = document.getElementById('setDocLang').value;
+                updateData = { education, experience, languages };
+            } else if (type === 'availability') {
+                const specialization = document.getElementById('setDocSpecSelect').value;
+                const appointmentDuration = parseInt(document.getElementById('setDocDuration').value);
+                const bufferTime = parseInt(document.getElementById('setDocBuffer').value);
+                const maxPatients = parseInt(document.getElementById('setDocMaxPatients').value);
+                const availability = {};
+                
+                document.querySelectorAll('.day-active').forEach(cb => {
+                    const day = cb.dataset.day;
+                    const from = document.querySelector(`.day-from[data-day="${day}"]`).value;
+                    const to = document.querySelector(`.day-to[data-day="${day}"]`).value;
+                    availability[day] = { active: cb.checked, from, to };
+                });
+
+                updateData = { specialization, appointmentDuration, bufferTime, maxPatients, availability };
+            } else if (type === 'fees') {
+                const online = parseFloat(document.getElementById('feeOnline').value) || 0;
+                const inPerson = parseFloat(document.getElementById('feeInPerson').value) || 0;
+                const followUp = parseFloat(document.getElementById('feeFollowUp').value) || 0;
+                updateData = { fees: { online, inPerson, followUp } };
+            } else if (type === 'notifications') {
+                const email = document.getElementById('notifEmail').checked;
+                const sms = document.getElementById('notifSms').checked;
+                const browser = document.getElementById('notifBrowser').checked;
+                updateData = { notifications: { email, sms, browser } };
+            } else if (type === 'general') {
+                showToast('General preferences updated', 'success');
+                return;
+            } else if (type === 'security') {
+                const newPass = document.getElementById('setDocNewPass').value;
+                const confirmPass = document.getElementById('setDocConfirmPass').value;
+                if (!newPass) {
+                    showToast('Please enter a new password', 'error');
+                    return;
+                }
+                if (newPass !== confirmPass) {
+                    showToast('Passwords do not match', 'error');
+                    return;
+                }
+                updateData = { password: newPass };
+            }
+
+            try {
+                const response = await fetch(`http://localhost:5000/api/users/${currentUser.id || currentUser._id}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify(updateData)
+                });
+
+                const data = await response.json();
+                if (data.success) {
+                    currentUser = { ...currentUser, ...updateData };
+                    localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                    showToast('Settings saved successfully!', 'success');
+                    if (window.renderSidebarProfile) window.renderSidebarProfile();
+                } else {
+                    showToast(data.message || 'Failed to update settings', 'error');
+                }
+            } catch (err) {
+                showToast('Server error connecting to backend', 'error');
+            }
+        };
 
             // Start
             loadPage('dashboard');
         })();
+    </script>
+    <script>
+        fetch('Frontend/components/sidebar.html')
+            .then(response => response.text())
+            .then(html => {
+                const wrapper = document.createElement('div');
+                wrapper.innerHTML = html;
+                wrapper.querySelectorAll('script').forEach(scriptNode => {
+                    const script = document.createElement('script');
+                    script.textContent = scriptNode.textContent;
+                    document.body.appendChild(script);
+                    script.remove();
+                });
+            })
+            .catch(error => console.error('Sidebar failed:', error));
     </script>
 </body>
 

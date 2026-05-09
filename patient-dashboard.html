@@ -691,36 +691,8 @@
     </style>
 </head>
 
-<body>
+<body data-sidebar-role="patient">
     <div class="dashboard">
-        <div class="sidebar-overlay" id="sidebarOverlay"></div>
-
-        <div class="sidebar" id="sidebar">
-            <div class="sidebar-header">
-                <div class="brand-icon"><i class="fas fa-user-heart"></i></div>
-                <h2>ClinicCare · Patient</h2>
-            </div>
-            <div class="profile-card" id="profileCard"></div>
-            <nav class="nav-menu">
-                <div class="nav-item active" data-page="dashboard"><i class="fas fa-chart-pie"></i>
-                    <span>Dashboard</span>
-                </div>
-                <div class="nav-item" data-page="appointments"><i class="fas fa-calendar-check"></i>
-                    <span>Appointments</span>
-                </div>
-                <div class="nav-item" data-page="records"><i class="fas fa-notes-medical"></i> <span>Medical
-                        Records</span></div>
-                <div class="nav-item" data-page="prescriptions"><i class="fas fa-prescription"></i>
-                    <span>Prescriptions</span>
-                </div>
-                <div class="nav-item" data-page="billing"><i class="fas fa-file-invoice-dollar"></i>
-                    <span>Billing</span>
-                </div>
-                <div class="nav-item" data-page="profile"><i class="fas fa-id-card"></i> <span>My Profile</span></div>
-            </nav>
-            <div class="logout-button" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> <span>Sign out</span></div>
-        </div>
-
         <div class="main-panel">
             <div class="mobile-header">
                 <button class="menu-toggle" id="menuToggle"><i class="fas fa-bars"></i></button>
@@ -751,19 +723,6 @@
                 role: 'patient'
             };
             localStorage.setItem('currentUser', JSON.stringify(currentUser));
-
-            // Mobile sidebar controls
-            const sidebar = document.getElementById('sidebar');
-            const overlay = document.getElementById('sidebarOverlay');
-            const menuToggle = document.getElementById('menuToggle');
-
-            function closeSidebar() { sidebar.classList.remove('open'); overlay.classList.remove('active'); }
-            function openSidebar() { sidebar.classList.add('open'); overlay.classList.add('active'); }
-            if (menuToggle) menuToggle.addEventListener('click', openSidebar);
-            overlay.addEventListener('click', closeSidebar);
-            document.querySelectorAll('.nav-item').forEach(item => {
-                item.addEventListener('click', () => { if (window.innerWidth < 1024) closeSidebar(); });
-            });
 
             function showToast(msg, type = 'success') {
                 const toast = document.getElementById('toastMsg');
@@ -811,17 +770,6 @@
                 ]));
             }
 
-            function renderProfile() {
-                const u = currentUser;
-                document.getElementById('profileCard').innerHTML = `
-            <div class="profile-name"><i class="fas fa-user-circle"></i> <span>${u.name}</span></div>
-            <div class="profile-detail"><i class="fas fa-envelope"></i> <span>${u.email}</span></div>
-            <div class="profile-detail"><i class="fas fa-phone"></i> <span>${u.phone}</span></div>
-            <div><span class="role-tag"><i class="fas fa-id-card"></i> Patient</span></div>
-        `;
-            }
-            renderProfile();
-
             function updateClocks() {
                 const now = new Date();
                 const timeStr = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
@@ -840,20 +788,6 @@
             }
             window.openModal = openModal;
 
-            const navItems = document.querySelectorAll('.nav-item');
-            navItems.forEach(nav => {
-                nav.addEventListener('click', () => {
-                    navItems.forEach(n => n.classList.remove('active'));
-                    nav.classList.add('active');
-                    const page = nav.dataset.page;
-                    const title = nav.querySelector('span')?.innerText || 'Dashboard';
-                    document.getElementById('mobileTitle').innerText = title;
-                    const desktopTitle = document.getElementById('desktopTitle');
-                    if (desktopTitle) desktopTitle.innerText = title;
-                    loadPage(page);
-                });
-            });
-
             window.loadPage = function (page) {
                 const container = document.getElementById('contentArea');
                 if (page === 'dashboard') renderDashboard(container);
@@ -862,6 +796,8 @@
                 else if (page === 'prescriptions') renderPrescriptions(container);
                 else if (page === 'billing') renderBilling(container);
                 else if (page === 'profile') renderProfilePage(container);
+                window.currentDashboardPage = page;
+                window.updateSharedSidebarState?.(page);
             };
 
             function getTodayStr() { return new Date().toISOString().slice(0, 10); }
@@ -999,10 +935,24 @@
             window.payBillModal = function () { const pending = JSON.parse(localStorage.getItem('billing')).filter(b => b.patient === currentUser.name && b.status === 'pending'); openModal(`<h3>Pay bills</h3>${pending.length === 0 ? '<p>No pending bills.</p>' : pending.map(b => `<div style="display:flex; justify-content:space-between; background:#f5f9ff; padding:12px; border-radius:20px; margin-bottom:10px;"><span>${b.description} - $${b.amount}</span><button class="btn-primary" onclick="paySingleBill('${b.id}')">Pay</button></div>`).join('')}<div class="modal-actions"><button class="btn-secondary" onclick="closeModal()">Close</button></div>`); };
             window.paySingleBill = function (id) { let bills = JSON.parse(localStorage.getItem('billing')); let b = bills.find(x => x.id === id); if (b) { b.status = 'paid'; b.paidOn = getTodayStr(); localStorage.setItem('billing', JSON.stringify(bills)); closeModal(); showToast('Payment successful', 'success'); loadPage('billing'); } };
             window.editProfileModal = function () { const u = currentUser; openModal(`<h3>Edit profile</h3><div class="form-field"><label>Phone</label><input class="form-input" id="editPhone" value="${u.phone}"></div><div class="form-field"><label>Blood type</label><select class="form-input" id="editBlood"><option>O+</option><option>O-</option><option>A+</option><option>A-</option><option>B+</option><option>B-</option><option>AB+</option><option>AB-</option></select></div><div class="form-field"><label>Allergies</label><input class="form-input" id="editAllergies" value="${u.allergies || ''}"></div><div class="modal-actions"><button class="btn-primary" onclick="updateProfile()">Update</button><button class="btn-secondary" onclick="closeModal()">Cancel</button></div>`); };
-            window.updateProfile = function () { currentUser.phone = document.getElementById('editPhone')?.value || currentUser.phone; currentUser.bloodType = document.getElementById('editBlood')?.value; currentUser.allergies = document.getElementById('editAllergies')?.value; localStorage.setItem('currentUser', JSON.stringify(currentUser)); let users = JSON.parse(localStorage.getItem('users')); let idx = users.findIndex(u => u.id === currentUser.id); if (idx >= 0) users[idx] = currentUser; localStorage.setItem('users', JSON.stringify(users)); closeModal(); renderProfile(); showToast('Profile updated', 'success'); loadPage('profile'); };
-            document.getElementById('logoutBtn').addEventListener('click', () => { showToast('Logging out...', 'info'); setTimeout(() => { localStorage.removeItem('currentUser'); alert('Logged out'); }, 800); });
+            window.updateProfile = function () { currentUser.phone = document.getElementById('editPhone')?.value || currentUser.phone; currentUser.bloodType = document.getElementById('editBlood')?.value; currentUser.allergies = document.getElementById('editAllergies')?.value; localStorage.setItem('currentUser', JSON.stringify(currentUser)); let users = JSON.parse(localStorage.getItem('users')); let idx = users.findIndex(u => u.id === currentUser.id); if (idx >= 0) users[idx] = currentUser; localStorage.setItem('users', JSON.stringify(users)); closeModal(); window.renderSidebarProfile?.(); showToast('Profile updated', 'success'); loadPage('profile'); };
             loadPage('dashboard');
         })();
+    </script>
+    <script>
+        fetch('Frontend/components/sidebar.html')
+            .then(response => response.text())
+            .then(html => {
+                const wrapper = document.createElement('div');
+                wrapper.innerHTML = html;
+                wrapper.querySelectorAll('script').forEach(scriptNode => {
+                    const script = document.createElement('script');
+                    script.textContent = scriptNode.textContent;
+                    document.body.appendChild(script);
+                    script.remove();
+                });
+            })
+            .catch(error => console.error('Sidebar failed:', error));
     </script>
 </body>
 

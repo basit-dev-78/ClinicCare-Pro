@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ClinicCare Pro · Sign Up</title>
+    <meta name="description" content="ClinicCare Pro sign up page">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="auth.css">
+</head>
+<body>
+    <div class="auth-container">
+        <section class="brand-panel">
+            <div>
+                <h1>Start with ClinicCare</h1>
+                <p>Create secure access for your clinic team, patients and admin staff.</p>
+                <ul class="brand-features">
+                    <li><i class="fas fa-user-plus"></i> Create your account quickly</li>
+                    <li><i class="fas fa-user-md"></i> Choose the best role</li>
+                    <li><i class="fas fa-check-circle"></i> Instant dashboard access</li>
+                </ul>
+            </div>
+            <div class="brand-footer">
+                <div class="stat">
+                    <strong>3 steps</strong>
+                    <span>Fast onboarding</span>
+                </div>
+                <div class="stat">
+                    <strong>24/7</strong>
+                    <span>Ready access</span>
+                </div>
+            </div>
+        </section>
+
+        <section class="form-panel">
+            <div class="form-header">
+                <h2>Create your account</h2>
+                <p>Register with your clinic information and get started immediately.</p>
+            </div>
+
+            <form id="signupForm" onsubmit="handleSignup(event)">
+                <div class="form-group">
+                    <label for="regName">Full name</label>
+                    <div class="input-icon">
+                        <i class="fas fa-user"></i>
+                        <input type="text" id="regName" required placeholder="Dr. Emily Carter">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="regEmail">Email address</label>
+                    <div class="input-icon">
+                        <i class="fas fa-envelope"></i>
+                        <input type="email" id="regEmail" required placeholder="doctor@example.com">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="regPhone">Phone number</label>
+                    <div class="input-icon">
+                        <i class="fas fa-phone-alt"></i>
+                        <input type="tel" id="regPhone" required placeholder="+1 (555) 123-4567">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="regRole">Role</label>
+                    <div class="input-icon">
+                        <i class="fas fa-user-tag"></i>
+                        <select id="regRole" required onchange="toggleSpecializationField()">
+                            <option value="">Select role</option>
+                            <option value="admin">Administrator</option>
+                            <option value="doctor">Doctor</option>
+                            <option value="patient">Patient</option>
+                            <option value="receptionist">Receptionist</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group hidden" id="specializationField">
+                    <label for="regSpecialization">Specialization</label>
+                    <div class="input-icon">
+                        <i class="fas fa-stethoscope"></i>
+                        <input type="text" id="regSpecialization" placeholder="e.g., Cardiology">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="regPassword">Password</label>
+                    <div class="input-icon">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" id="regPassword" required placeholder="Create a password">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="regConfirmPassword">Confirm password</label>
+                    <div class="input-icon">
+                        <i class="fas fa-check-circle"></i>
+                        <input type="password" id="regConfirmPassword" required placeholder="Confirm your password">
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-submit" id="signupBtn">
+                    <span><i class="fas fa-user-plus"></i> Create account</span>
+                </button>
+
+                <div class="form-footer">
+                    <p>Already have an account? <a href="login.html">Sign in</a></p>
+                </div>
+            </form>
+        </section>
+    </div>
+
+    <div id="toast" class="toast-message"></div>
+    <script src="auth.js"></script>
+</body>
+</html>

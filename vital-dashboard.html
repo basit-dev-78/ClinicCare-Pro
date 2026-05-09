@@ -1,0 +1,919 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
+  <title>Clinic Care Pro · Vital Signs Panel</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #f0f4f9;
+      color: #1a2c3e;
+      overflow-x: hidden;
+    }
+
+    ::-webkit-scrollbar {
+      width: 5px;
+      height: 5px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: #e2e8f0;
+      border-radius: 10px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: #2c7da0;
+      border-radius: 10px;
+    }
+
+    .dashboard {
+      display: flex;
+      min-height: 100vh;
+      width: 100%;
+    }
+
+    /* SIDEBAR */
+    .sidebar {
+      position: fixed;
+      top: 0;
+      left: -280px;
+      width: 270px;
+      height: 100vh;
+      background: linear-gradient(180deg, #0a2b3f 0%, #0a1f2e 100%);
+      display: flex;
+      flex-direction: column;
+      z-index: 1000;
+      transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 2px 0 20px rgba(0, 0, 0, 0.1);
+      overflow-y: auto;
+    }
+
+    .sidebar.open {
+      left: 0;
+    }
+
+    @media (min-width: 1024px) {
+      .sidebar {
+        left: 0;
+        width: 260px;
+      }
+
+      .menu-toggle-btn {
+        display: none !important;
+      }
+
+      .sidebar-overlay {
+        display: none !important;
+      }
+
+      .main-panel {
+        margin-left: 260px;
+      }
+    }
+
+    .sidebar-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(4px);
+      z-index: 999;
+      display: none;
+    }
+
+    .sidebar-overlay.active {
+      display: block;
+    }
+
+    .sidebar-header {
+      padding: 24px 20px 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .brand-icon {
+      width: 44px;
+      height: 44px;
+      background: linear-gradient(135deg, #2c7da0, #1f5e7a);
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      color: white;
+    }
+
+    .sidebar-header h2 {
+      font-weight: 700;
+      font-size: 1rem;
+      background: linear-gradient(120deg, #ffffff, #b3e0ff);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .profile-card {
+      background: rgba(255, 255, 255, 0.06);
+      margin: 16px 14px 20px;
+      padding: 14px;
+      border-radius: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .profile-name {
+      font-weight: 600;
+      color: #f0fcff;
+      font-size: 0.85rem;
+      margin-bottom: 8px;
+    }
+
+    .role-tag {
+      background: linear-gradient(135deg, #2c7da0, #1f5e7a);
+      padding: 4px 12px;
+      border-radius: 40px;
+      font-size: 0.65rem;
+      font-weight: 600;
+      display: inline-block;
+    }
+
+    /* Navigation */
+    .nav-menu {
+      flex: 1;
+      padding: 0 10px 20px 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 14px;
+      border-radius: 12px;
+      color: #cbdff2;
+      font-weight: 500;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .nav-item i {
+      width: 20px;
+      color: #86b3d4;
+    }
+
+    .nav-item:hover {
+      background: rgba(44, 125, 160, 0.3);
+      color: white;
+    }
+
+    .nav-item.active {
+      background: linear-gradient(95deg, #2c7da0, #1f5e7a);
+      color: white;
+    }
+
+    .nav-item.active i {
+      color: white;
+    }
+
+    /* Parent dropdown */
+    .nav-parent {
+      position: relative;
+      justify-content: space-between;
+    }
+
+    .nav-parent .parent-content {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex: 1;
+    }
+
+    .dropdown-icon {
+      font-size: 0.7rem;
+      transition: transform 0.2s;
+    }
+
+    .dropdown-icon.open {
+      transform: rotate(90deg);
+    }
+
+    .sub-nav {
+      margin-left: 32px;
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease;
+    }
+
+    .sub-nav.show {
+      max-height: 300px;
+    }
+
+    .sub-nav .nav-item {
+      padding: 8px 12px;
+      font-size: 0.7rem;
+      font-weight: 400;
+      margin: 2px 0;
+      background: rgba(255, 255, 255, 0.02);
+      border-radius: 10px;
+    }
+
+    .sub-nav .nav-item i {
+      font-size: 0.7rem;
+      width: 18px;
+    }
+
+    .sub-nav .nav-item span {
+      font-size: 0.7rem;
+    }
+
+    /* MAIN PANEL */
+    .main-panel {
+      flex: 1;
+      width: 100%;
+      background: #f0f4f9;
+      transition: margin-left 0.3s;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    .sticky-header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: #f0f4f9;
+      padding: 12px 16px 8px 16px;
+    }
+
+    @media (min-width: 1024px) {
+      .sticky-header {
+        padding: 16px 28px 12px 28px;
+      }
+    }
+
+    .mobile-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: white;
+      padding: 12px 16px;
+      border-radius: 28px;
+      border: 1px solid #e6edf8;
+    }
+
+    .menu-toggle-btn {
+      background: linear-gradient(135deg, #2c7da0, #1f5e7a);
+      border: none;
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      color: white;
+      cursor: pointer;
+    }
+
+    .page-title-mobile {
+      font-weight: 700;
+      font-size: 1rem;
+      background: linear-gradient(145deg, #1c4e6e, #2c7da0);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .live-clock {
+      background: #ecf2ff;
+      padding: 6px 12px;
+      border-radius: 40px;
+      font-weight: 500;
+      font-size: 0.7rem;
+      font-family: monospace;
+    }
+
+    @media (min-width: 1024px) {
+      .mobile-header {
+        display: none;
+      }
+    }
+
+    .desktop-header {
+      display: none;
+      background: white;
+      padding: 14px 28px;
+      border-radius: 48px;
+      justify-content: space-between;
+      align-items: center;
+      border: 1px solid #e6edf8;
+    }
+
+    @media (min-width: 1024px) {
+      .desktop-header {
+        display: flex;
+      }
+    }
+
+    .page-title {
+      font-weight: 700;
+      font-size: 1.3rem;
+      background: linear-gradient(145deg, #1c4e6e, #2c7da0);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .content-area-scroll {
+      flex: 1;
+      padding: 0 16px 100px 16px;
+    }
+
+    @media (min-width: 1024px) {
+      .content-area-scroll {
+        padding: 0 28px 100px 28px;
+      }
+    }
+
+    /* Floating Action Buttons */
+    .floating-actions {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      display: flex;
+      gap: 12px;
+      z-index: 200;
+    }
+
+    .floating-btn {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #2c7da0, #1f5e7a);
+      color: white;
+      border: none;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      cursor: pointer;
+      font-size: 1.2rem;
+      transition: transform 0.2s;
+    }
+
+    .floating-btn:hover {
+      transform: scale(1.05);
+    }
+
+    .floating-btn.cancel-btn {
+      background: #64748b;
+    }
+
+    .floating-btn.submit-btn {
+      background: linear-gradient(135deg, #10b981, #059669);
+    }
+
+    /* Stats Cards */
+    .stat-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+      margin-bottom: 24px;
+    }
+
+    @media (min-width:640px) {
+      .stat-grid {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 20px;
+      }
+    }
+
+    .stat-block {
+      background: white;
+      padding: 16px 18px;
+      border-radius: 28px;
+      border: 1px solid #e2edff;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      transition: transform 0.2s;
+    }
+
+    .stat-block:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+    }
+
+    .stat-icon {
+      width: 50px;
+      height: 50px;
+      background: linear-gradient(135deg, #eef4ff, #e1eafe);
+      border-radius: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      color: #2c7da0;
+    }
+
+    .stat-info h4 {
+      font-weight: 500;
+      color: #5a6e8c;
+      font-size: 0.7rem;
+      letter-spacing: 0.3px;
+    }
+
+    .stat-info .figure {
+      font-weight: 800;
+      font-size: 1.6rem;
+      color: #0a2b44;
+      line-height: 1.2;
+    }
+
+    /* Content Cards */
+    .content-card {
+      background: white;
+      border-radius: 28px;
+      padding: 20px 24px;
+      border: 1px solid #e6edfc;
+      margin-bottom: 24px;
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid #f0f4fc;
+    }
+
+    .card-header h3 {
+      font-weight: 700;
+      font-size: 1rem;
+      color: #1e3a5f;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* Table Styling */
+    .table-responsive {
+      overflow-x: auto;
+      border-radius: 20px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.8rem;
+      min-width: 650px;
+    }
+
+    th {
+      text-align: left;
+      padding: 14px 12px;
+      font-weight: 700;
+      background: linear-gradient(95deg, #1a4a62, #1f5e7a);
+      color: white;
+      font-size: 0.75rem;
+      letter-spacing: 0.5px;
+    }
+
+    td {
+      padding: 12px 12px;
+      border-bottom: 1px solid #f0f4fc;
+      color: #1f3b5c;
+      background: white;
+    }
+
+    tr:hover td {
+      background: #fafcff;
+    }
+
+    .status-badge {
+      padding: 4px 12px;
+      border-radius: 40px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      display: inline-block;
+    }
+
+    .badge-normal {
+      background: #e1f7ea;
+      color: #0a7143;
+    }
+
+    .badge-warning {
+      background: #fff0db;
+      color: #b45500;
+    }
+
+    .badge-critical {
+      background: #ffe6e5;
+      color: #bc3f2e;
+    }
+
+    .btn-primary {
+      background: linear-gradient(105deg, #2c7da0, #1f5e7a);
+      color: white;
+      border: none;
+      padding: 8px 20px;
+      border-radius: 40px;
+      font-weight: 600;
+      font-size: 0.75rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-secondary {
+      background: white;
+      border: 1px solid #cfe2ff;
+      color: #1e5a88;
+      padding: 6px 16px;
+      border-radius: 40px;
+      font-size: 0.7rem;
+      cursor: pointer;
+    }
+
+    /* Form */
+    .form-container {
+      max-width: 560px;
+      margin: 0 auto;
+      background: #fafcff;
+      padding: 28px 32px;
+      border-radius: 32px;
+    }
+
+    .form-title {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #1e3a5f;
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border-left: 4px solid #2c7da0;
+      padding-left: 16px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 0.7rem;
+      font-weight: 600;
+      margin-bottom: 6px;
+      color: #4a627a;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      padding: 12px 16px;
+      border: 1.5px solid #e2eaff;
+      border-radius: 24px;
+      font-size: 0.85rem;
+      font-family: inherit;
+      transition: all 0.2s;
+      background: white;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus {
+      outline: none;
+      border-color: #2c7da0;
+      box-shadow: 0 0 0 3px rgba(44, 125, 160, 0.1);
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .search-input {
+      padding: 10px 18px;
+      border-radius: 40px;
+      border: 1.5px solid #e2eaff;
+      width: 260px;
+      font-size: 0.8rem;
+    }
+
+    .toast-notification {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: #1e2f3c;
+      color: white;
+      border-radius: 60px;
+      padding: 12px 24px;
+      display: flex;
+      gap: 12px;
+      transform: translateY(100px);
+      transition: transform 0.25s;
+      z-index: 1300;
+      font-size: 0.85rem;
+    }
+
+    .toast-notification.show {
+      transform: translateY(0);
+    }
+  </style>
+</head>
+
+<body>
+  <div class="dashboard">
+    <div class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <div class="brand-icon"><i class="fas fa-heartbeat"></i></div>
+        <h2>CarePro <span style="font-size:0.7rem;">Vitals</span></h2>
+      </div>
+      <div class="profile-card">
+        <div class="profile-name"><i class="fas fa-user-md"></i> Dr. Sarah Chen</div>
+        <div class="role-tag">Vital Signs Monitor</div>
+      </div>
+      <div class="nav-menu">
+        <div class="nav-item active" data-tab="dashboard"><i class="fas fa-chart-line"></i> Dashboard</div>
+        <div class="nav-item" data-tab="patients"><i class="fas fa-users"></i> Patients</div>
+        <div class="nav-item" data-tab="vitalHistory"><i class="fas fa-history"></i> Vital History</div>
+
+        <div class="nav-parent nav-item" id="parentOps">
+          <div class="parent-content"><i class="fas fa-tools"></i> Operations</div>
+          <i class="fas fa-chevron-right dropdown-icon" id="opsIcon"></i>
+        </div>
+        <div class="sub-nav" id="subOps">
+          <div class="nav-item" data-tab="addPatientPage"><i class="fas fa-plus-circle"></i> <span>Add Patient</span>
+          </div>
+          <div class="nav-item" data-tab="recordVitalsPage"><i class="fas fa-plus-circle"></i> <span>Record
+              Vitals</span></div>
+          <div class="nav-item" data-tab="addDevicePage"><i class="fas fa-plus-circle"></i> <span>Add Device</span>
+          </div>
+        </div>
+
+        <div class="nav-parent nav-item" id="parentReports">
+          <div class="parent-content"><i class="fas fa-chart-simple"></i> Insights</div>
+          <i class="fas fa-chevron-right dropdown-icon" id="reportsIcon"></i>
+        </div>
+        <div class="sub-nav" id="subReports">
+          <div class="nav-item" data-tab="alerts"><i class="fas fa-bell"></i> <span>Alerts</span></div>
+          <div class="nav-item" data-tab="trends"><i class="fas fa-chart-line"></i> <span>Trends</span></div>
+          <div class="nav-item" data-tab="reports"><i class="fas fa-file-alt"></i> <span>Reports</span></div>
+        </div>
+
+        <div class="nav-item" data-tab="devices"><i class="fas fa-microchip"></i> Devices</div>
+        <div class="nav-item" data-tab="settings"><i class="fas fa-sliders-h"></i> Settings</div>
+      </div>
+    </div>
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <div class="main-panel">
+      <div class="sticky-header">
+        <div class="mobile-header">
+          <button class="menu-toggle-btn" id="menuToggleBtn"><i class="fas fa-bars"></i></button>
+          <span class="page-title-mobile" id="mobileTitle">Vital Signs</span>
+          <span class="live-clock" id="mobileClock"></span>
+        </div>
+        <div class="desktop-header">
+          <span class="page-title" id="desktopTitle">Vital Signs Dashboard</span>
+          <span class="live-clock" id="desktopClock"></span>
+        </div>
+      </div>
+      <div class="content-area-scroll" id="contentArea"></div>
+    </div>
+  </div>
+  <div class="floating-actions" id="floatingActions" style="display: none;">
+    <button class="floating-btn cancel-btn" id="floatingCancel"><i class="fas fa-times"></i></button>
+    <button class="floating-btn submit-btn" id="floatingSubmit"><i class="fas fa-check"></i></button>
+  </div>
+  <div id="toastMsg" class="toast-notification"><i class="fas fa-check-circle"></i><span id="toastText"></span></div>
+
+  <script>
+    // Data
+    let patients = [
+      { id: 'P1', name: 'John Doe', age: 45, gender: 'Male', phone: '9876543210', lastVitals: '2026-05-02' },
+      { id: 'P2', name: 'Jane Smith', age: 32, gender: 'Female', phone: '9876543211', lastVitals: '2026-05-01' },
+      { id: 'P3', name: 'Robert Johnson', age: 58, gender: 'Male', phone: '9876543212', lastVitals: '2026-04-30' }
+    ];
+
+    let vitals = [
+      { id: 'V1', patientId: 'P1', patientName: 'John Doe', date: '2026-05-02', bpSystolic: 120, bpDiastolic: 80, pulse: 72, temperature: 98.6, spo2: 98, respiratory: 16, status: 'Normal' },
+      { id: 'V2', patientId: 'P1', patientName: 'John Doe', date: '2026-04-25', bpSystolic: 130, bpDiastolic: 85, pulse: 78, temperature: 98.8, spo2: 97, respiratory: 18, status: 'Warning' },
+      { id: 'V3', patientId: 'P2', patientName: 'Jane Smith', date: '2026-05-01', bpSystolic: 118, bpDiastolic: 78, pulse: 68, temperature: 98.4, spo2: 99, respiratory: 14, status: 'Normal' },
+      { id: 'V4', patientId: 'P3', patientName: 'Robert Johnson', date: '2026-04-30', bpSystolic: 145, bpDiastolic: 92, pulse: 88, temperature: 99.1, spo2: 95, respiratory: 20, status: 'Critical' }
+    ];
+
+    let devices = [
+      { id: 'D1', name: 'BP Monitor Pro', type: 'Blood Pressure', status: 'Active', lastCalibration: '2026-01-15' },
+      { id: 'D2', name: 'Pulse Oximeter X1', type: 'SpO2', status: 'Active', lastCalibration: '2026-02-10' }
+    ];
+
+    let alerts = [
+      { id: 'A1', patient: 'Robert Johnson', vital: 'BP', value: '145/92', message: 'High Blood Pressure', date: '2026-04-30', status: 'Unread' }
+    ];
+
+    function showToast(msg, type = 'success') {
+      const toast = document.getElementById('toastMsg');
+      toast.querySelector('i').className = type === 'success' ? 'fas fa-check-circle' : 'fas fa-exclamation-circle';
+      toast.querySelector('span').innerText = msg;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 3000);
+    }
+
+    function updateClocks() { const now = new Date().toLocaleTimeString(); document.getElementById('mobileClock') && (document.getElementById('mobileClock').innerText = now); document.getElementById('desktopClock') && (document.getElementById('desktopClock').innerText = now); }
+    setInterval(updateClocks, 1000); updateClocks();
+
+    function toggleDropdown(parentId, subId, iconId) {
+      const parent = document.getElementById(parentId);
+      const sub = document.getElementById(subId);
+      const icon = document.getElementById(iconId);
+      if (parent && sub && icon) {
+        parent.addEventListener('click', (e) => { e.stopPropagation(); sub.classList.toggle('show'); icon.classList.toggle('open'); });
+      }
+    }
+    toggleDropdown('parentOps', 'subOps', 'opsIcon');
+    toggleDropdown('parentReports', 'subReports', 'reportsIcon');
+
+    function hideFloatingButtons() { document.getElementById('floatingActions').style.display = 'none'; }
+    function showFloatingButtons(submitCallback, cancelCallback) {
+      const floatDiv = document.getElementById('floatingActions');
+      floatDiv.style.display = 'flex';
+      document.getElementById('floatingSubmit').onclick = () => { if (submitCallback) submitCallback(); };
+      document.getElementById('floatingCancel').onclick = () => { if (cancelCallback) cancelCallback(); else hideFloatingButtons(); loadPage('dashboard'); };
+    }
+
+    // ========== FORM PAGES ==========
+    function renderAddPatientPage() {
+      document.getElementById('contentArea').innerHTML = `
+        <div class="form-container"><div class="form-title"><i class="fas fa-user-plus"></i> Add New Patient</div>
+        <div class="form-row"><div class="form-group"><label>Full Name *</label><input id="patName" placeholder="Patient name"></div><div class="form-group"><label>Age</label><input id="patAge" type="number" placeholder="Age"></div></div>
+        <div class="form-row"><div class="form-group"><label>Gender</label><select id="patGender"><option>Male</option><option>Female</option><option>Other</option></select></div><div class="form-group"><label>Phone</label><input id="patPhone" placeholder="Contact"></div></div>
+        <div class="form-group"><label>Address</label><textarea id="patAddress" rows="2"></textarea></div></div>`;
+      showFloatingButtons(() => { let name = document.getElementById('patName')?.value; if (!name) { showToast('Patient name required', 'error'); return; } patients.push({ id: 'P' + Date.now(), name, age: parseInt(document.getElementById('patAge')?.value) || 0, gender: document.getElementById('patGender')?.value, phone: document.getElementById('patPhone')?.value || '', address: document.getElementById('patAddress')?.value || '', lastVitals: new Date().toISOString().slice(0, 10) }); showToast('Patient added'); hideFloatingButtons(); loadPage('patients'); }, () => { hideFloatingButtons(); loadPage('patients'); });
+    }
+
+    function renderRecordVitalsPage() {
+      document.getElementById('contentArea').innerHTML = `
+        <div class="form-container"><div class="form-title"><i class="fas fa-heartbeat"></i> Record Vital Signs</div>
+        <div class="form-group"><label>Select Patient *</label><select id="vitalPatient">${patients.map(p => `<option value="${p.id}">${p.name}</option>`)}</select></div>
+        <div class="form-row"><div class="form-group"><label>BP Systolic</label><input type="number" id="bpSys" placeholder="120"></div><div class="form-group"><label>BP Diastolic</label><input type="number" id="bpDia" placeholder="80"></div></div>
+        <div class="form-row"><div class="form-group"><label>Pulse (bpm)</label><input type="number" id="pulse" placeholder="72"></div><div class="form-group"><label>Temperature (°F)</label><input type="number" step="0.1" id="temp" placeholder="98.6"></div></div>
+        <div class="form-row"><div class="form-group"><label>SpO2 (%)</label><input type="number" id="spo2" placeholder="98"></div><div class="form-group"><label>Respiratory Rate</label><input type="number" id="resp" placeholder="16"></div></div></div>`;
+      showFloatingButtons(() => {
+        let patientId = document.getElementById('vitalPatient')?.value;
+        let patient = patients.find(p => p.id === patientId);
+        let bpSys = parseInt(document.getElementById('bpSys')?.value) || 0;
+        let bpDia = parseInt(document.getElementById('bpDia')?.value) || 0;
+        let status = 'Normal';
+        if (bpSys > 140 || bpDia > 90) status = 'Critical';
+        else if (bpSys > 130 || bpDia > 85) status = 'Warning';
+        vitals.unshift({ id: 'V' + Date.now(), patientId, patientName: patient?.name, date: new Date().toISOString().slice(0, 10), bpSystolic: bpSys, bpDiastolic: bpDia, pulse: parseInt(document.getElementById('pulse')?.value) || 0, temperature: parseFloat(document.getElementById('temp')?.value) || 98.6, spo2: parseInt(document.getElementById('spo2')?.value) || 0, respiratory: parseInt(document.getElementById('resp')?.value) || 0, status });
+        if (patient) patient.lastVitals = new Date().toISOString().slice(0, 10);
+        if (status === 'Critical') alerts.unshift({ id: 'A' + Date.now(), patient: patient?.name, vital: 'BP', value: `${bpSys}/${bpDia}`, message: 'Abnormal vitals detected', date: new Date().toISOString().slice(0, 10), status: 'Unread' });
+        showToast('Vitals recorded'); hideFloatingButtons(); loadPage('vitalHistory');
+      }, () => { hideFloatingButtons(); loadPage('vitalHistory'); });
+    }
+
+    function renderAddDevicePage() {
+      document.getElementById('contentArea').innerHTML = `
+        <div class="form-container"><div class="form-title"><i class="fas fa-microchip"></i> Add Medical Device</div>
+        <div class="form-row"><div class="form-group"><label>Device Name</label><input id="devName" placeholder="Device name"></div><div class="form-group"><label>Type</label><select id="devType"><option>Blood Pressure</option><option>Pulse Oximeter</option><option>Thermometer</option><option>ECG</option></select></div></div>
+        <div class="form-group"><label>Serial Number</label><input id="devSerial" placeholder="Serial #"></div></div>`;
+      showFloatingButtons(() => { let name = document.getElementById('devName')?.value; if (!name) { showToast('Device name required', 'error'); return; } devices.push({ id: 'D' + Date.now(), name, type: document.getElementById('devType')?.value, serial: document.getElementById('devSerial')?.value, status: 'Active', lastCalibration: new Date().toISOString().slice(0, 10) }); showToast('Device added'); hideFloatingButtons(); loadPage('devices'); }, () => { hideFloatingButtons(); loadPage('devices'); });
+    }
+
+    // ========== MAIN PAGES ==========
+    function renderDashboard() {
+      hideFloatingButtons();
+      let totalPatients = patients.length;
+      let totalReadings = vitals.length;
+      let criticalAlerts = alerts.filter(a => a.status === 'Unread').length;
+      let avgBP = vitals.reduce((s, v) => s + v.bpSystolic, 0) / vitals.length || 0;
+      document.getElementById('contentArea').innerHTML = `
+        <div class="stat-grid">
+          <div class="stat-block"><div class="stat-icon"><i class="fas fa-users"></i></div><div class="stat-info"><h4>Total Patients</h4><div class="figure">${totalPatients}</div></div></div>
+          <div class="stat-block"><div class="stat-icon"><i class="fas fa-heartbeat"></i></div><div class="stat-info"><h4>Vital Readings</h4><div class="figure">${totalReadings}</div></div></div>
+          <div class="stat-block"><div class="stat-icon"><i class="fas fa-bell"></i></div><div class="stat-info"><h4>Active Alerts</h4><div class="figure">${criticalAlerts}</div></div></div>
+          <div class="stat-block"><div class="stat-icon"><i class="fas fa-chart-line"></i></div><div class="stat-info"><h4>Avg SBP</h4><div class="figure">${Math.round(avgBP)}</div></div></div>
+        </div>
+        <div class="content-card"><div class="card-header"><h3><i class="fas fa-history"></i> Recent Vital Signs</h3><button class="btn-primary" onclick="loadPage('recordVitalsPage')"><i class="fas fa-plus"></i> Record Vitals</button></div>
+        <div class="table-responsive"><table><thead><tr><th>Date</th><th>Patient</th><th>BP</th><th>Pulse</th><th>Temp</th><th>SpO2</th><th>Status</th></tr></thead><tbody>
+          ${vitals.slice(0, 5).map(v => `<td><td>${v.date}</td><td>${v.patientName}</td><td>${v.bpSystolic}/${v.bpDiastolic}</td><td>${v.pulse}</td><td>${v.temperature}°F</td><td>${v.spo2}%</td><td><span class="status-badge ${v.status === 'Normal' ? 'badge-normal' : v.status === 'Warning' ? 'badge-warning' : 'badge-critical'}">${v.status}</span></td></tr>`).join('')}
+        </tbody></table></div></div>`;
+    }
+
+    function renderPatients() {
+      hideFloatingButtons();
+      document.getElementById('contentArea').innerHTML = `<div class="content-card"><div class="card-header"><h3><i class="fas fa-users"></i> Patient List</h3><button class="btn-primary" onclick="loadPage('addPatientPage')"><i class="fas fa-plus"></i> Add Patient</button></div>
+        <div class="table-responsive"><table><thead><tr><th>Name</th><th>Age</th><th>Gender</th><th>Phone</th><th>Last Vitals</th><th>Action</th></tr></thead><tbody>
+        ${patients.map(p => `<tr><td>${p.name}</td><td>${p.age}</td><td>${p.gender}</td><td>${p.phone}</td><td>${p.lastVitals}</td><td><button class="btn-secondary" onclick="viewPatientVitals('${p.id}')">View Vitals</button></td></tr>`).join('')}</tbody></table></div></div>`;
+    }
+
+    window.viewPatientVitals = (patientId) => {
+      let patient = patients.find(p => p.id === patientId);
+      let patientVitals = vitals.filter(v => v.patientId === patientId);
+      document.getElementById('contentArea').innerHTML = `<div class="content-card"><div class="card-header"><h3><i class="fas fa-heartbeat"></i> Vitals: ${patient?.name}</h3><button class="btn-primary" onclick="loadPage('recordVitalsPage')">+ Record New</button><button class="btn-secondary" onclick="loadPage('patients')">Back</button></div>
+        <div class="table-responsive"><table><thead><tr><th>Date</th><th>BP</th><th>Pulse</th><th>Temp</th><th>SpO2</th><th>Resp</th><th>Status</th></tr></thead><tbody>
+        ${patientVitals.map(v => `<tr><td>${v.date}</td><td>${v.bpSystolic}/${v.bpDiastolic}</td><td>${v.pulse}</td><td>${v.temperature}°F</td><td>${v.spo2}%</td><td>${v.respiratory}</td><td><span class="status-badge ${v.status === 'Normal' ? 'badge-normal' : v.status === 'Warning' ? 'badge-warning' : 'badge-critical'}">${v.status}</span></td></tr>`).join('')}</tbody></table></div></div>`;
+    };
+
+    function renderVitalHistory() {
+      hideFloatingButtons();
+      document.getElementById('contentArea').innerHTML = `<div class="content-card"><div class="card-header"><h3><i class="fas fa-history"></i> Complete Vital History</h3><button class="btn-primary" onclick="loadPage('recordVitalsPage')"><i class="fas fa-plus"></i> Record New</button></div>
+        <div class="table-responsive"><table><thead><tr><th>Date</th><th>Patient</th><th>BP</th><th>Pulse</th><th>Temp</th><th>SpO2</th><th>Resp</th><th>Status</th></tr></thead><tbody>
+        ${vitals.map(v => `<tr><td>${v.date}</td><td>${v.patientName}</td><td>${v.bpSystolic}/${v.bpDiastolic}</td><td>${v.pulse}</td><td>${v.temperature}°F</td><td>${v.spo2}%</td><td>${v.respiratory}</td><td><span class="status-badge ${v.status === 'Normal' ? 'badge-normal' : v.status === 'Warning' ? 'badge-warning' : 'badge-critical'}">${v.status}</span></td></tr>`).join('')}</tbody></table></div></div>`;
+    }
+
+    function renderAlerts() {
+      hideFloatingButtons();
+      document.getElementById('contentArea').innerHTML = `<div class="content-card"><div class="card-header"><h3><i class="fas fa-bell"></i> Vital Alerts</h3><button class="btn-primary" onclick="alerts.forEach(a=>a.status='Read'); renderAlerts(); showToast('All alerts cleared')">Clear All</button></div>
+        <div class="table-responsive"><table><thead><tr><th>Date</th><th>Patient</th><th>Vital</th><th>Value</th><th>Message</th><th>Status</th></tr></thead><tbody>
+        ${alerts.map(a => `<tr><td>${a.date}</td><td>${a.patient}</td><td>${a.vital}</td><td>${a.value}</td><td>${a.message}</td><td><span class="status-badge ${a.status === 'Unread' ? 'badge-critical' : 'badge-normal'}">${a.status}</span></td></tr>`).join('')}</tbody></table></div></div>`;
+    }
+
+    function renderTrends() {
+      hideFloatingButtons();
+      let last7Vitals = vitals.slice(0, 7);
+      document.getElementById('contentArea').innerHTML = `<div class="content-card"><div class="card-header"><h3><i class="fas fa-chart-line"></i> Vital Trends (Last 7 Readings)</h3></div>
+        <canvas id="trendChart" height="200"></canvas></div>`;
+      setTimeout(() => {
+        let ctx = document.getElementById('trendChart')?.getContext('2d');
+        if (ctx) new Chart(ctx, {
+          type: 'line', data: {
+            labels: last7Vitals.map(v => v.date), datasets: [
+              { label: 'Systolic BP', data: last7Vitals.map(v => v.bpSystolic), borderColor: '#2c7da0', tension: 0.3 },
+              { label: 'Pulse', data: last7Vitals.map(v => v.pulse), borderColor: '#10b981', tension: 0.3 }
+            ]
+          }
+        });
+      }, 100);
+    }
+
+    function renderReports() {
+      hideFloatingButtons();
+      let normalCount = vitals.filter(v => v.status === 'Normal').length;
+      let warningCount = vitals.filter(v => v.status === 'Warning').length;
+      let criticalCount = vitals.filter(v => v.status === 'Critical').length;
+      document.getElementById('contentArea').innerHTML = `<div class="stat-grid">
+        <div class="stat-block"><div class="stat-icon"><i class="fas fa-check-circle"></i></div><div class="stat-info"><h4>Normal</h4><div class="figure">${normalCount}</div></div></div>
+        <div class="stat-block"><div class="stat-icon"><i class="fas fa-exclamation-triangle"></i></div><div class="stat-info"><h4>Warning</h4><div class="figure">${warningCount}</div></div></div>
+        <div class="stat-block"><div class="stat-icon"><i class="fas fa-skull-crosswalk"></i></div><div class="stat-info"><h4>Critical</h4><div class="figure">${criticalCount}</div></div></div>
+      </div><div class="content-card"><h3>Vital Statistics Summary</h3><canvas id="statsChart" height="200"></canvas></div>`;
+      setTimeout(() => {
+        let ctx = document.getElementById('statsChart')?.getContext('2d');
+        if (ctx) new Chart(ctx, { type: 'pie', data: { labels: ['Normal', 'Warning', 'Critical'], datasets: [{ data: [normalCount, warningCount, criticalCount], backgroundColor: ['#10b981', '#f59e0b', '#ef4444'] }] } });
+      }, 100);
+    }
+
+    function renderDevices() {
+      hideFloatingButtons();
+      document.getElementById('contentArea').innerHTML = `<div class="content-card"><div class="card-header"><h3><i class="fas fa-microchip"></i> Medical Devices</h3><button class="btn-primary" onclick="loadPage('addDevicePage')"><i class="fas fa-plus"></i> Add Device</button></div>
+        <div class="table-responsive"><table><thead><tr><th>Name</th><th>Type</th><th>Serial</th><th>Status</th><th>Last Calibration</th></tr></thead><tbody>
+        ${devices.map(d => `<tr><td>${d.name}</td><td>${d.type}</td><td>${d.serial || '-'}</td><td><span class="status-badge badge-normal">${d.status}</span></td><td>${d.lastCalibration}</td></tr>`).join('')}</tbody></table></div></div>`;
+    }
+
+    function renderSettings() {
+      hideFloatingButtons();
+      document.getElementById('contentArea').innerHTML = `<div class="form-container"><div class="form-title"><i class="fas fa-sliders-h"></i> Vital Settings</div>
+        <div class="form-group"><label>BP Normal Range (Systolic)</label><input id="bpRange" value="90-140"></div>
+        <div class="form-group"><label>Pulse Normal Range</label><input id="pulseRange" value="60-100"></div>
+        <div class="form-actions"><button class="btn-primary" onclick="showToast('Settings saved')">Save Settings</button></div></div>`;
+    }
+
+    function loadPage(page) {
+      const pages = { dashboard: renderDashboard, patients: renderPatients, vitalHistory: renderVitalHistory, addPatientPage: renderAddPatientPage, recordVitalsPage: renderRecordVitalsPage, addDevicePage: renderAddDevicePage, alerts: renderAlerts, trends: renderTrends, reports: renderReports, devices: renderDevices, settings: renderSettings };
+      if (pages[page]) pages[page]();
+      document.getElementById('mobileTitle').innerText = page.replace('Page', '').replace(/([A-Z])/g, ' $1').trim() || 'Vitals';
+      document.getElementById('desktopTitle').innerText = page.replace('Page', '').replace(/([A-Z])/g, ' $1').trim() || 'Vital Signs Dashboard';
+      document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+      document.querySelector(`[data-tab="${page}"]`)?.classList.add('active');
+      if (window.innerWidth < 1024) closeSidebar();
+    }
+
+    document.querySelectorAll('.nav-item').forEach(item => { if (!item.classList.contains('nav-parent')) item.addEventListener('click', () => { loadPage(item.dataset.tab); }); });
+    document.getElementById('menuToggleBtn')?.addEventListener('click', () => { document.getElementById('sidebar').classList.add('open'); document.getElementById('sidebarOverlay').classList.add('active'); });
+    function closeSidebar() { document.getElementById('sidebar').classList.remove('open'); document.getElementById('sidebarOverlay').classList.remove('active'); }
+    document.getElementById('sidebarOverlay')?.addEventListener('click', closeSidebar);
+    loadPage('dashboard');
+  </script>
+</body>
+
+</html>

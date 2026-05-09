@@ -431,6 +431,7 @@
         .badge-active { background: #e1f7ea; color: #0b6e41; }
         .badge-pending { background: #fff0df; color: #b15500; }
         .badge-role { background: #e9efff; color: #1d4ed8; }
+        .badge-blocked { background: #fee2e2; color: #dc2626; }
         .btn-primary {
             background: linear-gradient(105deg, #2563eb, #4f46e5);
             color: white;
@@ -463,6 +464,34 @@
             margin: 0 2px;
         }
         .icon-action.delete:hover { background: #feeaea; color: #dc2626; }
+        .icon-action.block:hover { background: #feeaea; color: #dc2626; }
+        .icon-action.unblock:hover { background: #e1f7ea; color: #0b6e41; }
+        .action-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .mini-action-btn {
+            border: none;
+            border-radius: 999px;
+            padding: 7px 14px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.2s ease;
+        }
+        .mini-action-btn.block {
+            background: #fee2e2;
+            color: #b91c1c;
+        }
+        .mini-action-btn.unblock {
+            background: #dcfce7;
+            color: #166534;
+        }
+        .mini-action-btn:hover {
+            transform: translateY(-1px);
+        }
         .chart-box {
             height: 190px;
             width: 100%;
@@ -501,28 +530,8 @@
         @media (min-width: 769px) { .sidebar-overlay { display: none !important; } }
     </style>
 </head>
-<body>
+<body data-sidebar-role="admin">
 <div class="dashboard">
-    <div class="sidebar-overlay" id="sidebarOverlay"></div>
-    <div class="sidebar" id="sidebar">
-        <div class="sidebar-header">
-            <div class="brand-icon"><i class="fas fa-stethoscope"></i></div>
-            <h2>ClinicCare Pro</h2>
-        </div>
-        <div class="profile-card" id="profileCard"></div>
-        <nav class="nav-menu" id="navMenu">
-            <div class="nav-item active" data-page="dashboard"><i class="fas fa-chart-pie"></i> <span>Dashboard</span></div>
-            <div class="nav-item" data-page="users"><i class="fas fa-users"></i> <span>User management</span></div>
-            <div class="nav-item" data-page="doctors"><i class="fas fa-user-md"></i> <span>Doctors</span></div>
-            <div class="nav-item" data-page="appointments"><i class="fas fa-calendar-check"></i> <span>Appointments</span></div>
-            <div class="nav-item" data-page="departments"><i class="fas fa-building"></i> <span>Departments</span></div>
-            <div class="nav-item" data-page="reports"><i class="fas fa-chart-line"></i> <span>Analytics</span></div>
-            <div class="nav-item" data-page="audit"><i class="fas fa-history"></i> <span>Audit trail</span></div>
-            <div class="nav-item" data-page="settings"><i class="fas fa-sliders-h"></i> <span>Settings</span></div>
-        </nav>
-        <div class="logout-button" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> <span>Secure logout</span></div>
-    </div>
-
     <div class="main-panel">
         <div class="header-bar">
             <button class="menu-toggle-btn" id="menuToggleBtn"><i class="fas fa-bars"></i></button>
@@ -536,53 +545,114 @@
 <div class="toast-notification" id="toastMsg"><i class="fas" id="toastIcon"></i><span id="toastText"></span></div>
 
 <script>
-    (function() {
-        // ========== INITIAL DATA ==========
-        if (!localStorage.getItem('users')) {
-            localStorage.setItem('users', JSON.stringify([
-                { id: 'U1001', name: 'John Doe', email: 'john.d@example.com', phone: '+1 555-2301', role: 'patient', status: 'active', createdAt: '2025-01-10' },
-                { id: 'U1002', name: 'Jane Smith', email: 'jane.s@example.com', phone: '+1 555-6712', role: 'patient', status: 'active', createdAt: '2025-01-15' },
-                { id: 'U1003', name: 'Dr. Sarah Chen', email: 'sarah.chen@clinic.com', phone: '+1 555-8234', role: 'doctor', specialization: 'Cardiology', status: 'active', createdAt: '2024-12-01' },
-                { id: 'U1004', name: 'Dr. James Wilson', email: 'james.wilson@clinic.com', phone: '+1 555-9845', role: 'doctor', specialization: 'Neurology', status: 'active', createdAt: '2024-11-20' },
-                { id: 'U1005', name: 'Emily Davis', email: 'emily.d@example.com', phone: '+1 555-1122', role: 'patient', status: 'active', createdAt: '2025-02-05' },
-                { id: 'U1006', name: 'Dr. Lisa Ray', email: 'lisa.ray@clinic.com', phone: '+1 555-7766', role: 'doctor', specialization: 'Dermatology', status: 'active', createdAt: '2025-01-22' }
-            ]));
-        }
-        if (!localStorage.getItem('appointments')) {
-            localStorage.setItem('appointments', JSON.stringify([
-                { id: 'A101', patient: 'John Doe', doctor: 'Dr. Sarah Chen', date: '2025-03-20', time: '10:30', status: 'confirmed' },
-                { id: 'A102', patient: 'Jane Smith', doctor: 'Dr. James Wilson', date: '2025-03-21', time: '14:00', status: 'pending' },
-                { id: 'A103', patient: 'Emily Davis', doctor: 'Dr. Lisa Ray', date: '2025-03-22', time: '09:15', status: 'confirmed' },
-                { id: 'A104', patient: 'Robert Brown', doctor: 'Dr. Sarah Chen', date: '2025-03-23', time: '11:45', status: 'confirmed' }
-            ]));
-        }
-        if (!localStorage.getItem('departments')) {
-            localStorage.setItem('departments', JSON.stringify([
-                { id: 'D1', name: 'Cardiology', head: 'Dr. Sarah Chen', staffCount: 8 },
-                { id: 'D2', name: 'Neurology', head: 'Dr. James Wilson', staffCount: 5 },
-                { id: 'D3', name: 'Dermatology', head: 'Dr. Lisa Ray', staffCount: 4 },
-                { id: 'D4', name: 'Pediatrics', head: 'Dr. Michael Brown', staffCount: 6 }
-            ]));
-        }
-        if (!localStorage.getItem('auditLog')) {
-            localStorage.setItem('auditLog', JSON.stringify([
-                { user: 'Dr. Michael Adams', action: 'System Login', timestamp: new Date().toLocaleString() },
-                { user: 'System', action: 'Initialized Data', timestamp: new Date(Date.now()-3600000).toLocaleString() }
-            ]));
-        }
-        if (!localStorage.getItem('currentUser')) {
-            localStorage.setItem('currentUser', JSON.stringify({
-                id: 'A1001', name: 'Dr. Michael Adams', email: 'michael.adams@cliniccare.com', phone: '+1 (415) 555-8901', role: 'admin'
-            }));
-        }
-        
+    (async function() {
+        // Check authentication
         let currentUser = JSON.parse(localStorage.getItem('currentUser'));
+        const token = localStorage.getItem('authToken');
         
-        function addAuditLog(action) {
-            let logs = JSON.parse(localStorage.getItem('auditLog'));
-            logs.unshift({ user: currentUser.name, action: action, timestamp: new Date().toLocaleString() });
-            if (logs.length > 50) logs.pop();
-            localStorage.setItem('auditLog', JSON.stringify(logs));
+        if (!currentUser || !token || currentUser.role !== 'admin') {
+            window.location.href = 'Frontend/Auth/login.html';
+            return;
+        }
+
+        let globalUsers = [];
+        let globalLoginHistory = [];
+        let globalAppointments = [];
+        let globalDepartments = [];
+        let globalAuditLogs = [];
+        let globalUsersError = '';
+        let globalLoginHistoryError = '';
+        async function handleProtectedResponse(response) {
+            if (response.status === 401 || response.status === 403) {
+                localStorage.removeItem('authToken');
+                localStorage.removeItem('currentUser');
+                window.location.href = 'Frontend/Auth/login.html';
+                return null;
+            }
+            return response.json();
+        }
+        async function loadUsers() {
+            try {
+                globalUsersError = '';
+                const response = await fetch('http://localhost:5000/api/users', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const data = await handleProtectedResponse(response);
+                if (!data) return;
+                if (data.success) {
+                    globalUsers = data.users;
+                } else {
+                    globalUsers = [];
+                    globalUsersError = data.message || 'Failed to load users';
+                    showToast('Failed to load users', 'error');
+                }
+            } catch (error) {
+                globalUsers = [];
+                globalUsersError = error?.message?.includes('Failed to fetch')
+                    ? 'Backend API is not running on localhost:5000.'
+                    : 'Error loading users';
+                showToast('Error loading users', 'error');
+            }
+        }
+        async function loadLoginHistory() {
+            try {
+                globalLoginHistoryError = '';
+                const response = await fetch('http://localhost:5000/api/login-history', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const data = await handleProtectedResponse(response);
+                if (!data) return;
+                if (data.success) {
+                    globalLoginHistory = data.history;
+                } else {
+                    globalLoginHistory = [];
+                    globalLoginHistoryError = data.message || 'Failed to load login history';
+                    showToast('Failed to load login history', 'error');
+                }
+            } catch (error) {
+                globalLoginHistory = [];
+                globalLoginHistoryError = error?.message?.includes('Failed to fetch')
+                    ? 'Backend API is not running on localhost:5000.'
+                    : 'Error loading login history';
+                showToast('Error loading login history', 'error');
+            }
+        }
+        async function loadAppointments() {
+            try {
+                const response = await fetch('http://localhost:5000/api/appointments', { headers: { 'Authorization': `Bearer ${token}` } });
+                const data = await handleProtectedResponse(response);
+                if (data) globalAppointments = data;
+            } catch(e) {}
+        }
+        async function loadDepartments() {
+            try {
+                const response = await fetch('http://localhost:5000/api/departments', { headers: { 'Authorization': `Bearer ${token}` } });
+                const data = await handleProtectedResponse(response);
+                if (data) globalDepartments = data;
+            } catch(e) {}
+        }
+        async function loadAuditLogs() {
+            try {
+                const response = await fetch('http://localhost:5000/api/audit-logs', { headers: { 'Authorization': `Bearer ${token}` } });
+                const data = await handleProtectedResponse(response);
+                if (data) globalAuditLogs = data;
+            } catch(e) {}
+        }
+
+        await loadUsers();
+        await loadLoginHistory();
+        await loadAppointments();
+        await loadDepartments();
+        await loadAuditLogs();
+        
+        async function addAuditLog(action) {
+            try {
+                await fetch('http://localhost:5000/api/audit-logs', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                    body: JSON.stringify({ user: currentUser.name, action: action })
+                });
+            } catch(e) {}
         }
         
         function showToast(msg, type = 'success') {
@@ -596,16 +666,6 @@
         }
         window.showToast = showToast;
         
-        function renderProfile() {
-            document.getElementById('profileCard').innerHTML = `
-                <div class="profile-name"><i class="fas fa-user-shield"></i> ${currentUser.name}</div>
-                <div class="profile-detail"><i class="fas fa-envelope"></i> ${currentUser.email}</div>
-                <div class="profile-detail"><i class="fas fa-phone-alt"></i> ${currentUser.phone || '—'}</div>
-                <div><span class="role-tag"><i class="fas fa-crown"></i> System Admin</span></div>
-            `;
-        }
-        renderProfile();
-        
         function tick() {
             const d = new Date();
             document.getElementById('liveTime').innerText = d.toLocaleString('en-US', { weekday:'short', month:'short', day:'numeric', hour:'2-digit', minute:'2-digit', second:'2-digit' });
@@ -618,15 +678,6 @@
         }
         window.closeModal = function() { document.getElementById('modalRoot').style.display = 'none'; };
         
-        // Mobile sidebar
-        const sidebar = document.getElementById('sidebar');
-        const overlay = document.getElementById('sidebarOverlay');
-        const toggleBtn = document.getElementById('menuToggleBtn');
-        function closeSidebar() { sidebar.classList.remove('mobile-open'); overlay.classList.remove('active'); }
-        function openSidebar() { sidebar.classList.add('mobile-open'); overlay.classList.add('active'); }
-        if (toggleBtn) toggleBtn.addEventListener('click', (e) => { e.stopPropagation(); sidebar.classList.contains('mobile-open') ? closeSidebar() : openSidebar(); });
-        overlay.addEventListener('click', closeSidebar);
-        
         function makeTableResponsive(tableEl) {
             if (!tableEl) return;
             const headers = Array.from(tableEl.querySelectorAll('thead tr th')).map(th => th.innerText);
@@ -636,65 +687,284 @@
             tableEl.classList.add('responsive-table');
         }
         
+        function getEmptyStateRow(colspan, message) {
+            return `<tr><td colspan="${colspan}" style="text-align:center; padding: 28px 16px; color:#64748b; font-weight:600;">${message}</td></tr>`;
+        }
+        
         // ========== FULL CRUD OPERATIONS ==========
         window.addUserModal = function() {
-            openModal(`<h2>➕ Add New User</h2>
-                <div class="form-field"><label>Full name</label><input class="form-input" id="modalName" placeholder="Enter full name"></div>
-                <div class="form-field"><label>Email</label><input class="form-input" id="modalEmail" type="email" placeholder="user@example.com"></div>
-                <div class="row-fields"><div class="form-field"><label>Role</label><select class="form-input" id="modalRole"><option value="patient">Patient</option><option value="doctor">Doctor</option></select></div>
-                <div class="form-field"><label>Phone</label><input class="form-input" id="modalPhone" placeholder="+1 555 1234"></div></div>
-                <div class="modal-actions"><button class="btn-primary" onclick="saveNewUser()">Create User</button><button class="btn-outline" onclick="closeModal()">Cancel</button></div>`);
+            openModal(`
+                <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 24px;">
+                    <div style="width: 44px; height: 44px; background: #eef2ff; border-radius: 14px; display: flex; align-items: center; justify-content: center; color: #3b82f6; font-size: 1.2rem;">
+                        <i class="fas fa-user-plus"></i>
+                    </div>
+                    <h2 style="margin: 0; font-size: 1.4rem; color: #1e293b;">Create New User</h2>
+                </div>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 18px;">
+                    <div class="form-field">
+                        <label>First Name</label>
+                        <input class="form-input" id="modalFirstName" placeholder="John">
+                    </div>
+                    <div class="form-field">
+                        <label>Middle Name</label>
+                        <input class="form-input" id="modalMiddleName" placeholder="M.">
+                    </div>
+                    <div class="form-field">
+                        <label>Last Name</label>
+                        <input class="form-input" id="modalLastName" placeholder="Doe">
+                    </div>
+                </div>
+
+                <div class="form-field">
+                    <label>Email Address</label>
+                    <input class="form-input" id="modalEmail" type="email" placeholder="user@cliniccare.pro">
+                </div>
+
+                <div class="form-field">
+                    <label>Password</label>
+                    <input class="form-input" id="modalPassword" type="password" placeholder="••••••••">
+                </div>
+
+                <div class="row-fields">
+                    <div class="form-field" style="flex: 1;">
+                        <label>Assign Role</label>
+                        <select class="form-input" id="modalRole">
+                            <option value="patient">Patient</option>
+                            <option value="doctor">Doctor</option>
+                            <option value="receptionist">Receptionist</option>
+                            <option value="admin">Administrator</option>
+                        </select>
+                    </div>
+                    <div class="form-field" style="flex: 1;">
+                        <label>Phone Number</label>
+                        <input class="form-input" id="modalPhone" placeholder="+1 555-0000">
+                    </div>
+                </div>
+
+                <div class="modal-actions">
+                    <button class="btn-outline" onclick="closeModal()">Cancel</button>
+                    <button class="btn-primary" onclick="saveNewUser()">Create Account</button>
+                </div>
+            `);
         };
-        window.saveNewUser = function() {
-            const users = JSON.parse(localStorage.getItem('users'));
-            const newUser = {
-                id: 'U'+Date.now(),
-                name: document.getElementById('modalName')?.value || 'New User',
-                email: document.getElementById('modalEmail')?.value || 'noemail@domain.com',
-                phone: document.getElementById('modalPhone')?.value || '',
-                role: document.getElementById('modalRole')?.value || 'patient',
-                status: 'active',
-                createdAt: new Date().toISOString().slice(0,10)
-            };
-            if (newUser.role === 'doctor') newUser.specialization = 'General Medicine';
-            users.push(newUser);
-            localStorage.setItem('users', JSON.stringify(users));
-            addAuditLog(`Created new user: ${newUser.name} (${newUser.role})`);
-            closeModal(); showToast(`User ${newUser.name} added successfully`, 'success');
-            loadPage('users');
-        };
-        
-        window.editUser = (id) => {
-            let users = JSON.parse(localStorage.getItem('users'));
-            let u = users.find(x=>x.id===id);
-            if(u) openModal(`<h2>✏️ Edit User</h2><div class="form-field"><label>Full name</label><input id="editName" class="form-input" value="${u.name.replace(/"/g, '&quot;')}"></div>
-                <div class="form-field"><label>Email</label><input id="editEmail" class="form-input" value="${u.email}"></div>
-                <div class="form-field"><label>Phone</label><input id="editPhone" class="form-input" value="${u.phone || ''}"></div>
-                <div class="modal-actions"><button class="btn-primary" onclick="updateUser('${id}')">Save Changes</button><button class="btn-outline" onclick="closeModal()">Cancel</button></div>`);
-        };
-        window.updateUser = (id) => {
-            let users = JSON.parse(localStorage.getItem('users'));
-            let u = users.find(x=>x.id===id);
-            if(u) {
-                u.name = document.getElementById('editName')?.value || u.name;
-                u.email = document.getElementById('editEmail')?.value || u.email;
-                u.phone = document.getElementById('editPhone')?.value || u.phone;
-                localStorage.setItem('users', JSON.stringify(users));
-                addAuditLog(`Updated user: ${u.name}`);
-                closeModal(); showToast('User updated', 'info');
-                loadPage('users');
+        window.saveNewUser = async function() {
+            const firstName = document.getElementById('modalFirstName')?.value.trim();
+            const middleName = document.getElementById('modalMiddleName')?.value.trim();
+            const lastName = document.getElementById('modalLastName')?.value.trim();
+            const email = document.getElementById('modalEmail')?.value.trim();
+            const password = document.getElementById('modalPassword')?.value.trim();
+            const role = document.getElementById('modalRole')?.value;
+            const phone = document.getElementById('modalPhone')?.value.trim();
+
+            if (!firstName || !lastName || !email || !password || !role || !phone) {
+                showToast('Please fill all required fields', 'error');
+                return;
+            }
+
+            const fullName = middleName ? `${firstName} ${middleName} ${lastName}` : `${firstName} ${lastName}`;
+
+            try {
+                const response = await fetch('http://localhost:5000/api/users', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({
+                        name: fullName,
+                        email,
+                        password,
+                        role,
+                        phone,
+                        specialization: role === 'doctor' ? 'General Medicine' : ''
+                    })
+                });
+
+                const data = await handleProtectedResponse(response);
+                if (!data) return;
+
+                if (data.success) {
+                    showToast('User created successfully', 'success');
+                    addAuditLog(`Created new user: ${fullName} (${role})`);
+                    closeModal();
+                    await loadUsers();
+                    loadPage('users');
+                } else {
+                    showToast(data.message || 'Failed to create user', 'error');
+                }
+            } catch (error) {
+                showToast('Error connecting to server', 'error');
             }
         };
         
-        window.deleteUser = (id) => {
-            if(confirm('⚠️ Permanently delete this user? This action cannot be undone.')){
-                let users = JSON.parse(localStorage.getItem('users'));
-                const deleted = users.find(u=>u.id===id);
-                users = users.filter(u=>u.id!==id);
-                localStorage.setItem('users', JSON.stringify(users));
-                addAuditLog(`Deleted user: ${deleted?.name || id}`);
-                showToast('User deleted', 'warning');
-                loadPage('users');
+        window.editUser = (id) => {
+            let u = globalUsers.find(x=>x.id===id);
+            if (!u) return;
+
+            const nameParts = u.name.split(' ');
+            const firstName = nameParts[0] || '';
+            const lastName = nameParts.length > 1 ? nameParts[nameParts.length - 1] : '';
+            const middleName = nameParts.length > 2 ? nameParts.slice(1, -1).join(' ') : '';
+
+            openModal(`
+                <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 24px;">
+                    <div style="width: 44px; height: 44px; background: #fff7ed; border-radius: 14px; display: flex; align-items: center; justify-content: center; color: #f59e0b; font-size: 1.2rem;">
+                        <i class="fas fa-user-edit"></i>
+                    </div>
+                    <h2 style="margin: 0; font-size: 1.4rem; color: #1e293b;">Edit User Details</h2>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 18px;">
+                    <div class="form-field">
+                        <label>First Name</label>
+                        <input class="form-input" id="editFirstName" value="${firstName.replace(/"/g, '&quot;')}">
+                    </div>
+                    <div class="form-field">
+                        <label>Middle Name</label>
+                        <input class="form-input" id="editMiddleName" value="${middleName.replace(/"/g, '&quot;')}">
+                    </div>
+                    <div class="form-field">
+                        <label>Last Name</label>
+                        <input class="form-input" id="editLastName" value="${lastName.replace(/"/g, '&quot;')}">
+                    </div>
+                </div>
+
+                <div class="form-field">
+                    <label>Email Address</label>
+                    <input id="editEmail" class="form-input" value="${u.email}">
+                </div>
+                
+                <div class="form-field">
+                    <label>Update Password (leave blank to keep current)</label>
+                    <input id="editPassword" class="form-input" type="password" placeholder="••••••••">
+                </div>
+
+                <div class="row-fields">
+                    <div class="form-field" style="flex: 1;">
+                        <label>Role</label>
+                        <select class="form-input" id="editRole">
+                            <option value="patient" ${u.role === 'patient' ? 'selected' : ''}>Patient</option>
+                            <option value="doctor" ${u.role === 'doctor' ? 'selected' : ''}>Doctor</option>
+                            <option value="receptionist" ${u.role === 'receptionist' ? 'selected' : ''}>Receptionist</option>
+                            <option value="admin" ${u.role === 'admin' ? 'selected' : ''}>Administrator</option>
+                        </select>
+                    </div>
+                    <div class="form-field" style="flex: 1;">
+                        <label>Phone Number</label>
+                        <input id="editPhone" class="form-input" value="${u.phone || ''}">
+                    </div>
+                </div>
+
+                <div class="modal-actions">
+                    <button class="btn-outline" onclick="closeModal()">Cancel</button>
+                    <button class="btn-primary" onclick="updateUser('${id}')">Save Changes</button>
+                </div>`);
+        };
+        window.updateUser = async (id) => {
+            const firstName = document.getElementById('editFirstName')?.value.trim();
+            const middleName = document.getElementById('editMiddleName')?.value.trim();
+            const lastName = document.getElementById('editLastName')?.value.trim();
+            const email = document.getElementById('editEmail')?.value.trim();
+            const phone = document.getElementById('editPhone')?.value.trim();
+            const role = document.getElementById('editRole')?.value;
+            const password = document.getElementById('editPassword')?.value.trim();
+
+            if (!firstName || !lastName || !email || !role || !phone) {
+                showToast('Required fields cannot be empty', 'error');
+                return;
+            }
+
+            const fullName = middleName ? `${firstName} ${middleName} ${lastName}` : `${firstName} ${lastName}`;
+
+            try {
+                const updatePayload = {
+                    name: fullName,
+                    email,
+                    phone,
+                    role,
+                    specialization: role === 'doctor' ? 'General Medicine' : ''
+                };
+                if (password) updatePayload.password = password;
+
+                const response = await fetch(`http://localhost:5000/api/users/${id}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify(updatePayload)
+                });
+
+                const data = await handleProtectedResponse(response);
+                if (!data) return;
+
+                if (data.success) {
+                    showToast('User updated successfully', 'info');
+                    addAuditLog(`Updated user: ${fullName}`);
+                    closeModal();
+                    await loadUsers();
+                    loadPage('users');
+                } else {
+                    showToast(data.message || 'Failed to update user', 'error');
+                }
+            } catch (error) {
+                showToast('Error connecting to server', 'error');
+            }
+        };
+        
+        window.deleteUser = async (id) => {
+            if (confirm('⚠️ Permanently delete this user? This action cannot be undone.')) {
+                try {
+                    const response = await fetch(`http://localhost:5000/api/users/${id}`, {
+                        method: 'DELETE',
+                        headers: { 'Authorization': `Bearer ${token}` }
+                    });
+
+                    const data = await handleProtectedResponse(response);
+                    if (!data) return;
+
+                    if (data.success) {
+                        showToast('User deleted successfully', 'warning');
+                        addAuditLog(`Deleted user ID: ${id}`);
+                        await loadUsers();
+                        loadPage('users');
+                    } else {
+                        showToast(data.message || 'Failed to delete user', 'error');
+                    }
+                } catch (error) {
+                    showToast('Error connecting to server', 'error');
+                }
+            }
+        };
+        
+        window.toggleBlockUser = async function(id, currentlyBlocked) {
+            const action = currentlyBlocked ? 'unblock' : 'block';
+            if (!confirm(`Are you sure you want to ${action} this user?`)) return;
+            
+            try {
+                const response = await fetch(`http://localhost:5000/api/users/${id}/block`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.getItem('authToken')}`
+                    },
+                    body: JSON.stringify({ blocked: !currentlyBlocked })
+                });
+                const data = await handleProtectedResponse(response);
+                if (!data) return;
+                if (data.success) {
+                    showToast(`User ${action}ed successfully`, currentlyBlocked ? 'success' : 'warning');
+                    await loadUsers();
+                    await loadLoginHistory();
+                    const updatedUser = globalUsers.find(user => user.id === id);
+                    addAuditLog(`${action === 'block' ? 'Blocked' : 'Unblocked'} user: ${updatedUser?.name || id}`);
+                    loadPage('users');
+                } else {
+                    showToast(data.message || `Failed to ${action} user`, 'error');
+                }
+            } catch (error) {
+                showToast(`Error ${action}ing user`, 'error');
             }
         };
         
@@ -708,36 +978,45 @@
                 <div class="row-fields"><div class="form-field"><label>Date</label><input type="date" class="form-input" id="appDate"></div><div class="form-field"><label>Time</label><input type="time" class="form-input" id="appTime"></div></div>
                 <div class="modal-actions"><button class="btn-primary" onclick="saveAppointment()">Schedule</button><button class="btn-outline" onclick="closeModal()">Cancel</button></div>`);
         };
-        window.saveAppointment = function() {
-            const apps = JSON.parse(localStorage.getItem('appointments'));
+        window.saveAppointment = async function() {
             const newApp = {
-                id: 'A'+Date.now(),
                 patient: document.getElementById('appPatient')?.value,
                 doctor: document.getElementById('appDoctor')?.value,
                 date: document.getElementById('appDate')?.value,
                 time: document.getElementById('appTime')?.value,
                 status: 'pending'
             };
-            apps.push(newApp);
-            localStorage.setItem('appointments', JSON.stringify(apps));
-            addAuditLog(`Created appointment: ${newApp.patient} with ${newApp.doctor}`);
-            closeModal(); showToast('Appointment scheduled', 'success');
-            loadPage('appointments');
-        };
-        window.deleteAppointment = (id) => {
-            if(confirm('Cancel this appointment?')){
-                let apps = JSON.parse(localStorage.getItem('appointments')).filter(a=>a.id!==id);
-                localStorage.setItem('appointments', JSON.stringify(apps));
-                addAuditLog(`Cancelled appointment ID: ${id}`);
-                showToast('Appointment cancelled', 'info');
+            try {
+                await fetch('http://localhost:5000/api/appointments', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                    body: JSON.stringify(newApp)
+                });
+                await loadAppointments();
+                addAuditLog(`Created appointment: ${newApp.patient} with ${newApp.doctor}`);
+                closeModal(); showToast('Appointment scheduled', 'success');
                 loadPage('appointments');
+            } catch(e) {}
+        };
+        window.deleteAppointment = async (id) => {
+            if(confirm('Cancel this appointment?')){
+                try {
+                    await fetch(`http://localhost:5000/api/appointments/${id}`, {
+                        method: 'DELETE',
+                        headers: { 'Authorization': `Bearer ${token}` }
+                    });
+                    await loadAppointments();
+                    addAuditLog(`Cancelled appointment ID: ${id}`);
+                    showToast('Appointment cancelled', 'info');
+                    loadPage('appointments');
+                } catch(e) {}
             }
         };
         
         // ========== PAGE RENDERING WITH FULL FUNCTIONALITY ==========
         function renderDashboard(container) {
-            const users = JSON.parse(localStorage.getItem('users'));
-            const apps = JSON.parse(localStorage.getItem('appointments'));
+            const users = globalUsers;
+            const apps = globalAppointments;
             const totalUsers = users.length;
             const totalDocs = users.filter(u=>u.role==='doctor').length;
             const totalPats = users.filter(u=>u.role==='patient').length;
@@ -750,7 +1029,7 @@
                 </div>
                 <div class="content-card"><div class="card-header"><h3>📋 Recent System Activity</h3><button class="btn-primary" onclick="loadPage('audit')"><i class="fas fa-history"></i> Full Audit</button></div>
                 <table class="activity-table"><thead><tr><th>User</th><th>Action</th><th>Timestamp</th></tr></thead><tbody>
-                    ${JSON.parse(localStorage.getItem('auditLog')).slice(0,3).map(log=>`<tr><td>${log.user}</td><td>${log.action}</td><td>${log.timestamp}</td></tr>`).join('')}
+                    ${globalAuditLogs.slice(0,3).map(log=>`<tr><td>${log.user}</td><td>${log.action}</td><td>${log.timestamp}</td></tr>`).join('')}
                 </tbody></table></div>
                 <div class="content-card"><div class="card-header"><h3>📊 Weekly Consultations Trend</h3></div><div class="chart-box"><canvas id="dashChart"></canvas></div></div>
             `;
@@ -763,22 +1042,22 @@
         }
         
         function renderUsers(container) {
-            const users = JSON.parse(localStorage.getItem('users'));
+            const users = globalUsers;
             container.innerHTML = `<div class="content-card"><div class="card-header"><h3>👥 User Management</h3><button class="btn-primary" onclick="addUserModal()"><i class="fas fa-plus"></i> New user</button></div>
-            <table class="users-table"><thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Status</th><th>Actions</th></tr></thead>
-            <tbody>${users.map(u => `<tr><td>${u.name}</td><td>${u.email}</td><td><span class="status-badge badge-role">${u.role}</span></td><td><span class="status-badge ${u.status==='active'?'badge-active':'badge-pending'}">${u.status}</span></td>
-            <td><button class="icon-action" onclick="editUser('${u.id}')"><i class="fas fa-edit"></i></button><button class="icon-action delete" onclick="deleteUser('${u.id}')"><i class="fas fa-trash"></i></button></td></tr>`).join('')}</tbody></table></div>`;
+            <table class="users-table"><thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Signup Date</th><th>Status</th><th>Actions</th></tr></thead>
+            <tbody>${users.map(u => `<tr><td>${u.name}</td><td>${u.email}</td><td><span class="status-badge badge-role">${u.role}</span></td><td>${u.createdAt ? new Date(u.createdAt).toLocaleDateString() : 'N/A'}</td><td><span class="status-badge ${u.blocked ? 'badge-blocked' : 'badge-active'}">${u.blocked ? 'blocked' : 'active'}</span></td>
+            <td><div class="action-group"><button class="icon-action" onclick="editUser('${u.id}')"><i class="fas fa-edit"></i></button><button class="mini-action-btn ${u.blocked ? 'unblock' : 'block'}" onclick="toggleBlockUser('${u.id}', ${u.blocked})">${u.blocked ? 'Unblock' : 'Block'}</button><button class="icon-action delete" onclick="deleteUser('${u.id}')"><i class="fas fa-trash"></i></button></div></td></tr>`).join('') || getEmptyStateRow(6, globalUsersError || 'No signup data found.')}</tbody></table></div>`;
             setTimeout(() => { const tbl = document.querySelector('.users-table'); if(tbl && window.innerWidth<=768) makeTableResponsive(tbl); }, 10);
         }
         
         function renderDoctors(container) {
-            const docs = JSON.parse(localStorage.getItem('users')).filter(u=>u.role==='doctor');
+            const docs = globalUsers.filter(u=>u.role==='doctor');
             container.innerHTML = `<div class="content-card"><h3>🩺 Medical Staff Directory</h3><table class="doctors-table"><thead><tr><th>Name</th><th>Specialization</th><th>Email</th><th>Phone</th></tr></thead><tbody>${docs.map(d=>`<tr><td>${d.name}</td><td>${d.specialization||'General Medicine'}</td><td>${d.email}</td><td>${d.phone||'—'}</td></tr>`).join('')}</tbody></table></div>`;
             setTimeout(()=>{const tbl=document.querySelector('.doctors-table'); if(tbl && window.innerWidth<=768) makeTableResponsive(tbl);},10);
         }
         
         function renderAppointments(container) {
-            const apps = JSON.parse(localStorage.getItem('appointments'));
+            const apps = globalAppointments;
             container.innerHTML = `<div class="content-card"><div class="card-header"><h3>📆 Appointment Schedule</h3><button class="btn-primary" onclick="addAppointmentModal()"><i class="fas fa-plus"></i> New Appointment</button></div>
             <table class="app-table"><thead><tr><th>Patient</th><th>Doctor</th><th>Date</th><th>Time</th><th>Status</th><th>Action</th></tr></thead>
             <tbody>${apps.map(a=>`<tr><td>${a.patient}</td><td>${a.doctor}</td><td>${a.date}</td><td>${a.time}</td><td><span class="status-badge ${a.status==='confirmed'?'badge-active':'badge-pending'}">${a.status}</span></td>
@@ -787,7 +1066,7 @@
         }
         
         function renderDepartments(container) {
-            const depts=JSON.parse(localStorage.getItem('departments'));
+            const depts=globalDepartments;
             container.innerHTML=`<div class="content-card"><h3>🏥 Departments</h3><table class="dept-table"><thead><tr><th>Name</th><th>Head of Department</th><th>Staff Count</th></tr></thead><tbody>${depts.map(d=>`<tr><td>${d.name}</td><td>${d.head}</td><td>${d.staffCount}</td></tr>`).join('')}</tbody></table></div>`;
             setTimeout(()=>{const tbl=document.querySelector('.dept-table'); if(tbl && window.innerWidth<=768) makeTableResponsive(tbl);},10);
         }
@@ -798,7 +1077,7 @@
         }
         
         function renderAudit(container) {
-            const log=JSON.parse(localStorage.getItem('auditLog'));
+            const log=globalAuditLogs;
             container.innerHTML=`<div class="content-card"><h3>🔒 Security & Audit Trail</h3><table class="audit-table"><thead><tr><th>User</th><th>Action</th><th>Timestamp</th></tr></thead><tbody>${log.map(l=>`<tr><td>${l.user}</td><td>${l.action}</td><td>${l.timestamp}</td></tr>`).join('')}</tbody></table></div>`;
             setTimeout(()=>{const tbl=document.querySelector('.audit-table'); if(tbl && window.innerWidth<=768) makeTableResponsive(tbl);},10);
         }
@@ -809,42 +1088,81 @@
             <button class="btn-primary" onclick="showToast('Settings saved successfully','success'); addAuditLog('Updated system settings');"><i class="fas fa-save"></i> Save Preferences</button></div>`;
         }
         
+        function renderLoginHistory(container) {
+            const history = globalLoginHistory;
+            container.innerHTML = `<div class="content-card"><div class="card-header"><h3>🔐 Login History</h3><button class="btn-primary" onclick="refreshLoginHistory()"><i class="fas fa-sync"></i> Refresh</button></div>
+            <table class="login-history-table"><thead><tr><th>User</th><th>Email</th><th>Role</th><th>Login Time</th><th>Status</th><th>Actions</th></tr></thead>
+            <tbody>${history.map(h => `<tr><td>${h.userName || h.userId}</td><td>${h.email}</td><td><span class="status-badge badge-role">${h.role || 'unknown'}</span></td><td>${new Date(h.timestamp).toLocaleString()}</td><td><span class="status-badge ${h.blocked ? 'badge-blocked' : 'badge-active'}">${h.blocked ? 'blocked' : 'active'}</span></td>
+            <td><button class="icon-action delete" onclick="deleteLoginHistory('${h._id}')"><i class="fas fa-trash"></i></button></td></tr>`).join('') || getEmptyStateRow(6, globalLoginHistoryError || 'No login history found yet.')}</tbody></table></div>`;
+            setTimeout(() => { const tbl = document.querySelector('.login-history-table'); if (tbl && window.innerWidth <= 768) makeTableResponsive(tbl); }, 10);
+        }
+        
+        window.refreshLoginHistory = async function() {
+            await loadLoginHistory();
+            loadPage('login-history');
+            showToast('Login history refreshed', 'success');
+        };
+        
+        window.deleteLoginHistory = async function(id) {
+            if (!confirm('Delete this login history entry?')) return;
+            try {
+                const response = await fetch(`http://localhost:5000/api/login-history/${id}`, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': `Bearer ${localStorage.getItem('authToken')}` }
+                });
+                const data = await handleProtectedResponse(response);
+                if (!data) return;
+                if (data.success) {
+                    showToast('Login history entry deleted', 'success');
+                    await loadLoginHistory();
+                    loadPage('login-history');
+                } else {
+                    showToast('Failed to delete entry', 'error');
+                }
+            } catch (error) {
+                showToast('Error deleting entry', 'error');
+            }
+        };
+        
         window.loadPage = function(page) {
             const container = document.getElementById('contentArea');
+            window.currentDashboardPage = page;
+            window.updateSharedSidebarState?.(page);
             if (page === 'dashboard') renderDashboard(container);
-            else if (page === 'users') renderUsers(container);
+            else if (page === 'users') {
+                loadUsers().then(() => renderUsers(container));
+                return;
+            }
             else if (page === 'doctors') renderDoctors(container);
             else if (page === 'appointments') renderAppointments(container);
             else if (page === 'departments') renderDepartments(container);
+            else if (page === 'login-history') {
+                loadLoginHistory().then(() => renderLoginHistory(container));
+                return;
+            }
             else if (page === 'reports') renderReports(container);
             else if (page === 'audit') renderAudit(container);
             else if (page === 'settings') renderSettings(container);
-            document.getElementById('headerTitle').innerText = document.querySelector(`.nav-item[data-page="${page}"] span`)?.innerText || page;
         };
-        
-        const navItems = document.querySelectorAll('.nav-item');
-        navItems.forEach(item => {
-            item.addEventListener('click', () => {
-                navItems.forEach(n => n.classList.remove('active'));
-                item.classList.add('active');
-                const page = item.dataset.page;
-                loadPage(page);
-                if (window.innerWidth <= 768) closeSidebar();
-            });
-        });
-        
-        document.getElementById('logoutBtn').addEventListener('click', () => {
-            addAuditLog('User logged out');
-            showToast('🔐 Logging out securely...', 'info');
-            setTimeout(() => {
-                localStorage.removeItem('currentUser');
-                window.location.reload();
-            }, 800);
-        });
-        
+
+        window.addAuditLog = addAuditLog;
         loadPage('dashboard');
-        window.addEventListener('resize', () => { if (window.innerWidth > 768 && sidebar.classList.contains('mobile-open')) closeSidebar(); });
     })();
+</script>
+<script>
+    fetch('Frontend/components/sidebar.html')
+        .then(response => response.text())
+        .then(html => {
+            const wrapper = document.createElement('div');
+            wrapper.innerHTML = html;
+            wrapper.querySelectorAll('script').forEach(scriptNode => {
+                const script = document.createElement('script');
+                script.textContent = scriptNode.textContent;
+                document.body.appendChild(script);
+                script.remove();
+            });
+        })
+        .catch(error => console.error('Sidebar failed:', error));
 </script>
 </body>
 </html>

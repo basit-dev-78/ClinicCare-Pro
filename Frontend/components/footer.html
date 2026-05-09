@@ -1,0 +1,141 @@
+<style>
+    .footer {
+        background: #1a1f2b;
+        color: white;
+        padding: 3rem 0 2rem;
+    }
+
+    .footer-content {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 1rem;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 2rem;
+    }
+
+    .footer-section {
+        display: flex;
+        flex-direction: column;
+        gap: 0.8rem;
+    }
+
+    .footer-brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 1rem;
+    }
+
+    .footer-brand i {
+        color: #4158D0;
+        font-size: 1.5rem;
+    }
+
+    .footer-brand h3 {
+        margin: 0;
+        color: #ffffff;
+        font-size: 1.2rem;
+    }
+
+    .footer-section h4 {
+        margin: 0;
+        color: #ffffff;
+        font-size: 1rem;
+    }
+
+    .footer-section p,
+    .footer-section a,
+    .footer-bottom p {
+        color: #adb5bd;
+        line-height: 1.8;
+    }
+
+    .footer-section ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: grid;
+        gap: 0.5rem;
+    }
+
+    .footer-section a {
+        text-decoration: none;
+        color: #adb5bd;
+        transition: color 0.25s ease;
+    }
+
+    .footer-section a:hover {
+        color: #ffffff;
+    }
+
+    .social-links {
+        display: flex;
+        gap: 0.75rem;
+    }
+
+    .social-links a {
+        color: #adb5bd;
+        font-size: 1rem;
+        transition: color 0.25s ease;
+    }
+
+    .social-links a:hover {
+        color: #ffffff;
+    }
+
+    .footer-bottom {
+        margin-top: 2rem;
+        padding-top: 1rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.08);
+        text-align: center;
+    }
+
+    @media (max-width: 768px) {
+        .footer {
+            padding: 2.5rem 0 1.5rem;
+        }
+
+        .footer-content {
+            gap: 1.5rem;
+        }
+    }
+</style>
+
+<footer class="footer">
+    <div class="footer-content">
+        <div class="footer-section">
+            <div class="footer-brand">
+                <i class="fas fa-clinic-medical"></i>
+                <h3>ClinicCare Pro</h3>
+            </div>
+            <p>Transforming healthcare management with AI-powered solutions for clinics worldwide.</p>
+        </div>
+
+        <div class="footer-section">
+            <h4>Quick Links</h4>
+            <ul>
+                <li><a href="#features">Features</a></li>
+                <li><a href="#pricing">Pricing</a></li>
+                <li><a href="#contact">Support</a></li>
+            </ul>
+        </div>
+
+        <div class="footer-section">
+            <h4>Contact Info</h4>
+            <p><i class="fas fa-envelope"></i> support@cliniccarepro.com</p>
+            <p><i class="fas fa-phone"></i> +1 (555) 123-4567</p>
+            <p><i class="fas fa-map-marker-alt"></i> 123 Healthcare Ave, Medical City</p>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <p>&copy; <span id="footerYear"></span> ClinicCare Pro. All rights reserved.</p>
+    </div>
+</footer>
+
+<script>
+    const footerYear = document.getElementById('footerYear');
+    if (footerYear) {
+        footerYear.textContent = new Date().getFullYear();
+    }
+</script>

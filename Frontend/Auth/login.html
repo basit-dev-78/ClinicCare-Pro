@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ClinicCare Pro · Login</title>
+    <meta name="description" content="ClinicCare Pro secure login page">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="auth.css">
+</head>
+<body>
+    <div class="auth-container">
+        <section class="brand-panel">
+            <div>
+                <h1>ClinicCare Pro</h1>
+                <p>Securely sign in to manage appointments, patient records and clinic workflows.</p>
+                <ul class="brand-features">
+                    <li><i class="fas fa-shield-alt"></i> Secure local authentication</li>
+                    <li><i class="fas fa-calendar-check"></i> Dashboard access for every role</li>
+                    <li><i class="fas fa-user-md"></i> Demo users included</li>
+                </ul>
+            </div>
+            <div class="brand-footer">
+                <div class="stat">
+                    <strong>4</strong>
+                    <span>Clinic roles</span>
+                </div>
+                <div class="stat">
+                    <strong>99.9%</strong>
+                    <span>Service confidence</span>
+                </div>
+            </div>
+        </section>
+
+        <section class="form-panel">
+            <div class="form-header">
+                <h2>Sign in to ClinicCare Pro</h2>
+                <p>Use one of the demo accounts or your own clinic credentials.</p>
+            </div>
+
+            <form id="loginForm" onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label for="loginEmail">Email address</label>
+                    <div class="input-icon">
+                        <i class="fas fa-envelope"></i>
+                        <input type="email" id="loginEmail" required placeholder="doctor@example.com">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="loginPassword">Password</label>
+                    <div class="input-icon">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" id="loginPassword" required placeholder="Enter your password">
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-submit" id="loginBtn">
+                    <span><i class="fas fa-arrow-right-to-bracket"></i> Sign In</span>
+                </button>
+
+                <div class="form-footer">
+                    <p><a href="forgot-password.html">Forgot password?</a></p>
+                    <p>New here? <a href="signup.html">Create account</a></p>
+                </div>
+
+                <p style="font-size:0.92rem; color:#64748b; margin-top: 20px; line-height:1.6;">
+                    Demo accounts: admin@example.com / admin123 · doctor@example.com / doctor123 · patient@example.com / patient123 · receptionist@example.com / receptionist123
+                </p>
+            </form>
+        </section>
+    </div>
+
+    <div id="toast" class="toast-message"></div>
+    <script src="auth.js"></script>
+</body>
+</html>
