@@ -553,6 +553,66 @@
             </div>
         `);
 
+        // Dynamic Centralized Header Fetch & Inject
+        fetch('dashboard_header.html')
+            .then(r => r.text())
+            .then(headerHtml => {
+                const oldHeader = document.querySelector('.header-bar, header.header-bar, header.header');
+                if (oldHeader) {
+                    const tempDiv = document.createElement('div');
+                    tempDiv.innerHTML = headerHtml;
+                    
+                    const newHeader = tempDiv.querySelector('.custom-header-bar');
+                    const newStyle = tempDiv.querySelector('style');
+                    
+                    if (newHeader) {
+                        const oldTitle = oldHeader.querySelector('.page-title, #headerTitle');
+                        const newTitle = newHeader.querySelector('#headerTitle');
+                        if (oldTitle && newTitle) {
+                            newTitle.innerText = oldTitle.innerText;
+                        }
+                        
+                        // Preserve old clock ID (desktopClock, liveTime, etc.) for backwards compatibility
+                        const oldClock = oldHeader.querySelector('.live-clock, #desktopClock, #liveTime');
+                        const newClock = newHeader.querySelector('#desktopClock');
+                        if (oldClock && newClock) {
+                            newClock.id = oldClock.id || 'desktopClock';
+                        }
+                        
+                        // Replace the old header elements in the DOM
+                        oldHeader.replaceWith(newHeader);
+                        if (newStyle) document.head.appendChild(newStyle);
+                        
+                        // Set up clock element
+                        const clockEl = newHeader.querySelector('#desktopClock') || newHeader.querySelector('#liveTime');
+                        if (clockEl) {
+                            const updateClock = () => {
+                                clockEl.innerText = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                            };
+                            updateClock();
+                            setInterval(updateClock, 60000);
+                        }
+                        
+                        // Bind menu toggle element to sidebar action
+                        const menuBtn = newHeader.querySelector('#headerMenuToggle');
+                        if (menuBtn) {
+                            menuBtn.addEventListener('click', function(e) {
+                                e.stopPropagation();
+                                const sidebar = document.getElementById('sidebar');
+                                if (!sidebar) return;
+                                const isOpen = role === 'admin'
+                                    ? sidebar.classList.contains('mobile-open')
+                                    : sidebar.classList.contains('open');
+
+                                if (isOpen) closeSidebar();
+                                else openSidebar();
+                            });
+                        }
+                    }
+                }
+            })
+            .catch(err => console.error('Failed to load header component dynamically:', err));
+
         function renderSidebarProfile() {
             const currentUser = JSON.parse(localStorage.getItem('currentUser') || 'null');
             const nameEl = document.getElementById('sidebarUserName');
