@@ -1,0 +1,938 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Naat Studio Pro | Cinematic Voice Editor</title>
+    
+    <!-- Fonts: Inter for UI, Amiri for Arabic/Islamic aesthetic -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            /* Palette: Islamic Golden & Deep Midnight Blue */
+            --color-bg: #050a14;
+            --color-text: #ffffff;
+            --color-text-muted: #a0aab5;
+            --color-gold: #d4af37;
+            --color-gold-glow: rgba(212, 175, 55, 0.4);
+            --color-accent: #1e3a5f;
+            --color-surface: #0f1623;
+            
+            --font-main: 'Inter', sans-serif;
+            --font-display: 'Amiri', serif;
+
+            --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--color-bg);
+            color: var(--color-text);
+            font-family: var(--font-main);
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* --- Scrollbar --- */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--color-bg);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--color-accent);
+            border-radius: 4px;
+        }
+
+        /* --- Typography --- */
+        h1, h2, h3 {
+            font-family: var(--font-display);
+            font-weight: 400;
+            line-height: 1.1;
+        }
+        
+        .display-text {
+            font-size: clamp(3rem, 8vw, 6rem);
+            background: linear-gradient(135deg, #fff 0%, #b8b8b8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1rem;
+        }
+
+        .section-title {
+            font-size: clamp(2rem, 5vw, 4rem);
+            color: var(--color-gold);
+            margin-bottom: 2rem;
+        }
+
+        p {
+            font-size: 1.125rem;
+            line-height: 1.6;
+            color: var(--color-text-muted);
+            max-width: 600px;
+            margin-bottom: 2rem;
+        }
+
+        /* --- Navigation --- */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 1.5rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+            background: linear-gradient(to bottom, rgba(5,10,20,0.9), transparent);
+            backdrop-filter: blur(10px);
+        }
+
+        .logo {
+            font-family: var(--font-display);
+            font-size: 1.5rem;
+            color: var(--color-gold);
+            text-decoration: none;
+        }
+
+        .nav-links a {
+            color: var(--color-text);
+            text-decoration: none;
+            margin-left: 2rem;
+            font-size: 0.9rem;
+            opacity: 0.8;
+            transition: opacity 0.3s;
+        }
+
+        .nav-links a:hover {
+            opacity: 1;
+            color: var(--color-gold);
+        }
+
+        /* --- Hero Section --- */
+        .hero {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            position: relative;
+            padding: 2rem;
+            overflow: hidden;
+        }
+
+        .hero-bg-anim {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80vw;
+            height: 80vw;
+            background: radial-gradient(circle, var(--color-accent) 0%, transparent 70%);
+            opacity: 0.3;
+            filter: blur(60px);
+            z-index: -1;
+            animation: pulse 8s infinite ease-in-out;
+        }
+
+        .hero-visual {
+            margin-top: 3rem;
+            width: 300px;
+            height: 300px;
+            position: relative;
+        }
+
+        .circle-rim {
+            position: absolute;
+            inset: 0;
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 50%;
+            animation: rotate 20s linear infinite;
+        }
+        
+        .circle-rim:nth-child(2) {
+            inset: 20px;
+            border-color: var(--color-gold);
+            opacity: 0.3;
+            animation-duration: 15s;
+            animation-direction: reverse;
+        }
+
+        .hero-btn {
+            padding: 1rem 2.5rem;
+            background: var(--color-text);
+            color: var(--color-bg);
+            border: none;
+            border-radius: 30px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            margin-top: 2rem;
+        }
+
+        .hero-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px var(--color-gold-glow);
+        }
+
+        /* --- Scrollytelling Container --- */
+        .story-section {
+            padding: 10vh 2rem;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .story-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            max-width: 1200px;
+            width: 100%;
+            align-items: center;
+        }
+
+        .story-content {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 1s var(--ease-out-expo);
+        }
+
+        .story-content.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .story-visual {
+            position: relative;
+            height: 400px;
+            background: var(--color-surface);
+            border-radius: 20px;
+            overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.05);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+        }
+
+        /* --- Parallax & Scroll-Scrubbing Elements --- */
+        .scrub-element {
+            transition: transform 0.1s linear; /* Smoothed via JS mostly */
+            will-change: transform, opacity;
+        }
+
+        .icon-feature {
+            width: 80px;
+            height: 80px;
+            background: var(--color-gold);
+            mask-size: contain;
+            -webkit-mask-size: contain;
+            mask-repeat: no-repeat;
+            -webkit-mask-repeat: no-repeat;
+            mask-position: center;
+            -webkit-mask-position: center;
+        }
+
+        /* --- Specific Visuals --- */
+        #visual-reverb {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none" stroke="%23d4af37" stroke-width="0.5"><circle cx="50" cy="50" r="20"/><circle cx="50" cy="50" r="40"/><circle cx="50" cy="50" r="60"/></svg>');
+            background-size: cover;
+            opacity: 0.2;
+            transform: scale(0.8);
+        }
+
+        .waveform-bars {
+            display: flex;
+            gap: 4px;
+            align-items: center;
+            height: 100px;
+        }
+
+        .bar {
+            width: 6px;
+            background: var(--color-gold);
+            border-radius: 4px;
+            height: 10%;
+        }
+
+        /* --- Interactive Editor Demo --- */
+        .editor-section {
+            padding: 5rem 2rem;
+            background: radial-gradient(circle at center, #1a2436 0%, #050a14 100%);
+            position: relative;
+        }
+
+        .editor-interface {
+            max-width: 900px;
+            margin: 0 auto;
+            background: #0f131a;
+            border: 1px solid #333;
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 0 100px rgba(0,0,0,0.8);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Gold glowing line at top */
+        .editor-interface::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--color-gold), transparent);
+        }
+
+        .track-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+            border-bottom: 1px solid #2a2f3a;
+            padding-bottom: 1rem;
+        }
+
+        .track-controls {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .control-btn {
+            background: #2a2f3a;
+            border: none;
+            color: #fff;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s, color 0.2s;
+        }
+
+        .control-btn:hover {
+            background: var(--color-gold);
+            color: #000;
+        }
+
+        .control-btn.active {
+            background: var(--color-gold);
+            color: #000;
+            box-shadow: 0 0 15px var(--color-gold-glow);
+        }
+
+        .waveform-container {
+            height: 150px;
+            background: #0a0d12;
+            border-radius: 8px;
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 1.5rem;
+            cursor: crosshair;
+        }
+
+        #waveformCanvas {
+            width: 100%;
+            height: 100%;
+        }
+
+        .playhead {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 2px;
+            height: 100%;
+            background: #ff4757;
+            box-shadow: 0 0 10px #ff4757;
+            transform: translateX(0);
+            pointer-events: none;
+        }
+
+        .effects-panel {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+        }
+
+        .effect-knob {
+            background: #161b24;
+            padding: 1rem;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .knob-label {
+            font-size: 0.8rem;
+            color: var(--color-text-muted);
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        input[type=range] {
+            width: 100%;
+            accent-color: var(--color-gold);
+            height: 4px;
+            background: #333;
+            border-radius: 2px;
+            -webkit-appearance: none;
+        }
+        
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 16px;
+            width: 16px;
+            border-radius: 50%;
+            background: var(--color-gold);
+            cursor: pointer;
+            margin-top: -6px;
+        }
+        
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 4px;
+            background: #333;
+            border-radius: 2px;
+        }
+
+        /* --- Footer --- */
+        footer {
+            padding: 4rem 2rem;
+            text-align: center;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            color: var(--color-text-muted);
+        }
+
+        .bismillah {
+            font-family: var(--font-display);
+            font-size: 2rem;
+            color: var(--color-gold);
+            margin-bottom: 1rem;
+            opacity: 0.8;
+        }
+
+        /* --- Keyframes --- */
+        @keyframes pulse {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.3; }
+            50% { transform: translate(-50%, -50%) scale(1.1); opacity: 0.5; }
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* --- Responsive --- */
+        @media (max-width: 768px) {
+            .story-container {
+                grid-template-columns: 1fr;
+            }
+            .story-visual {
+                order: -1;
+                height: 300px;
+            }
+            .display-text {
+                font-size: 3rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navigation -->
+    <nav>
+        <a href="#" class="logo">Naat Studio</a>
+        <div class="nav-links">
+            <a href="#features">Features</a>
+            <a href="#editor">Try Demo</a>
+            <a href="#download">Download</a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="hero">
+        <div class="hero-bg-anim"></div>
+        <h1 class="display-text">The Art of<br>Devotion.</h1>
+        <p>The world's most spiritual audio workstation. <br>Edit, refine, and present Naat recitations with cinematic clarity.</p>
+        
+        <div class="hero-visual">
+            <div class="circle-rim"></div>
+            <div class="circle-rim"></div>
+            <!-- SVG Icon representing a microphone/sound -->
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" style="width: 64px; height: 64px; color: var(--color-gold); position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+                <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
+                <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+                <line x1="12" y1="19" x2="12" y2="23"></line>
+                <line x1="8" y1="23" x2="16" y2="23"></line>
+            </svg>
+        </div>
+
+        <button class="hero-btn" onclick="scrollToEditor()">Start Creating</button>
+    </header>
+
+    <!-- Scrollytelling Section 1: Clarity -->
+    <section class="story-section" id="features">
+        <div class="story-container">
+            <div class="story-content fade-trigger">
+                <h2 class="section-title">Crystal Clarity</h2>
+                <p>Remove background noise and enhance vocal frequencies with our AI-powered "Hifazat" engine. Designed specifically to handle the delicate nuances of vocal recitation.</p>
+            </div>
+            <div class="story-visual">
+                <div class="scrub-element" data-speed="0.2" style="width: 100px; height: 100px; background: var(--color-gold); border-radius: 50%; filter: blur(20px);"></div>
+                <div style="z-index: 2; font-family: var(--font-display); font-size: 4rem; color: white; mix-blend-mode: overlay;"> purity </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Scrollytelling Section 2: Reverb/Atmosphere -->
+    <section class="story-section">
+        <div class="story-container">
+            <div class="story-visual">
+                <div id="visual-reverb" class="scrub-element" data-scale="true" style="z-index: 1;"></div>
+                <div style="z-index: 2; text-align: center;">
+                    <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1">
+                        <path d="M2 12h20M2 12l5-5m-5 5l5 5"/> <!-- Simple sound wave icon -->
+                    </svg>
+                </div>
+            </div>
+            <div class="story-content fade-trigger">
+                <h2 class="section-title">Sacred Atmosphere</h2>
+                <p>Add Hall, Mosque, or Cathedral reverbs to create an immersive listening experience. Transport your audience to a spiritual space instantly.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Scrollytelling Section 3: Mixing -->
+    <section class="story-section">
+        <div class="story-container">
+            <div class="story-content fade-trigger">
+                <h2 class="section-title">Harmonize Layers</h2>
+                <p>Mix vocals with backing nasheeds perfectly. Our automated aligner ensures your voice sits right on top of the music, not fighting it.</p>
+            </div>
+            <div class="story-visual" style="align-items: flex-end; padding-bottom: 2rem;">
+                <div class="waveform-bars" id="scroll-bars">
+                    <!-- Bars injected by JS -->
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Interactive Editor Demo -->
+    <section class="editor-section" id="editor">
+        <div style="text-align: center; margin-bottom: 3rem;">
+            <h2 class="section-title">Naat Studio Pro</h2>
+            <p style="margin: 0 auto;">Experience the interface. Click play to hear the demo track.</p>
+        </div>
+
+        <div class="editor-interface">
+            <div class="track-header">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <div style="width: 4px; height: 40px; background: var(--color-gold); border-radius: 2px;"></div>
+                    <span>Vocal_01_Final.wav</span>
+                </div>
+                <div class="track-controls">
+                    <button class="control-btn" id="btnRewind" title="Rewind">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M11 18V6l-8.5 6 8.5 6zm.5-6l8.5 6V6l-8.5 6z"/></svg>
+                    </button>
+                    <button class="control-btn" id="btnPlay" title="Play/Pause">
+                        <!-- Play Icon -->
+                        <svg id="iconPlay" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+                        <!-- Pause Icon (hidden) -->
+                        <svg id="iconPause" width="18" height="18" viewBox="0 0 24 24" fill="currentColor" style="display:none;"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+                    </button>
+                    <button class="control-btn" id="btnEffect" title="Toggle Reverb">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a9 9 0 0 0-9 9v7c0 1.66 1.34 3 3 3h3v-8H5v-2c0-3.87 3.13-7 7-7s7 3.13 7 7v2h-4v8h3c1.66 0 3-1.34 3-3v-7a9 9 0 0 0-9-9z"/></svg>
+                    </button>
+                </div>
+            </div>
+
+            <div class="waveform-container">
+                <canvas id="waveformCanvas"></canvas>
+                <div class="playhead" id="playhead"></div>
+            </div>
+
+            <div class="effects-panel">
+                <div class="effect-knob">
+                    <span class="knob-label">Volume</span>
+                    <input type="range" id="volSlider" min="0" max="1" step="0.01" value="0.7">
+                </div>
+                <div class="effect-knob">
+                    <span class="knob-label">Reverb</span>
+                    <input type="range" id="reverbSlider" min="0" max="1" step="0.01" value="0">
+                </div>
+                <div class="effect-knob">
+                    <span class="knob-label">Bass Boost</span>
+                    <input type="range" id="bassSlider" min="0" max="1" step="0.01" value="0.2">
+                </div>
+            </div>
+        </div>
+        
+        <div style="text-align: center; margin-top: 2rem; font-size: 0.8rem; color: var(--color-text-muted);">
+            *Audio is synthesized in real-time for demonstration purposes.
+        </div>
+    </section>
+
+    <footer>
+        <div class="bismillah">Bismillah Hir Rahman Nir Rahim</div>
+        <p>&copy; 2023 Naat Studio Pro. Crafted for devotion.</p>
+    </footer>
+
+    <script>
+        // --- 1. Scrollytelling & Animation Logic (Vanilla JS "ScrollTrigger") ---
+        
+        const fadeTriggers = document.querySelectorAll('.fade-trigger');
+        const scrubElements = document.querySelectorAll('.scrub-element');
+        const scrollBarsContainer = document.getElementById('scroll-bars');
+
+        // Populate the decorative bars for section 3
+        for(let i=0; i<20; i++) {
+            const bar = document.createElement('div');
+            bar.className = 'bar';
+            bar.style.height = Math.random() * 100 + '%';
+            scrollBarsContainer.appendChild(bar);
+        }
+        const scrollBars = document.querySelectorAll('.scroll-bars .bar');
+
+        // Main Animation Loop for smooth scrolling effects
+        let scrollY = 0;
+        let ticking = false;
+
+        window.addEventListener('scroll', () => {
+            scrollY = window.scrollY;
+            if (!ticking) {
+                window.requestAnimationFrame(() => {
+                    updateScrollAnimations();
+                    ticking = false;
+                });
+                ticking = true;
+            }
+        });
+
+        function updateScrollAnimations() {
+            const windowHeight = window.innerHeight;
+
+            // 1. Fade In Elements
+            fadeTriggers.forEach(el => {
+                const rect = el.getBoundingClientRect();
+                if (rect.top < windowHeight * 0.8) {
+                    el.classList.add('visible');
+                } else {
+                    el.classList.remove('visible');
+                }
+            });
+
+            // 2. Parallax / Scrub Elements
+            scrubElements.forEach(el => {
+                const rect = el.getBoundingClientRect();
+                const centerOffset = (windowHeight - rect.top - rect.height / 2) / windowHeight; // -1 to 1 approx
+                
+                // Move element based on scroll relative to viewport
+                const speed = parseFloat(el.getAttribute('data-speed')) || 0.5;
+                el.style.transform = `translateY(${centerOffset * 100 * speed}px)`;
+
+                // Special scale effect for Reverb circle
+                if (el.getAttribute('data-scale')) {
+                    const scale = 0.8 + (Math.max(0, centerOffset + 0.5) * 0.8); // Scale from 0.8 to 1.6
+                    el.style.transform = `scale(${scale})`;
+                }
+            });
+
+            // 3. Animate decorative bars in section 3
+            scrollBars.forEach((bar, index) => {
+                const rect = bar.getBoundingClientRect();
+                // If in center of screen, expand
+                const distFromCenter = Math.abs(rect.top - windowHeight/2);
+                const maxDist = windowHeight/2;
+                const normalized = 1 - (distFromCenter / maxDist);
+                
+                if(normalized > 0) {
+                    bar.style.height = (10 + normalized * 90) + '%';
+                    bar.style.background = `rgba(212, 175, 55, ${normalized})`;
+                } else {
+                    bar.style.height = '10%';
+                    bar.style.background = '#333';
+                }
+            });
+        }
+
+        // --- 2. Audio Editor Simulation & Web Audio API ---
+
+        let audioCtx;
+        let oscillator;
+        let gainNode;
+        let analyser;
+        let convolver; // For Reverb
+        let bassFilter;
+        let isPlaying = false;
+        let animationId;
+        
+        // Canvas setup
+        const canvas = document.getElementById('waveformCanvas');
+        const canvasCtx = canvas.getContext('2d');
+        const playhead = document.getElementById('playhead');
+        
+        // Resize canvas
+        function resizeCanvas() {
+            canvas.width = canvas.offsetWidth;
+            canvas.height = canvas.offsetHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        // Initialize Audio Context (must be triggered by user action)
+        function initAudio() {
+            if (!audioCtx) {
+                const AudioContext = window.AudioContext || window.webkitAudioContext;
+                audioCtx = new AudioContext();
+                
+                // Create Nodes
+                gainNode = audioCtx.createGain();
+                analyser = audioCtx.createAnalyser();
+                bassFilter = audioCtx.createBiquadFilter();
+                
+                // Setup Analyser
+                analyser.fftSize = 256;
+                
+                // Setup Bass Filter
+                bassFilter.type = 'lowshelf';
+                bassFilter.frequency.value = 200; 
+
+                // Create Impulse Response for Reverb (Simple noise burst)
+                convolver = audioCtx.createConvolver();
+                const rate = audioCtx.sampleRate;
+                const length = rate * 2; // 2 seconds reverb
+                const impulse = audioCtx.createBuffer(2, length, rate);
+                const left = impulse.getChannelData(0);
+                const right = impulse.getChannelData(1);
+                for (let i = 0; i < length; i++) {
+                    const decay = Math.pow(1 - i / length, 2); // Exponential decay
+                    left[i] = (Math.random() * 2 - 1) * decay;
+                    right[i] = (Math.random() * 2 - 1) * decay;
+                }
+                convolver.buffer = impulse;
+                
+                // Initial Connections: Osc -> Filter -> Gain -> Dry/Wet logic -> Dest
+                // We'll manage the graph in the toggle functions
+            }
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+        }
+
+        // Generate a synthesized "Naat-like" melody (sine waves with vibrato)
+        function startTone() {
+            initAudio();
+            
+            // Create oscillator for voice simulation
+            oscillator = audioCtx.createOscillator();
+            const vibrato = audioCtx.createOscillator();
+            const vibratoGain = audioCtx.createGain();
+
+            oscillator.type = 'sine';
+            // Start note (A3)
+            oscillator.frequency.setValueAtTime(220, audioCtx.currentTime);
+            // Slide to D4
+            oscillator.frequency.linearRampToValueAtTime(293.66, audioCtx.currentTime + 2);
+            // Slide to E4
+            oscillator.frequency.linearRampToValueAtTime(329.63, audioCtx.currentTime + 4);
+
+            // Vibrato setup
+            vibrato.frequency.value = 5; // 5Hz wobble
+            vibratoGain.gain.value = 5; // Depth
+            vibrato.connect(vibratoGain);
+            vibratoGain.connect(oscillator.frequency);
+            vibrato.start();
+
+            // Connect Logic: Osc -> Bass -> Gain -> Analyser -> Destination
+            // Reverb is handled via the slider value (wet/dry mix in real-time)
+            oscillator.connect(bassFilter);
+            bassFilter.connect(gainNode);
+            gainNode.connect(analyser);
+            analyser.connect(audioCtx.destination);
+
+            oscillator.start();
+            isPlaying = true;
+            visualize();
+            animatePlayhead();
+        }
+
+        function stopTone() {
+            if (oscillator) {
+                // Smooth stop
+                const now = audioCtx.currentTime;
+                gainNode.gain.setValueAtTime(gainNode.gain.value, now);
+                gainNode.gain.linearRampToValueAtTime(0, now + 0.1);
+                
+                oscillator.stop(now + 0.1);
+                oscillator = null;
+            }
+            isPlaying = false;
+            cancelAnimationFrame(animationId);
+            playhead.style.transform = `translateX(0px)`;
+        }
+
+        // Toggle Play/Pause
+        const btnPlay = document.getElementById('btnPlay');
+        const iconPlay = document.getElementById('iconPlay');
+        const iconPause = document.getElementById('iconPause');
+        const btnRewind = document.getElementById('btnRewind');
+
+        btnPlay.addEventListener('click', () => {
+            if (isPlaying) {
+                stopTone();
+                iconPlay.style.display = 'block';
+                iconPause.style.display = 'none';
+            } else {
+                startTone();
+                iconPlay.style.display = 'none';
+                iconPause.style.display = 'block';
+            }
+        });
+
+        btnRewind.addEventListener('click', () => {
+            playhead.style.transition = 'none';
+            playhead.style.transform = `translateX(0px)`;
+            setTimeout(() => { playhead.style.transition = 'transform 0.1s linear'; }, 50);
+        });
+
+        // Effects Control
+        const volSlider = document.getElementById('volSlider');
+        const reverbSlider = document.getElementById('reverbSlider');
+        const bassSlider = document.getElementById('bassSlider');
+
+        function updateEffects() {
+            if(!gainNode) return;
+            
+            // Volume
+            gainNode.gain.value = volSlider.value;
+
+            // Bass
+            bassFilter.gain.value = bassSlider.value * 15; // Boost up to 15dB
+
+            // Reverb (Complex routing)
+            // Disconnect existing paths to avoid pops
+            try {
+                oscillator.disconnect(); 
+                gainNode.disconnect();
+            } catch(e){}
+
+            // Rebuild path based on Reverb Mix
+            // Path 1: Dry signal
+            // Path 2: Wet signal (through convolver)
+            
+            // To simplify for this demo: If Reverb > 0, we send to convolver too
+            // But true Dry/Wet requires separate gains. 
+            // Simple implementation: Output goes to convolver, convolver goes to output? 
+            // No, standard way: Source -> Split -> Dry -> Sum
+            //                   Source -> Split -> Wet(C) -> Sum
+            
+            // Let's stick to basic routing and just change the parameter of a simulated reverb
+            // since true Web Audio routing is verbose for a single file.
+            
+            // Simple hack: We will connect Osc -> Gain -> Analyser -> Dest.
+            // And Osc -> Convolver -> Dest.
+            // We control the volume of the Convolver node based on slider?
+            
+            // Re-routing for Reverb:
+            oscillator.connect(bassFilter); // Input
+            
+            // Always connect to Analyser for visuals
+            bassFilter.connect(gainNode);
+            gainNode.connect(analyser);
+            analyser.connect(audioCtx.destination); // Dry
+            
+            // If Reverb enabled, send to convolver too
+            if(reverbSlider.value > 0.05) {
+               oscillator.connect(convolver);
+               // Need a gain node for reverb wet level, let's reuse logic or create one if missing
+               if(!window.reverbGain) {
+                   window.reverbGain = audioCtx.createGain();
+                   convolver.connect(window.reverbGain);
+                   window.reverbGain.connect(audioCtx.destination);
+                   window.reverbGain.connect(analyser); // Visualize reverb too
+               }
+               window.reverbGain.gain.value = reverbSlider.value * 0.8;
+            } else if (window.reverbGain) {
+                window.reverbGain.gain.value = 0;
+            }
+        }
+        
+        // Re-bind effects listeners to update in real-time
+        [volSlider, reverbSlider, bassSlider].forEach(s => s.addEventListener('input', updateEffects));
+
+        // Visualization (Canvas Waveform)
+        function visualize() {
+            if (!isPlaying) return;
+
+            const bufferLength = analyser.frequencyBinCount;
+            const dataArray = new Uint8Array(bufferLength);
+            analyser.getByteTimeDomainData(dataArray);
+
+            canvasCtx.fillStyle = 'rgb(10, 13, 18)';
+            canvasCtx.fillRect(0, 0, canvas.width, canvas.height);
+
+            canvasCtx.lineWidth = 2;
+            canvasCtx.strokeStyle = '#d4af37';
+            canvasCtx.beginPath();
+
+            const sliceWidth = canvas.width * 1.0 / bufferLength;
+            let x = 0;
+
+            for (let i = 0; i < bufferLength; i++) {
+                const v = dataArray[i] / 128.0;
+                const y = v * canvas.height / 2;
+
+                if (i === 0) {
+                    canvasCtx.moveTo(x, y);
+                } else {
+                    canvasCtx.lineTo(x, y);
+                }
+
+                x += sliceWidth;
+            }
+
+            canvasCtx.lineTo(canvas.width, canvas.height / 2);
+            canvasCtx.stroke();
+
+            animationId = requestAnimationFrame(visualize);
+        }
+
+        // Fake Playhead Animation
+        let playheadX = 0;
+        function animatePlayhead() {
+            if(!isPlaying) return;
+            playheadX += 2; // Speed
+            if(playheadX > canvas.width) playheadX = 0;
+            playhead.style.transform = `translateX(${playheadX}px)`;
+            requestAnimationFrame(animatePlayhead);
+        }
+
+        // Smooth Scroll Helper
+        function scrollToEditor() {
+            document.getElementById('editor').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Initialize scroll state
+        updateScrollAnimations();
+
+    </script>
+</body>
+</html>

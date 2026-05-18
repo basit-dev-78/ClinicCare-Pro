@@ -1,17 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
     <title>ClinicCare Pro | Intelligent Medical Dashboard</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <!-- External Assets: Fonts, Icons, Charts -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
     <style>
+        /* RESET & BASE */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            outline: none;
         }
 
         body {
@@ -21,301 +29,38 @@
             overflow-x: hidden;
         }
 
-        ::-webkit-scrollbar { width: 6px; height: 6px; }
-        ::-webkit-scrollbar-track { background: #eef2fa; border-radius: 10px; }
-        ::-webkit-scrollbar-thumb { background: #3b82f6; border-radius: 10px; }
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
 
+        ::-webkit-scrollbar-track {
+            background: #eef2fa;
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #3b82f6;
+            border-radius: 10px;
+        }
+
+        /* LAYOUT */
         .dashboard {
             display: flex;
             min-height: 100vh;
             position: relative;
         }
 
-        /* SIDEBAR - MODERN COLLAPSIBLE */
-        .sidebar {
-            width: 280px;
-            background: linear-gradient(180deg, #0c1f3c 0%, #0a1a34 100%);
-            border-right: 1px solid rgba(255,255,255,0.08);
-            box-shadow: 6px 0 20px -8px rgba(0,0,0,0.15);
-            display: flex;
-            flex-direction: column;
-            position: fixed;
-            height: 100vh;
-            color: white;
-            z-index: 1000;
-            transition: transform 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
-            transform: translateX(0);
-        }
 
-        @media (max-width: 768px) {
-            .sidebar {
-                transform: translateX(-100%);
-                width: 280px;
-                box-shadow: 8px 0 30px rgba(0,0,0,0.4);
-            }
-            .sidebar.mobile-open {
-                transform: translateX(0);
-            }
-            .main-panel {
-                margin-left: 0 !important;
-                width: 100%;
-                padding: 16px !important;
-                padding-top: 16px !important;
-            }
-            .menu-toggle-btn {
-                display: flex !important;
-                position: relative;
-                background: white;
-                border: none;
-                width: 44px;
-                height: 44px;
-                border-radius: 30px;
-                box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-                cursor: pointer;
-                align-items: center;
-                justify-content: center;
-                font-size: 1.3rem;
-                color: #2563eb;
-                transition: all 0.2s;
-                flex-shrink: 0;
-            }
-            .menu-toggle-btn:hover {
-                background: #2563eb;
-                color: white;
-            }
-            .header-bar {
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                background: white;
-                padding: 10px 18px !important;
-                border-radius: 60px;
-                margin-bottom: 20px !important;
-                border: 1px solid #e6edfa;
-                gap: 12px;
-            }
-            .page-title {
-                margin-left: 0 !important;
-                background: linear-gradient(135deg, #142b54, #1f46b0);
-                -webkit-background-clip: text;
-                -webkit-text-fill-color: transparent;
-                font-weight: 700;
-                flex: 1;
-                font-size: 1.3rem;
-            }
-            .live-clock {
-                display: none !important;
-            }
-            .stat-grid {
-                grid-template-columns: 1fr 1fr !important;
-                gap: 12px !important;
-                margin-bottom: 20px !important;
-            }
-            .stat-block {
-                padding: 12px 14px !important;
-                gap: 12px !important;
-            }
-            .stat-icon {
-                width: 44px !important;
-                height: 44px !important;
-                font-size: 1.3rem !important;
-                border-radius: 18px !important;
-            }
-            .stat-info h4 {
-                font-size: 0.65rem !important;
-            }
-            .stat-info .figure {
-                font-size: 1.3rem !important;
-            }
-            .content-card {
-                padding: 18px 16px !important;
-                border-radius: 24px !important;
-                margin-bottom: 18px !important;
-            }
-            .card-header h3 {
-                font-size: 1.1rem !important;
-            }
-            .responsive-table {
-                display: block;
-                width: 100%;
-            }
-            .responsive-table thead {
-                display: none;
-            }
-            .responsive-table tr {
-                display: block;
-                margin-bottom: 16px;
-                border: 1px solid #e2edfc;
-                border-radius: 20px;
-                padding: 12px;
-                background: white;
-            }
-            .responsive-table td {
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                padding: 8px 0;
-                border: none;
-                font-size: 0.85rem;
-                text-align: right;
-            }
-            .responsive-table td::before {
-                content: attr(data-label);
-                font-weight: 600;
-                color: #5b7295;
-                font-size: 0.75rem;
-                text-transform: uppercase;
-                letter-spacing: 0.3px;
-                text-align: left;
-            }
-            .chart-box {
-                height: 180px !important;
-            }
-            .modal-window {
-                padding: 24px 20px !important;
-                border-radius: 32px !important;
-                margin: 20px !important;
-            }
-            .row-fields {
-                flex-direction: column;
-                gap: 12px !important;
-            }
-            .toast-notification {
-                bottom: 70px !important;
-                right: 16px !important;
-                left: 16px !important;
-                width: auto !important;
-                text-align: center;
-                justify-content: center;
-            }
-        }
 
-        .menu-toggle-btn {
-            display: none;
-        }
-
-        .sidebar-header {
-            padding: 28px 20px 20px 24px;
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            border-bottom: 1px solid rgba(255,255,255,0.06);
-        }
-
-        .brand-icon {
-            width: 46px;
-            height: 46px;
-            background: linear-gradient(135deg, #2b6ef0, #a855f7);
-            border-radius: 16px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-            box-shadow: 0 8px 18px -6px #2563eb70;
-        }
-
-        .sidebar-header h2 {
-            font-weight: 700;
-            font-size: 1.35rem;
-            background: linear-gradient(to right, #ffffff, #c3dbff);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .profile-card {
-            background: rgba(255,255,255,0.03);
-            margin: 18px 16px 20px;
-            padding: 18px;
-            border-radius: 24px;
-            border: 1px solid rgba(255,255,255,0.04);
-        }
-
-        .profile-name {
-            font-weight: 600;
-            font-size: 1rem;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 10px;
-        }
-        .profile-name i { font-size: 1rem; color: #60a5fa; background: rgba(255,255,255,0.06); padding: 6px; border-radius: 12px; }
-        .profile-detail {
-            font-size: 0.75rem;
-            color: #b9d0f5;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin: 6px 0;
-        }
-        .role-tag {
-            background: linear-gradient(105deg, #2563eb, #7c3aed);
-            padding: 5px 14px;
-            border-radius: 32px;
-            font-size: 0.65rem;
-            font-weight: 600;
-            display: inline-block;
-            margin-top: 10px;
-        }
-
-        .nav-menu {
-            flex: 1;
-            padding: 8px 12px 20px;
-            overflow-y: auto;
-        }
-
-        .nav-item {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            padding: 10px 18px;
-            margin: 3px 0;
-            border-radius: 18px;
-            color: rgba(255,255,255,0.7);
-            font-weight: 500;
-            font-size: 0.85rem;
-            transition: all 0.2s;
-            cursor: pointer;
-        }
-
-        .nav-item i { width: 22px; font-size: 1.05rem; color: rgba(255,255,255,0.5); }
-        .nav-item:hover {
-            background: rgba(59, 130, 246, 0.2);
-            color: white;
-            transform: translateX(4px);
-        }
-        .nav-item.active {
-            background: linear-gradient(95deg, #1e3a8a, #2e4dad);
-            color: white;
-            box-shadow: 0 5px 12px -5px #1e3a8a;
-            border-left: 3px solid #fbbf24;
-        }
-        .logout-button {
-            margin: 12px 16px 24px;
-            padding: 12px 20px;
-            background: rgba(239,68,68,0.08);
-            border: 1px solid rgba(239,68,68,0.2);
-            border-radius: 40px;
-            color: #ffbcbc;
-            font-weight: 600;
-            font-size: 0.85rem;
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-        .logout-button:hover {
-            background: #ef4444;
-            color: white;
-            border-color: #ef4444;
-        }
-
+        /* MAIN PANEL */
         .main-panel {
             flex: 1;
             margin-left: 280px;
             padding: 24px 32px;
             background: #f5f9ff;
             transition: margin-left 0.3s ease;
+            width: calc(100% - 280px);
         }
 
         .header-bar {
@@ -325,9 +70,30 @@
             background: white;
             padding: 12px 28px;
             border-radius: 60px;
-            box-shadow: 0 4px 14px rgba(0,20,50,0.04);
+            box-shadow: 0 4px 14px rgba(0, 20, 50, 0.04);
             margin-bottom: 28px;
             border: 1px solid #e6edfa;
+        }
+
+        .menu-toggle-btn {
+            display: none;
+            background: white;
+            border: none;
+            width: 44px;
+            height: 44px;
+            border-radius: 30px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            cursor: pointer;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            color: #2563eb;
+            transition: all 0.2s;
+        }
+
+        .menu-toggle-btn:hover {
+            background: #2563eb;
+            color: white;
         }
 
         .page-title {
@@ -335,6 +101,7 @@
             font-size: 1.6rem;
             background: linear-gradient(135deg, #142b54, #1f46b0);
             -webkit-background-clip: text;
+            background-clip: text;
             -webkit-text-fill-color: transparent;
         }
 
@@ -347,6 +114,7 @@
             font-size: 0.8rem;
         }
 
+        /* STAT GRID */
         .stat-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
@@ -359,16 +127,18 @@
             padding: 18px 22px;
             border-radius: 32px;
             border: 1px solid #e2edfc;
-            box-shadow: 0 8px 18px -10px rgba(0,35,70,0.06);
+            box-shadow: 0 8px 18px -10px rgba(0, 35, 70, 0.06);
             display: flex;
             align-items: center;
             gap: 18px;
             transition: all 0.2s;
         }
+
         .stat-block:hover {
             transform: translateY(-3px);
             box-shadow: 0 15px 24px -12px #1e40af30;
         }
+
         .stat-icon {
             width: 56px;
             height: 56px;
@@ -380,15 +150,29 @@
             font-size: 1.8rem;
             color: #2b5fd9;
         }
-        .stat-info h4 { font-weight: 500; color: #667f9e; font-size: 0.75rem; letter-spacing: 0.4px; margin-bottom: 4px; }
-        .stat-info .figure { font-weight: 800; font-size: 1.8rem; color: #0a2540; line-height: 1.2; }
 
+        .stat-info h4 {
+            font-weight: 500;
+            color: #667f9e;
+            font-size: 0.75rem;
+            letter-spacing: 0.4px;
+            margin-bottom: 4px;
+        }
+
+        .stat-info .figure {
+            font-weight: 800;
+            font-size: 1.8rem;
+            color: #0a2540;
+            line-height: 1.2;
+        }
+
+        /* CONTENT CARDS */
         .content-card {
             background: white;
             border-radius: 36px;
             padding: 24px 28px;
             border: 1px solid #e5edfc;
-            box-shadow: 0 10px 24px -12px rgba(0,30,60,0.06);
+            box-shadow: 0 10px 24px -12px rgba(0, 30, 60, 0.06);
             margin-bottom: 26px;
         }
 
@@ -400,12 +184,19 @@
             flex-wrap: wrap;
             gap: 12px;
         }
-        .card-header h3 { font-weight: 700; font-size: 1.3rem; color: #0f2c4e; }
 
+        .card-header h3 {
+            font-weight: 700;
+            font-size: 1.3rem;
+            color: #0f2c4e;
+        }
+
+        /* TABLES */
         table {
             width: 100%;
             border-collapse: collapse;
         }
+
         th {
             text-align: left;
             padding: 12px 8px;
@@ -415,12 +206,19 @@
             text-transform: uppercase;
             border-bottom: 2px solid #e6edfc;
         }
+
         td {
             padding: 12px 8px;
             border-bottom: 1px solid #f0f4fe;
             color: #1a3154;
             font-size: 0.85rem;
+            vertical-align: middle;
         }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
         .status-badge {
             padding: 5px 14px;
             border-radius: 50px;
@@ -428,10 +226,28 @@
             font-weight: 600;
             display: inline-block;
         }
-        .badge-active { background: #e1f7ea; color: #0b6e41; }
-        .badge-pending { background: #fff0df; color: #b15500; }
-        .badge-role { background: #e9efff; color: #1d4ed8; }
-        .badge-blocked { background: #fee2e2; color: #dc2626; }
+
+        .badge-active {
+            background: #e1f7ea;
+            color: #0b6e41;
+        }
+
+        .badge-pending {
+            background: #fff0df;
+            color: #b15500;
+        }
+
+        .badge-role {
+            background: #e9efff;
+            color: #1d4ed8;
+        }
+
+        .badge-blocked {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        /* BUTTONS & ACTIONS */
         .btn-primary {
             background: linear-gradient(105deg, #2563eb, #4f46e5);
             color: white;
@@ -442,7 +258,16 @@
             font-size: 0.8rem;
             cursor: pointer;
             transition: 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
         }
+
+        .btn-primary:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+        }
+
         .btn-outline {
             background: white;
             border: 1px solid #cde0ff;
@@ -453,716 +278,1067 @@
             font-size: 0.8rem;
             cursor: pointer;
         }
-        .icon-action {
-            background: transparent;
-            border: none;
-            font-size: 0.95rem;
-            color: #6f87af;
-            padding: 6px;
-            border-radius: 12px;
-            cursor: pointer;
-            margin: 0 2px;
-        }
-        .icon-action.delete:hover { background: #feeaea; color: #dc2626; }
-        .icon-action.block:hover { background: #feeaea; color: #dc2626; }
-        .icon-action.unblock:hover { background: #e1f7ea; color: #0b6e41; }
+
         .action-group {
             display: flex;
             align-items: center;
             gap: 8px;
             flex-wrap: wrap;
         }
+
+        .icon-action {
+            background: transparent;
+            border: none;
+            font-size: 0.95rem;
+            color: #6f87af;
+            padding: 6px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin: 0 2px;
+        }
+
+        .icon-action:hover {
+            background: #f1f5f9;
+            color: #2563eb;
+        }
+
+        .icon-action.delete:hover {
+            background: #feeaea;
+            color: #dc2626;
+        }
+
         .mini-action-btn {
             border: none;
             border-radius: 999px;
-            padding: 7px 14px;
-            font-size: 0.75rem;
+            padding: 5px 12px;
+            font-size: 0.7rem;
             font-weight: 700;
             cursor: pointer;
-            transition: 0.2s ease;
+            transition: 0.2s;
         }
+
         .mini-action-btn.block {
             background: #fee2e2;
             color: #b91c1c;
         }
+
         .mini-action-btn.unblock {
             background: #dcfce7;
             color: #166534;
         }
-        .mini-action-btn:hover {
-            transform: translateY(-1px);
+
+        /* MODALS */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(4px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
         }
+
+        .modal-window {
+            background: white;
+            border-radius: 48px;
+            padding: 32px 36px;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 35px 70px rgba(0, 15, 40, 0.3);
+            animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(20px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .form-field {
+            margin-bottom: 16px;
+        }
+
+        .form-field label {
+            font-weight: 600;
+            font-size: 0.8rem;
+            display: block;
+            margin-bottom: 6px;
+            color: #2b4570;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px 20px;
+            border: 1.5px solid #e2edfc;
+            border-radius: 36px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.9rem;
+            transition: 0.2s;
+        }
+
+        .form-input:focus {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .row-fields {
+            display: flex;
+            gap: 16px;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 16px;
+            margin-top: 28px;
+            justify-content: flex-end;
+        }
+
+        /* TOASTS */
+        .toast-notification {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            background: white;
+            border-radius: 60px;
+            padding: 14px 28px;
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transform: translateX(450px);
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            z-index: 1200;
+            border-left: 4px solid;
+            font-size: 0.85rem;
+        }
+
+        .toast-notification.show {
+            transform: translateX(0);
+        }
+
+        .toast-success {
+            border-left-color: #10b981;
+        }
+
+        .toast-error {
+            border-left-color: #ef4444;
+        }
+
+        .toast-warning {
+            border-left-color: #f59e0b;
+        }
+
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+            backdrop-filter: blur(3px);
+        }
+
         .chart-box {
             height: 190px;
             width: 100%;
             background: #ffffff;
             border-radius: 28px;
             padding: 6px;
+            position: relative;
         }
-        .modal-overlay {
-            position: fixed; top:0; left:0; width:100%; height:100%;
-            background: rgba(0,0,0,0.4); backdrop-filter: blur(6px);
-            display: flex; align-items: center; justify-content: center;
-            z-index: 2000;
+
+        /* RESPONSIVE */
+        @media (max-width: 1024px) {
+            .stat-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
         }
-        .modal-window {
-            background: white; border-radius: 48px; padding: 32px 36px;
-            max-width: 500px; width: 90%; box-shadow: 0 35px 70px rgba(0,15,40,0.3);
+
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+                width: 280px;
+                box-shadow: 8px 0 30px rgba(0, 0, 0, 0.2);
+            }
+
+            .sidebar.mobile-open {
+                transform: translateX(0);
+            }
+
+            .sidebar-overlay.active {
+                display: block;
+            }
+
+            .main-panel {
+                margin-left: 0 !important;
+                width: 100% !important;
+                padding: 16px !important;
+            }
+
+            .menu-toggle-btn {
+                display: flex !important;
+            }
+
+            .header-bar {
+                padding: 10px 16px !important;
+                margin-bottom: 20px !important;
+                gap: 12px;
+            }
+
+            .page-title {
+                font-size: 1.2rem;
+            }
+
+            .live-clock {
+                display: none;
+            }
+
+            .stat-grid {
+                grid-template-columns: 1fr 1fr !important;
+                gap: 12px !important;
+                margin-bottom: 20px !important;
+            }
+
+            .stat-block {
+                padding: 12px 14px !important;
+                gap: 12px !important;
+            }
+
+            .stat-icon {
+                width: 44px !important;
+                height: 44px !important;
+                font-size: 1.3rem !important;
+                border-radius: 18px !important;
+            }
+
+            .stat-info h4 {
+                font-size: 0.65rem !important;
+            }
+
+            .stat-info .figure {
+                font-size: 1.3rem !important;
+            }
+
+            .content-card {
+                padding: 18px 16px !important;
+                border-radius: 24px !important;
+            }
+
+            .card-header h3 {
+                font-size: 1.1rem !important;
+            }
+
+            /* Responsive Table to Card */
+            .responsive-table {
+                display: block;
+                width: 100%;
+            }
+
+            .responsive-table thead {
+                display: none;
+            }
+
+            .responsive-table tr {
+                display: block;
+                margin-bottom: 16px;
+                border: 1px solid #e2edfc;
+                border-radius: 20px;
+                padding: 12px;
+                background: white;
+            }
+
+            .responsive-table td {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 8px 0;
+                border: none;
+                font-size: 0.85rem;
+                text-align: right;
+            }
+
+            .responsive-table td::before {
+                content: attr(data-label);
+                font-weight: 600;
+                color: #5b7295;
+                font-size: 0.75rem;
+                text-transform: uppercase;
+                text-align: left;
+            }
+
+            .modal-window {
+                padding: 24px 20px !important;
+                border-radius: 32px !important;
+                margin: 20px !important;
+                width: 95%;
+            }
+
+            .row-fields {
+                flex-direction: column;
+                gap: 12px !important;
+            }
+
+            .toast-notification {
+                bottom: 70px !important;
+                right: 16px !important;
+                left: 16px !important;
+                width: auto !important;
+                justify-content: center;
+            }
         }
-        .form-field { margin-bottom: 18px; }
-        .form-field label { font-weight: 600; font-size: 0.8rem; display: block; margin-bottom: 6px; color: #2b4570; }
-        .form-input {
-            width: 100%; padding: 12px 20px; border: 1.5px solid #e2edfc; border-radius: 36px;
-            font-family: 'Inter', sans-serif; font-size: 0.9rem;
-        }
-        .row-fields { display: flex; gap: 16px; }
-        .modal-actions { display: flex; gap: 16px; margin-top: 28px; justify-content: flex-end; }
-        .toast-notification {
-            position: fixed; bottom: 25px; right: 25px;
-            background: white; border-radius: 60px; padding: 14px 28px;
-            box-shadow: 0 12px 30px rgba(0,0,0,0.12); display: flex; align-items: center; gap: 12px;
-            transform: translateX(450px); transition: transform 0.25s; z-index: 1200;
-            border-left: 4px solid; font-size: 0.85rem;
-        }
-        .toast-notification.show { transform: translateX(0); }
-        .sidebar-overlay { display: none; position: fixed; top:0; left:0; right:0; bottom:0; background: rgba(0,0,0,0.5); z-index: 999; backdrop-filter: blur(3px); }
-        .sidebar-overlay.active { display: block; }
-        @media (min-width: 769px) { .sidebar-overlay { display: none !important; } }
     </style>
 </head>
+
 <body data-sidebar-role="admin">
-<div class="dashboard">
-    <div class="main-panel">
-        <div class="header-bar">
-            <button class="menu-toggle-btn" id="menuToggleBtn"><i class="fas fa-bars"></i></button>
-            <span class="page-title" id="headerTitle">Dashboard</span>
-            <span class="live-clock" id="liveTime"></span>
+
+    <div class="dashboard">
+        <!-- SIDEBAR WILL BE INJECTED HERE -->
+
+
+        <!-- Main Content Area -->
+        <div class="main-panel">
+            <header class="header-bar">
+                <button class="menu-toggle-btn"><i class="fas fa-bars"></i></button>
+                <span class="page-title" id="headerTitle">Dashboard</span>
+                <span class="live-clock" id="liveTime"></span>
+            </header>
+
+            <main class="content-area" id="contentArea">
+                <!-- Content Injected via JS -->
+            </main>
         </div>
-        <div class="content-area" id="contentArea"></div>
+
+        <!-- Overlays -->
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
     </div>
-</div>
-<div id="modalRoot" style="display: none;"></div>
-<div class="toast-notification" id="toastMsg"><i class="fas" id="toastIcon"></i><span id="toastText"></span></div>
 
-<script>
-    (async function() {
-        // Check authentication
-        let currentUser = JSON.parse(localStorage.getItem('currentUser'));
-        const token = localStorage.getItem('authToken');
-        
-        if (!currentUser || !token || currentUser.role !== 'admin') {
-            window.location.href = 'Frontend/Auth/login.html';
-            return;
-        }
+    <!-- Modal Root -->
+    <div id="modalRoot" style="display: none;"></div>
 
-        let globalUsers = [];
-        let globalLoginHistory = [];
-        let globalAppointments = [];
-        let globalDepartments = [];
-        let globalAuditLogs = [];
-        let globalUsersError = '';
-        let globalLoginHistoryError = '';
-        async function handleProtectedResponse(response) {
-            if (response.status === 401 || response.status === 403) {
-                localStorage.removeItem('authToken');
-                localStorage.removeItem('currentUser');
-                window.location.href = 'Frontend/Auth/login.html';
-                return null;
-            }
-            return response.json();
-        }
-        async function loadUsers() {
-            try {
-                globalUsersError = '';
-                const response = await fetch('http://localhost:5000/api/users', {
-                    headers: { 'Authorization': `Bearer ${token}` }
-                });
-                const data = await handleProtectedResponse(response);
-                if (!data) return;
-                if (data.success) {
-                    globalUsers = data.users;
-                } else {
-                    globalUsers = [];
-                    globalUsersError = data.message || 'Failed to load users';
-                    showToast('Failed to load users', 'error');
+    <!-- Toast -->
+    <div class="toast-notification" id="toastMsg">
+        <i class="fas" id="toastIcon"></i><span id="toastText"></span>
+    </div>
+
+    <script src="Frontend/assets/js/api.js"></script>
+    <script>
+        /**
+         * APPLICATION LOGIC
+         */
+        const app = {
+            currentUser: null,
+            chartInstance: null,
+            data: { users: [], appointments: [], audit: [], departments: [] },
+
+            init: async () => {
+                app.currentUser = JSON.parse(localStorage.getItem('currentUser'));
+                const token = localStorage.getItem('authToken');
+                if (!app.currentUser || !token || app.currentUser.role !== 'admin') {
+                    window.location.href = 'auth.html';
+                    return;
                 }
-            } catch (error) {
-                globalUsers = [];
-                globalUsersError = error?.message?.includes('Failed to fetch')
-                    ? 'Backend API is not running on localhost:5000.'
-                    : 'Error loading users';
-                showToast('Error loading users', 'error');
-            }
-        }
-        async function loadLoginHistory() {
-            try {
-                globalLoginHistoryError = '';
-                const response = await fetch('http://localhost:5000/api/login-history', {
-                    headers: { 'Authorization': `Bearer ${token}` }
-                });
-                const data = await handleProtectedResponse(response);
-                if (!data) return;
-                if (data.success) {
-                    globalLoginHistory = data.history;
-                } else {
-                    globalLoginHistory = [];
-                    globalLoginHistoryError = data.message || 'Failed to load login history';
-                    showToast('Failed to load login history', 'error');
-                }
-            } catch (error) {
-                globalLoginHistory = [];
-                globalLoginHistoryError = error?.message?.includes('Failed to fetch')
-                    ? 'Backend API is not running on localhost:5000.'
-                    : 'Error loading login history';
-                showToast('Error loading login history', 'error');
-            }
-        }
-        async function loadAppointments() {
-            try {
-                const response = await fetch('http://localhost:5000/api/appointments', { headers: { 'Authorization': `Bearer ${token}` } });
-                const data = await handleProtectedResponse(response);
-                if (data) globalAppointments = data;
-            } catch(e) {}
-        }
-        async function loadDepartments() {
-            try {
-                const response = await fetch('http://localhost:5000/api/departments', { headers: { 'Authorization': `Bearer ${token}` } });
-                const data = await handleProtectedResponse(response);
-                if (data) globalDepartments = data;
-            } catch(e) {}
-        }
-        async function loadAuditLogs() {
-            try {
-                const response = await fetch('http://localhost:5000/api/audit-logs', { headers: { 'Authorization': `Bearer ${token}` } });
-                const data = await handleProtectedResponse(response);
-                if (data) globalAuditLogs = data;
-            } catch(e) {}
-        }
+                app.setupSidebar();
+                app.setupEventListeners();
+                app.startClock();
+                await app.loadPage('dashboard');
+            },
 
-        await loadUsers();
-        await loadLoginHistory();
-        await loadAppointments();
-        await loadDepartments();
-        await loadAuditLogs();
-        
-        async function addAuditLog(action) {
-            try {
-                await fetch('http://localhost:5000/api/audit-logs', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-                    body: JSON.stringify({ user: currentUser.name, action: action })
-                });
-            } catch(e) {}
-        }
-        
-        function showToast(msg, type = 'success') {
-            const toast = document.getElementById('toastMsg');
-            const iconMap = { success: 'fa-check-circle', error: 'fa-exclamation-circle', warning: 'fa-exclamation-triangle', info: 'fa-info-circle' };
-            document.getElementById('toastIcon').className = 'fas ' + (iconMap[type] || 'fa-info-circle');
-            document.getElementById('toastText').innerText = msg;
-            toast.className = `toast-notification toast-${type}`;
-            toast.classList.add('show');
-            setTimeout(() => toast.classList.remove('show'), 3200);
-        }
-        window.showToast = showToast;
-        
-        function tick() {
-            const d = new Date();
-            document.getElementById('liveTime').innerText = d.toLocaleString('en-US', { weekday:'short', month:'short', day:'numeric', hour:'2-digit', minute:'2-digit', second:'2-digit' });
-        }
-        tick(); setInterval(tick, 1000);
-        
-        function openModal(html) {
-            document.getElementById('modalRoot').style.display = 'flex';
-            document.getElementById('modalRoot').innerHTML = `<div class="modal-overlay" onclick="closeModal()"><div class="modal-window" onclick="event.stopPropagation()">${html}</div></div>`;
-        }
-        window.closeModal = function() { document.getElementById('modalRoot').style.display = 'none'; };
-        
-        function makeTableResponsive(tableEl) {
-            if (!tableEl) return;
-            const headers = Array.from(tableEl.querySelectorAll('thead tr th')).map(th => th.innerText);
-            tableEl.querySelectorAll('tbody tr').forEach(row => {
-                row.querySelectorAll('td').forEach((cell, idx) => { if (headers[idx]) cell.setAttribute('data-label', headers[idx]); });
-            });
-            tableEl.classList.add('responsive-table');
-        }
-        
-        function getEmptyStateRow(colspan, message) {
-            return `<tr><td colspan="${colspan}" style="text-align:center; padding: 28px 16px; color:#64748b; font-weight:600;">${message}</td></tr>`;
-        }
-        
-        // ========== FULL CRUD OPERATIONS ==========
-        window.addUserModal = function() {
-            openModal(`
-                <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 24px;">
-                    <div style="width: 44px; height: 44px; background: #eef2ff; border-radius: 14px; display: flex; align-items: center; justify-content: center; color: #3b82f6; font-size: 1.2rem;">
-                        <i class="fas fa-user-plus"></i>
-                    </div>
-                    <h2 style="margin: 0; font-size: 1.4rem; color: #1e293b;">Create New User</h2>
-                </div>
-                
-                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 18px;">
-                    <div class="form-field">
-                        <label>First Name</label>
-                        <input class="form-input" id="modalFirstName" placeholder="John">
-                    </div>
-                    <div class="form-field">
-                        <label>Middle Name</label>
-                        <input class="form-input" id="modalMiddleName" placeholder="M.">
-                    </div>
-                    <div class="form-field">
-                        <label>Last Name</label>
-                        <input class="form-input" id="modalLastName" placeholder="Doe">
-                    </div>
-                </div>
+            refreshData: async () => {
+                try {
+                    const [users, apps, logs, depts] = await Promise.all([
+                        API.get('users'),
+                        API.get('appointments'),
+                        API.get('audit-logs'),
+                        API.get('departments')
+                    ]);
+                    app.data.users = users.users;
+                    app.data.appointments = apps;
+                    app.data.audit = logs;
+                    app.data.departments = depts;
+                } catch (e) { app.showToast('Failed to refresh data', 'error'); }
+            },
 
-                <div class="form-field">
-                    <label>Email Address</label>
-                    <input class="form-input" id="modalEmail" type="email" placeholder="user@cliniccare.pro">
-                </div>
+            setupSidebar: () => {
+                fetch('Frontend/components/sidebar.html')
+                    .then(r => r.text())
+                    .then(html => {
+                        const div = document.createElement('div');
+                        div.innerHTML = html;
+                        const script = div.querySelector('script');
+                        if (script) {
+                            const newScript = document.createElement('script');
+                            newScript.textContent = script.textContent;
+                            document.body.appendChild(newScript);
+                        }
+                    });
+            },
 
-                <div class="form-field">
-                    <label>Password</label>
-                    <input class="form-input" id="modalPassword" type="password" placeholder="••••••••">
-                </div>
-
-                <div class="row-fields">
-                    <div class="form-field" style="flex: 1;">
-                        <label>Assign Role</label>
-                        <select class="form-input" id="modalRole">
-                            <option value="patient">Patient</option>
-                            <option value="doctor">Doctor</option>
-                            <option value="receptionist">Receptionist</option>
-                            <option value="admin">Administrator</option>
-                        </select>
-                    </div>
-                    <div class="form-field" style="flex: 1;">
-                        <label>Phone Number</label>
-                        <input class="form-input" id="modalPhone" placeholder="+1 555-0000">
-                    </div>
-                </div>
-
-                <div class="modal-actions">
-                    <button class="btn-outline" onclick="closeModal()">Cancel</button>
-                    <button class="btn-primary" onclick="saveNewUser()">Create Account</button>
-                </div>
-            `);
-        };
-        window.saveNewUser = async function() {
-            const firstName = document.getElementById('modalFirstName')?.value.trim();
-            const middleName = document.getElementById('modalMiddleName')?.value.trim();
-            const lastName = document.getElementById('modalLastName')?.value.trim();
-            const email = document.getElementById('modalEmail')?.value.trim();
-            const password = document.getElementById('modalPassword')?.value.trim();
-            const role = document.getElementById('modalRole')?.value;
-            const phone = document.getElementById('modalPhone')?.value.trim();
-
-            if (!firstName || !lastName || !email || !password || !role || !phone) {
-                showToast('Please fill all required fields', 'error');
-                return;
-            }
-
-            const fullName = middleName ? `${firstName} ${middleName} ${lastName}` : `${firstName} ${lastName}`;
-
-            try {
-                const response = await fetch('http://localhost:5000/api/users', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${token}`
-                    },
-                    body: JSON.stringify({
-                        name: fullName,
-                        email,
-                        password,
-                        role,
-                        phone,
-                        specialization: role === 'doctor' ? 'General Medicine' : ''
-                    })
-                });
-
-                const data = await handleProtectedResponse(response);
-                if (!data) return;
-
-                if (data.success) {
-                    showToast('User created successfully', 'success');
-                    addAuditLog(`Created new user: ${fullName} (${role})`);
-                    closeModal();
-                    await loadUsers();
-                    loadPage('users');
-                } else {
-                    showToast(data.message || 'Failed to create user', 'error');
-                }
-            } catch (error) {
-                showToast('Error connecting to server', 'error');
-            }
-        };
-        
-        window.editUser = (id) => {
-            let u = globalUsers.find(x=>x.id===id);
-            if (!u) return;
-
-            const nameParts = u.name.split(' ');
-            const firstName = nameParts[0] || '';
-            const lastName = nameParts.length > 1 ? nameParts[nameParts.length - 1] : '';
-            const middleName = nameParts.length > 2 ? nameParts.slice(1, -1).join(' ') : '';
-
-            openModal(`
-                <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 24px;">
-                    <div style="width: 44px; height: 44px; background: #fff7ed; border-radius: 14px; display: flex; align-items: center; justify-content: center; color: #f59e0b; font-size: 1.2rem;">
-                        <i class="fas fa-user-edit"></i>
-                    </div>
-                    <h2 style="margin: 0; font-size: 1.4rem; color: #1e293b;">Edit User Details</h2>
-                </div>
-
-                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 18px;">
-                    <div class="form-field">
-                        <label>First Name</label>
-                        <input class="form-input" id="editFirstName" value="${firstName.replace(/"/g, '&quot;')}">
-                    </div>
-                    <div class="form-field">
-                        <label>Middle Name</label>
-                        <input class="form-input" id="editMiddleName" value="${middleName.replace(/"/g, '&quot;')}">
-                    </div>
-                    <div class="form-field">
-                        <label>Last Name</label>
-                        <input class="form-input" id="editLastName" value="${lastName.replace(/"/g, '&quot;')}">
-                    </div>
-                </div>
-
-                <div class="form-field">
-                    <label>Email Address</label>
-                    <input id="editEmail" class="form-input" value="${u.email}">
-                </div>
-                
-                <div class="form-field">
-                    <label>Update Password (leave blank to keep current)</label>
-                    <input id="editPassword" class="form-input" type="password" placeholder="••••••••">
-                </div>
-
-                <div class="row-fields">
-                    <div class="form-field" style="flex: 1;">
-                        <label>Role</label>
-                        <select class="form-input" id="editRole">
-                            <option value="patient" ${u.role === 'patient' ? 'selected' : ''}>Patient</option>
-                            <option value="doctor" ${u.role === 'doctor' ? 'selected' : ''}>Doctor</option>
-                            <option value="receptionist" ${u.role === 'receptionist' ? 'selected' : ''}>Receptionist</option>
-                            <option value="admin" ${u.role === 'admin' ? 'selected' : ''}>Administrator</option>
-                        </select>
-                    </div>
-                    <div class="form-field" style="flex: 1;">
-                        <label>Phone Number</label>
-                        <input id="editPhone" class="form-input" value="${u.phone || ''}">
-                    </div>
-                </div>
-
-                <div class="modal-actions">
-                    <button class="btn-outline" onclick="closeModal()">Cancel</button>
-                    <button class="btn-primary" onclick="updateUser('${id}')">Save Changes</button>
-                </div>`);
-        };
-        window.updateUser = async (id) => {
-            const firstName = document.getElementById('editFirstName')?.value.trim();
-            const middleName = document.getElementById('editMiddleName')?.value.trim();
-            const lastName = document.getElementById('editLastName')?.value.trim();
-            const email = document.getElementById('editEmail')?.value.trim();
-            const phone = document.getElementById('editPhone')?.value.trim();
-            const role = document.getElementById('editRole')?.value;
-            const password = document.getElementById('editPassword')?.value.trim();
-
-            if (!firstName || !lastName || !email || !role || !phone) {
-                showToast('Required fields cannot be empty', 'error');
-                return;
-            }
-
-            const fullName = middleName ? `${firstName} ${middleName} ${lastName}` : `${firstName} ${lastName}`;
-
-            try {
-                const updatePayload = {
-                    name: fullName,
-                    email,
-                    phone,
-                    role,
-                    specialization: role === 'doctor' ? 'General Medicine' : ''
+            setupEventListeners: () => {
+                // Global Modal Close
+                window.closeModal = () => {
+                    document.getElementById('modalRoot').style.display = 'none';
                 };
-                if (password) updatePayload.password = password;
+            },
 
-                const response = await fetch(`http://localhost:5000/api/users/${id}`, {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${token}`
-                    },
-                    body: JSON.stringify(updatePayload)
-                });
 
-                const data = await handleProtectedResponse(response);
-                if (!data) return;
-
-                if (data.success) {
-                    showToast('User updated successfully', 'info');
-                    addAuditLog(`Updated user: ${fullName}`);
-                    closeModal();
-                    await loadUsers();
-                    loadPage('users');
-                } else {
-                    showToast(data.message || 'Failed to update user', 'error');
-                }
-            } catch (error) {
-                showToast('Error connecting to server', 'error');
-            }
-        };
-        
-        window.deleteUser = async (id) => {
-            if (confirm('⚠️ Permanently delete this user? This action cannot be undone.')) {
-                try {
-                    const response = await fetch(`http://localhost:5000/api/users/${id}`, {
-                        method: 'DELETE',
-                        headers: { 'Authorization': `Bearer ${token}` }
+            startClock: () => {
+                const tick = () => {
+                    const d = new Date();
+                    document.getElementById('liveTime').innerText = d.toLocaleString('en-US', {
+                        weekday: 'short', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit'
                     });
+                };
+                tick();
+                setInterval(tick, 1000);
+            },
 
-                    const data = await handleProtectedResponse(response);
-                    if (!data) return;
+            showToast: (msg, type = 'success') => {
+                const toast = document.getElementById('toastMsg');
+                const iconMap = { success: 'fa-check-circle', error: 'fa-exclamation-circle', warning: 'fa-exclamation-triangle', info: 'fa-info-circle' };
 
-                    if (data.success) {
-                        showToast('User deleted successfully', 'warning');
-                        addAuditLog(`Deleted user ID: ${id}`);
-                        await loadUsers();
-                        loadPage('users');
-                    } else {
-                        showToast(data.message || 'Failed to delete user', 'error');
+                // Reset classes
+                toast.className = 'toast-notification';
+                toast.classList.add(`toast-${type}`);
+
+                document.getElementById('toastIcon').className = 'fas ' + (iconMap[type] || 'fa-info-circle');
+                document.getElementById('toastText').innerText = msg;
+
+                toast.classList.add('show');
+                setTimeout(() => toast.classList.remove('show'), 3000);
+            },
+
+            loadPage: async (pageId) => {
+                await app.refreshData();
+                const container = document.getElementById('contentArea');
+                const title = document.getElementById('headerTitle');
+
+                // Route
+                switch (pageId) {
+                    case 'dashboard':
+                        title.innerText = 'Dashboard Overview';
+                        app.renderDashboard(container);
+                        break;
+                    case 'users':
+                        title.innerText = 'User Management';
+                        app.renderUsers(container);
+                        break;
+                    case 'users-add':
+                        title.innerText = 'Add New User';
+                        app.renderAddUser(container);
+                        break;
+                    case 'doctors':
+                        title.innerText = 'Medical Staff';
+                        app.renderDoctors(container);
+                        break;
+                    case 'patients':
+                        title.innerText = 'Patient Records';
+                        app.renderPatients(container);
+                        break;
+                    case 'appointments':
+                        title.innerText = 'Appointments';
+                        app.renderAppointments(container);
+                        break;
+                    case 'appointments-add':
+                        title.innerText = 'Schedule Appointment';
+                        app.renderAddAppointment(container);
+                        break;
+                    case 'audit':
+                        title.innerText = 'Audit Logs';
+                        app.renderAudit(container);
+                        break;
+                    case 'departments':
+                        title.innerText = 'Departments';
+                        app.renderDepartments(container);
+                        break;
+                    case 'settings':
+                        title.innerText = 'Settings';
+                        app.renderSettings(container);
+                        break;
+                    case 'login-history':
+                        title.innerText = 'System Login History';
+                        app.renderLoginHistory(container);
+                        break;
+                    case 'reports':
+                        title.innerText = 'Business Analytics';
+                        app.renderAnalytics(container);
+                        break;
+                }
+            },
+
+            /* --- RENDERERS --- */
+
+            renderDashboard: (container) => {
+                const totalUsers = app.data.users.length;
+                const totalDocs = app.data.users.filter(u => u.role === 'doctor').length;
+                const totalPats = app.data.users.filter(u => u.role === 'patient').length;
+                const totalApps = app.data.appointments.length;
+
+                container.innerHTML = `
+                    <div class="stat-grid">
+                        <div class="stat-block"><div class="stat-icon"><i class="fas fa-users"></i></div><div class="stat-info"><h4>Total Users</h4><div class="figure">${totalUsers}</div></div></div>
+                        <div class="stat-block"><div class="stat-icon"><i class="fas fa-user-md"></i></div><div class="stat-info"><h4>Doctors</h4><div class="figure">${totalDocs}</div></div></div>
+                        <div class="stat-block"><div class="stat-icon"><i class="fas fa-heartbeat"></i></div><div class="stat-info"><h4>Patients</h4><div class="figure">${totalPats}</div></div></div>
+                        <div class="stat-block"><div class="stat-icon"><i class="fas fa-calendar-alt"></i></div><div class="stat-info"><h4>Appointments</h4><div class="figure">${totalApps}</div></div></div>
+                    </div>
+                    
+                    <div class="content-card">
+                        <div class="card-header">
+                            <h3>📋 Recent Activity</h3>
+                            <button class="btn-outline" onclick="app.loadPage('audit')">View All</button>
+                        </div>
+                        <div class="responsive-table-wrapper">
+                            <table class="responsive-table">
+                                <thead><tr><th>User</th><th>Action</th><th>Timestamp</th></tr></thead>
+                                <tbody>
+                                    ${app.data.audit.slice(0, 5).map(log => `<tr><td data-label="User">${log.user}</td><td data-label="Action">${log.action}</td><td data-label="Time">${log.timestamp}</td></tr>`).join('')}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="content-card">
+                        <div class="card-header"><h3>📊 Weekly Consultations</h3></div>
+                        <div class="chart-box"><canvas id="dashChart"></canvas></div>
+                    </div>
+                `;
+
+                // Render Chart
+                setTimeout(() => {
+                    const ctx = document.getElementById('dashChart');
+                    if (ctx) {
+                        if (app.chartInstance) app.chartInstance.destroy();
+
+                        // Calculate appts per day of current week
+                        const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+                        const counts = [0, 0, 0, 0, 0, 0, 0];
+                        const now = new Date();
+                        app.data.appointments.forEach(a => {
+                            const d = new Date(a.date);
+                            counts[d.getDay()]++;
+                        });
+                        const labels = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+                        const dataPoints = [counts[1], counts[2], counts[3], counts[4], counts[5], counts[6], counts[0]];
+
+                        app.chartInstance = new Chart(ctx, {
+                            type: 'line',
+                            data: {
+                                labels: labels,
+                                datasets: [{
+                                    label: 'Consultations', data: dataPoints,
+                                    borderColor: '#2563eb', tension: 0.4, fill: true, backgroundColor: '#eff6ff'
+                                }]
+                            },
+                            options: {
+                                responsive: true,
+                                maintainAspectRatio: false,
+                                plugins: { legend: { display: false } },
+                                scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } }
+                            }
+                        });
                     }
-                } catch (error) {
-                    showToast('Error connecting to server', 'error');
+                }, 50);
+            },
+
+            renderUsers: (container) => {
+                container.innerHTML = `
+                    <div class="content-card">
+                        <div class="card-header">
+                            <h3>👥 System Users</h3>
+                            <button class="btn-primary" onclick="app.loadPage('users-add')"><i class="fas fa-plus"></i> Add User</button>
+                        </div>
+                        <div class="responsive-table-wrapper">
+                            <table class="responsive-table">
+                                <thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Status</th><th>Actions</th></tr></thead>
+                                <tbody>
+                                    ${app.data.users.map(u => `
+                                    <tr>
+                                        <td data-label="Name">
+                                            <div style="font-weight:600">${u.name}</div>
+                                            <div style="font-size:0.75rem;color:#94a3b8">${u.phone || ''}</div>
+                                        </td>
+                                        <td data-label="Email">${u.email}</td>
+                                        <td data-label="Role"><span class="status-badge badge-role">${u.role}</span></td>
+                                        <td data-label="Status">
+                                            <span class="status-badge ${u.blocked ? 'badge-blocked' : 'badge-active'}">
+                                                ${u.blocked ? 'Blocked' : 'Active'}
+                                            </span>
+                                        </td>
+                                        <td data-label="Actions">
+                                            <div class="action-group">
+                                                <button class="icon-action" onclick="app.modals.editUser('${u.id}')"><i class="fas fa-edit"></i></button>
+                                                <button class="mini-action-btn ${u.blocked ? 'unblock' : 'block'}" onclick="app.actions.toggleBlock('${u.id}')">${u.blocked ? 'Unblock' : 'Block'}</button>
+                                                <button class="icon-action delete" onclick="app.actions.deleteUser('${u.id}')"><i class="fas fa-trash"></i></button>
+                                            </div>
+                                        </td>
+                                    </tr>`).join('')}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>`;
+            },
+
+            renderAddUser: (container) => {
+                container.innerHTML = `
+                    <div class="content-card" style="width: 100%; padding: 24px 32px; border-radius: 24px; box-shadow: var(--shadow); margin-bottom: 0;">
+                        <div style="margin-bottom: 20px;">
+                            <h3 style="font-size: 1.4rem; font-weight: 700; color: #0a2540;">➕ Add New User</h3>
+                            <p style="font-size: 0.85rem; color: #64748b; margin-top: 4px;">Fill in the details below to register a patient, doctor, or staff member.</p>
+                        </div>
+                        <div style="display: flex; flex-direction: column; gap: 14px;">
+                            <div class="row-fields" style="display: flex; gap: 16px;">
+                                <div class="form-field" style="flex: 1;">
+                                    <label>Full Name</label>
+                                    <input id="newUserName" class="form-input" placeholder="e.g. John Doe">
+                                </div>
+                                <div class="form-field" style="flex: 1;">
+                                    <label>Role</label>
+                                    <select id="newUserRole" class="form-input" onchange="document.getElementById('specField').style.display = this.value === 'doctor' ? 'block' : 'none'">
+                                        <option value="patient">Patient</option>
+                                        <option value="doctor">Doctor</option>
+                                        <option value="receptionist">Receptionist</option>
+                                        <option value="vital">Vital Monitor</option>
+                                        <option value="pharma">Pharmacy Manager</option>
+                                        <option value="admin">Admin</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row-fields" style="display: flex; gap: 16px;">
+                                <div class="form-field" style="flex: 1;">
+                                    <label>Email Address</label>
+                                    <input id="newUserEmail" type="email" class="form-input" placeholder="e.g. john@example.com">
+                                </div>
+                                <div class="form-field" style="flex: 1;">
+                                    <label>Phone Number</label>
+                                    <input id="newUserPhone" class="form-input" placeholder="e.g. +91 9876543210">
+                                </div>
+                            </div>
+                            <div class="row-fields" style="display: flex; gap: 16px;">
+                                <div id="specField" class="form-field" style="flex: 0.5; display: none;">
+                                    <label>Specialization (Doctors)</label>
+                                    <input id="newUserSpec" class="form-input" placeholder="e.g. Cardiology">
+                                </div>
+                                <div id="specSpacer" style="flex: 0.5;"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="content-card" style="width: 100%; padding: 20px 32px; display: flex; justify-content: flex-end; gap: 16px; margin-top: 30px; box-shadow: var(--shadow); border-radius: 24px; position: sticky; bottom: 0; background: white; z-index: 100;">
+                        <button class="btn-outline" onclick="app.loadPage('users')">Cancel</button>
+                        <button class="btn-primary" onclick="app.actions.saveUser()">Create User</button>
+                    </div>`;
+            },
+
+            renderAppointments: (container) => {
+                container.innerHTML = `
+                    <div class="content-card">
+                        <div class="card-header">
+                            <h3>📆 Appointments</h3>
+                            <button class="btn-primary" onclick="app.loadPage('appointments-add')"><i class="fas fa-plus"></i> New</button>
+                        </div>
+                        <table class="responsive-table">
+                            <thead><tr><th>Patient</th><th>Doctor</th><th>Date</th><th>Time</th><th>Status</th><th>Action</th></tr></thead>
+                            <tbody>
+                                ${app.data.appointments.map(a => `
+                                    <tr>
+                                        <td data-label="Patient">${a.patient}</td>
+                                        <td data-label="Doctor">${a.doctor}</td>
+                                        <td data-label="Date">${a.date}</td>
+                                        <td data-label="Time">${a.time}</td>
+                                        <td data-label="Status"><span class="status-badge ${a.status === 'confirmed' ? 'badge-active' : 'badge-pending'}">${a.status}</span></td>
+                                        <td data-label="Action">
+                                            <button class="icon-action delete" onclick="app.actions.deleteAppointment('${a.id}')"><i class="fas fa-trash"></i></button>
+                                        </td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>`;
+            },
+
+            renderAddAppointment: (container) => {
+                const patients = app.data.users.filter(u => u.role === 'patient');
+                const doctors = app.data.users.filter(u => u.role === 'doctor');
+
+                container.innerHTML = `
+                    <div class="content-card" style="width: 100%; padding: 32px; border-radius: 24px; box-shadow: var(--shadow);">
+                        <div style="margin-bottom: 24px;">
+                            <h3 style="font-size: 1.4rem; font-weight: 700; color: #0a2540;">📅 Schedule New Appointment</h3>
+                            <p style="font-size: 0.85rem; color: #64748b; margin-top: 4px;">Book a new medical consultation or checkup appointment.</p>
+                        </div>
+                        <div style="display: flex; flex-direction: column; gap: 16px;">
+                            <div class="form-field">
+                                <label>Patient</label>
+                                <select id="appPat" class="form-input">
+                                    ${patients.map(p => `<option value="${p.id}|${p.name}">${p.name}</option>`).join('')}
+                                </select>
+                            </div>
+                            <div class="form-field">
+                                <label>Doctor</label>
+                                <select id="appDoc" class="form-input">
+                                    ${doctors.map(d => `<option value="${d.id}|${d.name}">${d.name} (${d.specialization || 'General'})</option>`).join('')}
+                                </select>
+                            </div>
+                            <div class="row-fields" style="display: flex; gap: 16px;">
+                                <div class="form-field" style="flex: 1;">
+                                    <label>Date</label>
+                                    <input id="appDate" type="date" class="form-input" value="${new Date().toISOString().slice(0, 10)}">
+                                </div>
+                                <div class="form-field" style="flex: 1;">
+                                    <label>Time</label>
+                                    <input id="appTime" type="time" class="form-input" value="10:00">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="content-card" style="width: 100%; padding: 24px 32px; display: flex; justify-content: flex-end; gap: 16px; margin-top: 30px; box-shadow: var(--shadow); border-radius: 24px; position: sticky; bottom: 0; background: white; z-index: 100;">
+                        <button class="btn-outline" onclick="app.loadPage('appointments')">Cancel</button>
+                        <button class="btn-primary" onclick="app.actions.saveAppointment()">Schedule</button>
+                    </div>`;
+            },
+
+            renderDoctors: (container) => {
+                const docs = app.data.users.filter(u => u.role === 'doctor');
+                container.innerHTML = `
+                    <div class="content-card">
+                        <h3>🩺 Medical Staff Directory</h3>
+                        <table class="responsive-table">
+                            <thead><tr><th>Name</th><th>Specialization</th><th>Email</th><th>Contact</th></tr></thead>
+                            <tbody>
+                                ${docs.map(d => `<tr><td>${d.name}</td><td>${d.specialization || 'General Practice'}</td><td>${d.email}</td><td>${d.phone || '—'}</td></tr>`).join('')}
+                            </tbody>
+                        </table>
+                    </div>`;
+            },
+
+            renderPatients: (container) => {
+                const pats = app.data.users.filter(u => u.role === 'patient');
+                container.innerHTML = `
+                    <div class="content-card">
+                        <h3>🤒 Patient List</h3>
+                         <table class="responsive-table">
+                            <thead><tr><th>Name</th><th>Email</th><th>Phone</th><th>Status</th></tr></thead>
+                            <tbody>
+                                ${pats.map(p => `<tr><td>${p.name}</td><td>${p.email}</td><td>${p.phone}</td><td><span class="status-badge ${p.blocked ? 'badge-blocked' : 'badge-active'}">${p.blocked ? 'Inactive' : 'Active'}</span></td></tr>`).join('')}
+                            </tbody>
+                        </table>
+                    </div>`;
+            },
+
+            renderAudit: (container) => {
+                container.innerHTML = `
+                    <div class="content-card">
+                        <h3>🔒 Audit Trail</h3>
+                        <table class="responsive-table">
+                            <thead><tr><th>User</th><th>Action</th><th>Timestamp</th></tr></thead>
+                            <tbody>
+                                ${app.data.audit.map(l => `<tr><td>${l.user}</td><td>${l.action}</td><td>${l.timestamp}</td></tr>`).join('')}
+                            </tbody>
+                        </table>
+                    </div>`;
+            },
+
+            renderDepartments: (container) => {
+                container.innerHTML = `
+                    <div class="content-card">
+                        <h3>🏥 Departments</h3>
+                        <table class="responsive-table">
+                            <thead><tr><th>Name</th><th>Head</th><th>Staff</th></tr></thead>
+                            <tbody>
+                                ${app.data.departments.map(d => `<tr><td>${d.name}</td><td>${d.head}</td><td>${d.staffCount}</td></tr>`).join('')}
+                            </tbody>
+                        </table>
+                    </div>`;
+            },
+
+            renderSettings: (container) => {
+                container.innerHTML = `
+                    <div class="content-card">
+                        <h3>⚙️ Settings</h3>
+                        <div class="form-field"><label>Clinic Name</label><input class="form-input" value="ClinicCare Pro Medical Center"></div>
+                        <div class="form-field"><label>Admin Email</label><input class="form-input" type="email" value="admin@cliniccare.pro"></div>
+                        <button class="btn-primary" onclick="app.showToast('Settings Saved!', 'success')">Save Changes</button>
+                    </div>`;
+            },
+
+            renderLoginHistory: (container) => {
+                const loginLogs = app.data.audit.filter(l => l.action.toLowerCase().includes('logged in'));
+                container.innerHTML = `
+                    <div class="content-card">
+                        <div class="card-header">
+                            <h3>🔐 Login History</h3>
+                            <button class="btn-outline" onclick="app.refreshData().then(() => app.renderLoginHistory(container))">Refresh</button>
+                        </div>
+                        <div class="responsive-table-wrapper">
+                            <table class="responsive-table">
+                                <thead><tr><th>User</th><th>Action</th><th>IP Address</th><th>Timestamp</th></tr></thead>
+                                <tbody>
+                                    ${loginLogs.map(l => `<tr><td data-label="User"><b>${l.user}</b></td><td data-label="Action">${l.action}</td><td data-label="IP">${l.ip || '—'}</td><td data-label="Time">${new Date(l.timestamp).toLocaleString()}</td></tr>`).join('') || '<tr><td colspan="4">No login records found</td></tr>'}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>`;
+            },
+
+            renderAnalytics: (container) => {
+                const totalRevenue = app.data.appointments.filter(a => a.status === 'completed').length * 500;
+                const completed = app.data.appointments.filter(a => a.status === 'completed').length;
+                const canceled = app.data.appointments.filter(a => a.status === 'cancelled').length;
+
+                container.innerHTML = `
+                    <div class="stat-grid">
+                        <div class="stat-block"><div class="stat-icon"><i class="fas fa-wallet"></i></div><div class="stat-info"><h4>Total Revenue</h4><div class="figure">₹${totalRevenue}</div></div></div>
+                        <div class="stat-block"><div class="stat-icon"><i class="fas fa-check-double"></i></div><div class="stat-info"><h4>Completed Visits</h4><div class="figure">${completed}</div></div></div>
+                        <div class="stat-block"><div class="stat-icon"><i class="fas fa-user-times"></i></div><div class="stat-info"><h4>Cancellations</h4><div class="figure">${canceled}</div></div></div>
+                        <div class="stat-block"><div class="stat-icon"><i class="fas fa-chart-line"></i></div><div class="stat-info"><h4>Growth</h4><div class="figure">+12%</div></div></div>
+                    </div>
+                    
+                    <div class="grid-2" style="display:grid; grid-template-columns: 1fr 1fr; gap:20px;">
+                        <div class="content-card">
+                            <div class="card-header"><h3>Consultation Trends</h3></div>
+                            <div class="chart-box" style="height:250px;"><canvas id="trendChart"></canvas></div>
+                        </div>
+                        <div class="content-card">
+                            <div class="card-header"><h3>Department Distribution</h3></div>
+                            <div class="chart-box" style="height:250px;"><canvas id="deptChart"></canvas></div>
+                        </div>
+                    </div>
+                `;
+
+                setTimeout(() => {
+                    // Trend Chart
+                    const trendCtx = document.getElementById('trendChart');
+                    if (trendCtx) {
+                        new Chart(trendCtx, {
+                            type: 'bar',
+                            data: {
+                                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                                datasets: [{ label: 'Patients', data: [65, 59, 80, 81, 56, 55], backgroundColor: '#3b82f6' }]
+                            },
+                            options: { responsive: true, maintainAspectRatio: false }
+                        });
+                    }
+
+                    // Dept Chart
+                    const deptCtx = document.getElementById('deptChart');
+                    if (deptCtx) {
+                        new Chart(deptCtx, {
+                            type: 'doughnut',
+                            data: {
+                                labels: ['Cardiology', 'Pediatrics', 'ENT', 'General'],
+                                datasets: [{ data: [30, 20, 15, 35], backgroundColor: ['#3b82f6', '#10b981', '#f59e0b', '#6366f1'] }]
+                            },
+                            options: { responsive: true, maintainAspectRatio: false }
+                        });
+                    }
+                }, 100);
+            },
+
+            /* --- MODALS --- */
+            modals: {
+                open: (html) => {
+                    document.getElementById('modalRoot').style.display = 'flex';
+                    document.getElementById('modalRoot').innerHTML = `<div class="modal-overlay" onclick="closeModal()"><div class="modal-window" onclick="event.stopPropagation()">${html}</div></div>`;
+                },
+
+                addUser: () => {
+                    const docs = app.data.users.filter(u => u.role === 'doctor').map(d => d.name).join(','); // Just placeholder
+                    app.modals.open(`
+                        <h2 style="margin-bottom:24px;">Add New User</h2>
+                        <div class="form-field"><label>Full Name</label><input id="newUserName" class="form-input"></div>
+                        <div class="form-field"><label>Email</label><input id="newUserEmail" type="email" class="form-input"></div>
+                        <div class="form-field"><label>Phone</label><input id="newUserPhone" class="form-input"></div>
+                        <div class="row-fields">
+                            <div class="form-field" style="flex:1"><label>Role</label>
+                                <select id="newUserRole" class="form-input">
+                                    <option value="patient">Patient</option>
+                                    <option value="doctor">Doctor</option>
+                                    <option value="receptionist">Receptionist</option>
+                                    <option value="admin">Admin</option>
+                                </select>
+                            </div>
+                            <div class="form-field" style="flex:1"><label>Specialization (Doctors)</label><input id="newUserSpec" class="form-input"></div>
+                        </div>
+                        <div class="modal-actions">
+                            <button class="btn-outline" onclick="closeModal()">Cancel</button>
+                            <button class="btn-primary" onclick="app.actions.saveUser()">Create User</button>
+                        </div>
+                    `);
+                },
+
+                editUser: (id) => {
+                    const user = app.data.users.find(u => u.id === id);
+                    if (!user) return;
+                    app.modals.open(`
+                        <h2 style="margin-bottom:24px;">Edit User</h2>
+                        <input type="hidden" id="editUserId" value="${user.id}">
+                        <div class="form-field"><label>Full Name</label><input id="editUserName" class="form-input" value="${user.name}"></div>
+                        <div class="form-field"><label>Email</label><input id="editUserEmail" class="form-input" value="${user.email}"></div>
+                        <div class="form-field"><label>Phone</label><input id="editUserPhone" class="form-input" value="${user.phone}"></div>
+                        <div class="form-field"><label>Role</label>
+                            <select id="editUserRole" class="form-input">
+                                <option value="patient" ${user.role === 'patient' ? 'selected' : ''}>Patient</option>
+                                <option value="doctor" ${user.role === 'doctor' ? 'selected' : ''}>Doctor</option>
+                                <option value="receptionist" ${user.role === 'receptionist' ? 'selected' : ''}>Receptionist</option>
+                            </select>
+                        </div>
+                        <div class="modal-actions">
+                            <button class="btn-outline" onclick="closeModal()">Cancel</button>
+                            <button class="btn-primary" onclick="app.actions.updateUser()">Save Changes</button>
+                        </div>
+                    `);
+                },
+
+                addAppointment: () => {
+                    const patients = app.data.users.filter(u => u.role === 'patient');
+                    const doctors = app.data.users.filter(u => u.role === 'doctor');
+
+                    app.modals.open(`
+                        <h2 style="margin-bottom:24px;">Schedule Appointment</h2>
+                        <div class="form-field"><label>Patient</label>
+                            <select id="appPat" class="form-input">${patients.map(p => `<option value="${p.id}|${p.name}">${p.name}</option>`).join('')}</select>
+                        </div>
+                        <div class="form-field"><label>Doctor</label>
+                            <select id="appDoc" class="form-input">${doctors.map(d => `<option value="${d.id}|${d.name}">${d.name} (${d.specialization || 'Gen'})</option>`).join('')}</select>
+                        </div>
+                        <div class="row-fields">
+                            <div class="form-field" style="flex:1"><label>Date</label><input id="appDate" type="date" class="form-input"></div>
+                            <div class="form-field" style="flex:1"><label>Time</label><input id="appTime" type="time" class="form-input"></div>
+                        </div>
+                        <div class="modal-actions">
+                            <button class="btn-outline" onclick="closeModal()">Cancel</button>
+                            <button class="btn-primary" onclick="app.actions.saveAppointment()">Schedule</button>
+                        </div>
+                    `);
+                }
+            },
+
+            /* --- ACTIONS --- */
+            actions: {
+                saveUser: async () => {
+                    const name = document.getElementById('newUserName').value;
+                    const email = document.getElementById('newUserEmail').value;
+                    const phone = document.getElementById('newUserPhone').value;
+                    const role = document.getElementById('newUserRole').value;
+                    const spec = document.getElementById('newUserSpec').value;
+
+                    if (!name || !email) { app.showToast('Name and Email required', 'error'); return; }
+
+                    const newUser = {
+                        name, email, phone, role, specialization: spec,
+                        password: 'password123'
+                    };
+
+                    try {
+                        await API.post('users', newUser);
+                        await API.post('audit-logs', { user: app.currentUser.name, action: `Created user account for ${name}` });
+                        app.showToast('User created successfully', 'success');
+                        closeModal();
+                        await app.loadPage('users');
+                    } catch (e) { app.showToast('Failed to create user', 'error'); }
+                },
+
+                updateUser: async () => {
+                    const id = document.getElementById('editUserId').value;
+                    const name = document.getElementById('editUserName').value;
+                    const email = document.getElementById('editUserEmail').value;
+                    const phone = document.getElementById('editUserPhone').value;
+                    const role = document.getElementById('editUserRole').value;
+
+                    try {
+                        await API.put(`users/${id}`, { name, email, phone, role });
+                        await API.post('audit-logs', { user: app.currentUser.name, action: `Updated user ${name}` });
+                        app.showToast('User updated', 'success');
+                        closeModal();
+                        await app.loadPage('users');
+                    } catch (e) { app.showToast('Update failed', 'error'); }
+                },
+
+                deleteUser: async (id) => {
+                    if (!confirm('Are you sure? This cannot be undone.')) return;
+                    try {
+                        await API.delete(`users/${id}`);
+                        await API.post('audit-logs', { user: app.currentUser.name, action: `Deleted user ID ${id}` });
+                        app.showToast('User deleted', 'warning');
+                        await app.loadPage('users');
+                    } catch (e) { app.showToast('Delete failed', 'error'); }
+                },
+
+                toggleBlock: async (id) => {
+                    const u = app.data.users.find(x => x.id === id);
+                    if (u) {
+                        const newStatus = !u.blocked;
+                        try {
+                            await API.put(`users/${id}/block`, { blocked: newStatus });
+                            await API.post('audit-logs', { user: app.currentUser.name, action: `${newStatus ? 'Blocked' : 'Unblocked'} user ${u.name}` });
+                            app.showToast(`User ${newStatus ? 'Blocked' : 'Unblocked'}`, newStatus ? 'warning' : 'success');
+                            await app.loadPage('users');
+                        } catch (e) { app.showToast('Action failed', 'error'); }
+                    }
+                },
+
+                saveAppointment: async () => {
+                    const patVal = document.getElementById('appPat').value;
+                    const docVal = document.getElementById('appDoc').value;
+                    const date = document.getElementById('appDate').value;
+                    const time = document.getElementById('appTime').value;
+
+                    if (!patVal || !docVal || !date || !time) { app.showToast('All fields are required', 'error'); return; }
+
+                    const [patId, patName] = patVal.split('|');
+                    const [docId, docName] = docVal.split('|');
+
+                    try {
+                        await API.post('appointments', {
+                            patientId: patId,
+                            patient: patName,
+                            doctorId: docId,
+                            doctor: docName,
+                            date,
+                            time,
+                            status: 'confirmed'
+                        });
+                        await API.post('audit-logs', { user: app.currentUser.name, action: `Scheduled appointment for ${patName} with Dr. ${docName}` });
+                        app.showToast('Appointment Scheduled', 'success');
+                        closeModal();
+                        await app.loadPage('appointments');
+                    } catch (e) { app.showToast('Scheduling failed', 'error'); }
+                },
+
+                deleteAppointment: async (id) => {
+                    if (!confirm('Cancel this appointment?')) return;
+                    try {
+                        await API.delete(`appointments/${id}`);
+                        await API.post('audit-logs', { user: app.currentUser.name, action: `Cancelled appointment ID ${id}` });
+                        app.showToast('Appointment Cancelled', 'info');
+                        await app.loadPage('appointments');
+                    } catch (e) { app.showToast('Cancellation failed', 'error'); }
+                }
+            },
+
+            logout: () => {
+                if (confirm('Logout of Admin Dashboard?')) {
+                    localStorage.removeItem('currentUser');
+                    localStorage.removeItem('authToken');
+                    window.location.href = 'auth.html';
                 }
             }
-        };
-        
-        window.toggleBlockUser = async function(id, currentlyBlocked) {
-            const action = currentlyBlocked ? 'unblock' : 'block';
-            if (!confirm(`Are you sure you want to ${action} this user?`)) return;
-            
-            try {
-                const response = await fetch(`http://localhost:5000/api/users/${id}/block`, {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${localStorage.getItem('authToken')}`
-                    },
-                    body: JSON.stringify({ blocked: !currentlyBlocked })
-                });
-                const data = await handleProtectedResponse(response);
-                if (!data) return;
-                if (data.success) {
-                    showToast(`User ${action}ed successfully`, currentlyBlocked ? 'success' : 'warning');
-                    await loadUsers();
-                    await loadLoginHistory();
-                    const updatedUser = globalUsers.find(user => user.id === id);
-                    addAuditLog(`${action === 'block' ? 'Blocked' : 'Unblocked'} user: ${updatedUser?.name || id}`);
-                    loadPage('users');
-                } else {
-                    showToast(data.message || `Failed to ${action} user`, 'error');
-                }
-            } catch (error) {
-                showToast(`Error ${action}ing user`, 'error');
-            }
-        };
-        
-        // Appointment Management
-        window.addAppointmentModal = function() {
-            const patients = JSON.parse(localStorage.getItem('users')).filter(u=>u.role==='patient').map(p=>p.name);
-            const doctors = JSON.parse(localStorage.getItem('users')).filter(u=>u.role==='doctor').map(d=>d.name);
-            openModal(`<h2>📅 New Appointment</h2>
-                <div class="form-field"><label>Patient</label><select class="form-input" id="appPatient">${patients.map(p=>`<option>${p}</option>`).join('')}</select></div>
-                <div class="form-field"><label>Doctor</label><select class="form-input" id="appDoctor">${doctors.map(d=>`<option>${d}</option>`).join('')}</select></div>
-                <div class="row-fields"><div class="form-field"><label>Date</label><input type="date" class="form-input" id="appDate"></div><div class="form-field"><label>Time</label><input type="time" class="form-input" id="appTime"></div></div>
-                <div class="modal-actions"><button class="btn-primary" onclick="saveAppointment()">Schedule</button><button class="btn-outline" onclick="closeModal()">Cancel</button></div>`);
-        };
-        window.saveAppointment = async function() {
-            const newApp = {
-                patient: document.getElementById('appPatient')?.value,
-                doctor: document.getElementById('appDoctor')?.value,
-                date: document.getElementById('appDate')?.value,
-                time: document.getElementById('appTime')?.value,
-                status: 'pending'
-            };
-            try {
-                await fetch('http://localhost:5000/api/appointments', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-                    body: JSON.stringify(newApp)
-                });
-                await loadAppointments();
-                addAuditLog(`Created appointment: ${newApp.patient} with ${newApp.doctor}`);
-                closeModal(); showToast('Appointment scheduled', 'success');
-                loadPage('appointments');
-            } catch(e) {}
-        };
-        window.deleteAppointment = async (id) => {
-            if(confirm('Cancel this appointment?')){
-                try {
-                    await fetch(`http://localhost:5000/api/appointments/${id}`, {
-                        method: 'DELETE',
-                        headers: { 'Authorization': `Bearer ${token}` }
-                    });
-                    await loadAppointments();
-                    addAuditLog(`Cancelled appointment ID: ${id}`);
-                    showToast('Appointment cancelled', 'info');
-                    loadPage('appointments');
-                } catch(e) {}
-            }
-        };
-        
-        // ========== PAGE RENDERING WITH FULL FUNCTIONALITY ==========
-        function renderDashboard(container) {
-            const users = globalUsers;
-            const apps = globalAppointments;
-            const totalUsers = users.length;
-            const totalDocs = users.filter(u=>u.role==='doctor').length;
-            const totalPats = users.filter(u=>u.role==='patient').length;
-            container.innerHTML = `
-                <div class="stat-grid">
-                    <div class="stat-block"><div class="stat-icon"><i class="fas fa-users"></i></div><div class="stat-info"><h4>Total users</h4><div class="figure">${totalUsers}</div></div></div>
-                    <div class="stat-block"><div class="stat-icon"><i class="fas fa-user-md"></i></div><div class="stat-info"><h4>Doctors</h4><div class="figure">${totalDocs}</div></div></div>
-                    <div class="stat-block"><div class="stat-icon"><i class="fas fa-heartbeat"></i></div><div class="stat-info"><h4>Patients</h4><div class="figure">${totalPats}</div></div></div>
-                    <div class="stat-block"><div class="stat-icon"><i class="fas fa-calendar-alt"></i></div><div class="stat-info"><h4>Appointments</h4><div class="figure">${apps.length}</div></div></div>
-                </div>
-                <div class="content-card"><div class="card-header"><h3>📋 Recent System Activity</h3><button class="btn-primary" onclick="loadPage('audit')"><i class="fas fa-history"></i> Full Audit</button></div>
-                <table class="activity-table"><thead><tr><th>User</th><th>Action</th><th>Timestamp</th></tr></thead><tbody>
-                    ${globalAuditLogs.slice(0,3).map(log=>`<tr><td>${log.user}</td><td>${log.action}</td><td>${log.timestamp}</td></tr>`).join('')}
-                </tbody></table></div>
-                <div class="content-card"><div class="card-header"><h3>📊 Weekly Consultations Trend</h3></div><div class="chart-box"><canvas id="dashChart"></canvas></div></div>
-            `;
-            setTimeout(() => {
-                const ctx = document.getElementById('dashChart')?.getContext('2d');
-                if(ctx) new Chart(ctx, { type:'line', data: { labels: ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'], datasets: [{ label:'Consultations', data:[6,9,13,11,16,12,8], borderColor:'#2563eb', tension:0.3, fill:true, backgroundColor:'#2563eb15' }] }, options: { responsive:true, maintainAspectRatio:false } });
-                const tbl = document.querySelector('.activity-table');
-                if(tbl && window.innerWidth<=768) makeTableResponsive(tbl);
-            }, 50);
-        }
-        
-        function renderUsers(container) {
-            const users = globalUsers;
-            container.innerHTML = `<div class="content-card"><div class="card-header"><h3>👥 User Management</h3><button class="btn-primary" onclick="addUserModal()"><i class="fas fa-plus"></i> New user</button></div>
-            <table class="users-table"><thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Signup Date</th><th>Status</th><th>Actions</th></tr></thead>
-            <tbody>${users.map(u => `<tr><td>${u.name}</td><td>${u.email}</td><td><span class="status-badge badge-role">${u.role}</span></td><td>${u.createdAt ? new Date(u.createdAt).toLocaleDateString() : 'N/A'}</td><td><span class="status-badge ${u.blocked ? 'badge-blocked' : 'badge-active'}">${u.blocked ? 'blocked' : 'active'}</span></td>
-            <td><div class="action-group"><button class="icon-action" onclick="editUser('${u.id}')"><i class="fas fa-edit"></i></button><button class="mini-action-btn ${u.blocked ? 'unblock' : 'block'}" onclick="toggleBlockUser('${u.id}', ${u.blocked})">${u.blocked ? 'Unblock' : 'Block'}</button><button class="icon-action delete" onclick="deleteUser('${u.id}')"><i class="fas fa-trash"></i></button></div></td></tr>`).join('') || getEmptyStateRow(6, globalUsersError || 'No signup data found.')}</tbody></table></div>`;
-            setTimeout(() => { const tbl = document.querySelector('.users-table'); if(tbl && window.innerWidth<=768) makeTableResponsive(tbl); }, 10);
-        }
-        
-        function renderDoctors(container) {
-            const docs = globalUsers.filter(u=>u.role==='doctor');
-            container.innerHTML = `<div class="content-card"><h3>🩺 Medical Staff Directory</h3><table class="doctors-table"><thead><tr><th>Name</th><th>Specialization</th><th>Email</th><th>Phone</th></tr></thead><tbody>${docs.map(d=>`<tr><td>${d.name}</td><td>${d.specialization||'General Medicine'}</td><td>${d.email}</td><td>${d.phone||'—'}</td></tr>`).join('')}</tbody></table></div>`;
-            setTimeout(()=>{const tbl=document.querySelector('.doctors-table'); if(tbl && window.innerWidth<=768) makeTableResponsive(tbl);},10);
-        }
-        
-        function renderAppointments(container) {
-            const apps = globalAppointments;
-            container.innerHTML = `<div class="content-card"><div class="card-header"><h3>📆 Appointment Schedule</h3><button class="btn-primary" onclick="addAppointmentModal()"><i class="fas fa-plus"></i> New Appointment</button></div>
-            <table class="app-table"><thead><tr><th>Patient</th><th>Doctor</th><th>Date</th><th>Time</th><th>Status</th><th>Action</th></tr></thead>
-            <tbody>${apps.map(a=>`<tr><td>${a.patient}</td><td>${a.doctor}</td><td>${a.date}</td><td>${a.time}</td><td><span class="status-badge ${a.status==='confirmed'?'badge-active':'badge-pending'}">${a.status}</span></td>
-            <td><button class="icon-action delete" onclick="deleteAppointment('${a.id}')"><i class="fas fa-trash-alt"></i></button></td></tr>`).join('')}</tbody></table></div>`;
-            setTimeout(()=>{const tbl=document.querySelector('.app-table'); if(tbl && window.innerWidth<=768) makeTableResponsive(tbl);},10);
-        }
-        
-        function renderDepartments(container) {
-            const depts=globalDepartments;
-            container.innerHTML=`<div class="content-card"><h3>🏥 Departments</h3><table class="dept-table"><thead><tr><th>Name</th><th>Head of Department</th><th>Staff Count</th></tr></thead><tbody>${depts.map(d=>`<tr><td>${d.name}</td><td>${d.head}</td><td>${d.staffCount}</td></tr>`).join('')}</tbody></table></div>`;
-            setTimeout(()=>{const tbl=document.querySelector('.dept-table'); if(tbl && window.innerWidth<=768) makeTableResponsive(tbl);},10);
-        }
-        
-        function renderReports(container) {
-            container.innerHTML=`<div class="content-card"><h3>📈 Medical Analytics</h3><div class="chart-box"><canvas id="reportChart"></canvas></div><p style="margin-top:20px; font-size:0.8rem; color:#5b7295;">Monthly patient consultations overview</p></div>`;
-            setTimeout(()=>{ const ctx=document.getElementById('reportChart')?.getContext('2d'); if(ctx) new Chart(ctx,{type:'bar',data:{labels:['Jan','Feb','Mar','Apr','May'],datasets:[{label:'Consultations',data:[34,48,62,71,85],backgroundColor:'#3b82f6'}]}, options:{responsive:true, maintainAspectRatio:false}}); },50);
-        }
-        
-        function renderAudit(container) {
-            const log=globalAuditLogs;
-            container.innerHTML=`<div class="content-card"><h3>🔒 Security & Audit Trail</h3><table class="audit-table"><thead><tr><th>User</th><th>Action</th><th>Timestamp</th></tr></thead><tbody>${log.map(l=>`<tr><td>${l.user}</td><td>${l.action}</td><td>${l.timestamp}</td></tr>`).join('')}</tbody></table></div>`;
-            setTimeout(()=>{const tbl=document.querySelector('.audit-table'); if(tbl && window.innerWidth<=768) makeTableResponsive(tbl);},10);
-        }
-        
-        function renderSettings(container) {
-            container.innerHTML=`<div class="content-card"><h3>⚙️ System Preferences</h3><div class="form-field"><label>Organization Name</label><input class="form-input" id="clinicName" value="ClinicCare Pro Medical Center"></div>
-            <div class="form-field"><label>Timezone (readonly)</label><input class="form-input" value="UTC-5 / Eastern Time" disabled></div>
-            <button class="btn-primary" onclick="showToast('Settings saved successfully','success'); addAuditLog('Updated system settings');"><i class="fas fa-save"></i> Save Preferences</button></div>`;
-        }
-        
-        function renderLoginHistory(container) {
-            const history = globalLoginHistory;
-            container.innerHTML = `<div class="content-card"><div class="card-header"><h3>🔐 Login History</h3><button class="btn-primary" onclick="refreshLoginHistory()"><i class="fas fa-sync"></i> Refresh</button></div>
-            <table class="login-history-table"><thead><tr><th>User</th><th>Email</th><th>Role</th><th>Login Time</th><th>Status</th><th>Actions</th></tr></thead>
-            <tbody>${history.map(h => `<tr><td>${h.userName || h.userId}</td><td>${h.email}</td><td><span class="status-badge badge-role">${h.role || 'unknown'}</span></td><td>${new Date(h.timestamp).toLocaleString()}</td><td><span class="status-badge ${h.blocked ? 'badge-blocked' : 'badge-active'}">${h.blocked ? 'blocked' : 'active'}</span></td>
-            <td><button class="icon-action delete" onclick="deleteLoginHistory('${h._id}')"><i class="fas fa-trash"></i></button></td></tr>`).join('') || getEmptyStateRow(6, globalLoginHistoryError || 'No login history found yet.')}</tbody></table></div>`;
-            setTimeout(() => { const tbl = document.querySelector('.login-history-table'); if (tbl && window.innerWidth <= 768) makeTableResponsive(tbl); }, 10);
-        }
-        
-        window.refreshLoginHistory = async function() {
-            await loadLoginHistory();
-            loadPage('login-history');
-            showToast('Login history refreshed', 'success');
-        };
-        
-        window.deleteLoginHistory = async function(id) {
-            if (!confirm('Delete this login history entry?')) return;
-            try {
-                const response = await fetch(`http://localhost:5000/api/login-history/${id}`, {
-                    method: 'DELETE',
-                    headers: { 'Authorization': `Bearer ${localStorage.getItem('authToken')}` }
-                });
-                const data = await handleProtectedResponse(response);
-                if (!data) return;
-                if (data.success) {
-                    showToast('Login history entry deleted', 'success');
-                    await loadLoginHistory();
-                    loadPage('login-history');
-                } else {
-                    showToast('Failed to delete entry', 'error');
-                }
-            } catch (error) {
-                showToast('Error deleting entry', 'error');
-            }
-        };
-        
-        window.loadPage = function(page) {
-            const container = document.getElementById('contentArea');
-            window.currentDashboardPage = page;
-            window.updateSharedSidebarState?.(page);
-            if (page === 'dashboard') renderDashboard(container);
-            else if (page === 'users') {
-                loadUsers().then(() => renderUsers(container));
-                return;
-            }
-            else if (page === 'doctors') renderDoctors(container);
-            else if (page === 'appointments') renderAppointments(container);
-            else if (page === 'departments') renderDepartments(container);
-            else if (page === 'login-history') {
-                loadLoginHistory().then(() => renderLoginHistory(container));
-                return;
-            }
-            else if (page === 'reports') renderReports(container);
-            else if (page === 'audit') renderAudit(container);
-            else if (page === 'settings') renderSettings(container);
         };
 
-        window.addAuditLog = addAuditLog;
-        loadPage('dashboard');
-    })();
-</script>
-<script>
-    fetch('Frontend/components/sidebar.html')
-        .then(response => response.text())
-        .then(html => {
-            const wrapper = document.createElement('div');
-            wrapper.innerHTML = html;
-            wrapper.querySelectorAll('script').forEach(scriptNode => {
-                const script = document.createElement('script');
-                script.textContent = scriptNode.textContent;
-                document.body.appendChild(script);
-                script.remove();
-            });
-        })
-        .catch(error => console.error('Sidebar failed:', error));
-</script>
+        window.loadPage = app.loadPage;
+        // Initialize
+        window.addEventListener('DOMContentLoaded', app.init);
+    </script>
 </body>
+
 </html>

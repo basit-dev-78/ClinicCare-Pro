@@ -110,7 +110,9 @@ function isBlockedAccountMessage(message) {
 }
 
 function redirectToDashboard(role) {
-    const destination = `../../${role}-dashboard.html`;
+    let filename = `${role}-dashboard.html`;
+    if (role === 'pharma') filename = 'medical-pharma.html';
+    const destination = `../../${filename}`;
     window.location.href = destination;
 }
 

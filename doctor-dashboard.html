@@ -1,1566 +1,1184 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport"
-        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
-    <title>ClinicCare · Doctor Panel</title>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap"
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>ClinicCare · Pro Panel</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
         rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        /* --- CSS VARIABLES (THEMING) --- */
+        :root {
+            /* Light Theme */
+            --primary: #2563eb;
+            --primary-gradient: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            --primary-glow: rgba(37, 99, 235, 0.2);
+
+            --bg-body: #f1f5f9;
+            --bg-card: #ffffff;
+            --bg-sidebar: #ffffff;
+            --bg-input: #f8fafc;
+
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --text-inverse: #ffffff;
+
+            --border: #e2e8f0;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --info: #0ea5e9;
+
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --radius: 20px;
+        }
+
+        [data-theme="dark"] {
+            /* Dark Theme */
+            --bg-body: #0f172a;
+            --bg-card: #1e293b;
+            --bg-sidebar: #1e293b;
+            --bg-input: #334155;
+
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+
+            --border: #334155;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
+        }
+
+        /* --- RESET & BASE --- */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            outline: none;
         }
 
         body {
             font-family: 'Inter', sans-serif;
-            background: #f5f9ff;
-            color: #0a2540;
-            overflow-x: hidden;
-            width: 100%;
+            background: var(--bg-body);
+            color: var(--text-main);
+            height: 100vh;
+            display: flex;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            overflow: hidden;
         }
 
-        /* Custom scrollbar */
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        /* --- SCROLLBAR --- */
         ::-webkit-scrollbar {
-            width: 4px;
-            height: 4px;
+            width: 6px;
+            height: 6px;
         }
 
         ::-webkit-scrollbar-track {
-            background: #eef4fe;
+            background: transparent;
         }
 
         ::-webkit-scrollbar-thumb {
-            background: #2c7da0;
-            border-radius: 20px;
+            background: var(--border);
+            border-radius: 10px;
         }
 
-        .dashboard {
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--text-muted);
+        }
+
+        /* --- SIDEBAR --- */
+
+
+        /* --- MAIN PANEL --- */
+        .main-panel {
+            flex: 1;
+            margin-left: 280px;
+            padding: 30px 40px;
+            height: 100vh;
+            overflow-y: auto;
+            transition: var(--transition);
+        }
+
+        .header {
             display: flex;
-            min-height: 100vh;
-            width: 100%;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .page-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 16px;
+            align-items: center;
+        }
+
+        .icon-btn {
+            width: 44px;
+            height: 44px;
+            border-radius: 14px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            transition: var(--transition);
             position: relative;
         }
 
-        /* ===== SIDEBAR - OFF-CANVAS ON MOBILE ===== */
-        .sidebar {
-            position: fixed;
-            top: 0;
-            left: -280px;
-            width: 280px;
-            height: 100vh;
-            background: linear-gradient(180deg, #0a2b3f 0%, #0a1f2e 100%);
-            border-right: 1px solid rgba(255, 255, 255, 0.08);
-            display: flex;
-            flex-direction: column;
-            z-index: 1000;
-            transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        .icon-btn:hover {
+            color: var(--primary);
+            border-color: var(--primary);
+            transform: translateY(-2px);
         }
 
-        .sidebar.open {
-            left: 0;
-        }
-
-        /* Desktop sidebar */
-        @media (min-width: 1024px) {
-            .sidebar {
-                position: fixed;
-                left: 0;
-                width: 260px;
-            }
-
-            .menu-toggle-btn {
-                display: none !important;
-            }
-
-            .sidebar-overlay {
-                display: none !important;
-            }
-
-            .main-panel {
-                margin-left: 260px;
-            }
-        }
-
-        .sidebar-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(4px);
-            z-index: 999;
-            display: none;
-        }
-
-        .sidebar-overlay.active {
-            display: block;
-        }
-
-        .sidebar-header {
-            padding: 24px 20px 16px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-        }
-
-        .brand-icon {
-            width: 44px;
-            height: 44px;
-            background: linear-gradient(135deg, #2c7da0, #1f5e7a);
-            border-radius: 14px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 22px;
-            flex-shrink: 0;
-            color: white;
-        }
-
-        .sidebar-header h2 {
-            font-weight: 700;
-            font-size: 1rem;
-            background: linear-gradient(120deg, #ffffff, #b3e0ff);
-            -webkit-background-clip: text;
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .profile-card {
-            background: rgba(255, 255, 255, 0.05);
-            margin: 16px 14px 20px;
-            padding: 14px;
-            border-radius: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .profile-name {
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-bottom: 8px;
-            font-size: 0.85rem;
-            color: #f0fcff;
-        }
-
-        .profile-detail {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin: 6px 0;
-            color: #b8d0e9;
-            font-size: 0.7rem;
-            word-break: break-all;
-        }
-
-        .profile-detail i {
-            width: 16px;
-            flex-shrink: 0;
-        }
-
-        .role-tag {
-            background: linear-gradient(135deg, #2c7da0, #1f5e7a);
-            padding: 4px 12px;
-            border-radius: 40px;
-            font-size: 0.65rem;
-            font-weight: 600;
-            display: inline-block;
-            margin-top: 6px;
-        }
-
-        .nav-menu {
-            flex: 1;
-            padding: 0 10px;
-            overflow-y: auto;
-        }
-
-        .nav-item {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 10px 14px;
-            margin: 4px 0;
-            border-radius: 14px;
-            color: #cbdff2;
-            font-weight: 500;
-            font-size: 0.85rem;
-            transition: all 0.2s;
-            cursor: pointer;
-        }
-
-        .nav-item i {
-            width: 20px;
-            font-size: 1rem;
-            color: #86b3d4;
-            flex-shrink: 0;
-        }
-
-        .nav-item span {
-            flex: 1;
-        }
-
-        .nav-item:hover {
-            background: rgba(44, 125, 160, 0.3);
-            color: white;
-        }
-
-        .nav-item.active {
-            background: linear-gradient(95deg, #2c7da0, #1f5e7a);
-            color: white;
-            box-shadow: 0 4px 12px -4px #1f5e7a;
-        }
-
-        .nav-item.active i {
-            color: white;
-        }
-
-        .logout-button {
-            margin: 12px 14px 20px;
-            padding: 10px 16px;
-            background: rgba(239, 68, 68, 0.12);
-            border: 1px solid rgba(239, 68, 68, 0.25);
-            border-radius: 40px;
-            color: #ffbcbc;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .logout-button:hover {
-            background: #ef4444;
-            color: white;
-        }
-
-        /* ===== MAIN PANEL ===== */
-        .main-panel {
-            flex: 1;
-            width: 100%;
-            padding: 16px;
-            background: #f5f9ff;
-            transition: margin-left 0.3s ease;
-        }
-
-        /* Mobile Header */
-        .mobile-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            background: white;
-            padding: 12px 16px;
-            border-radius: 28px;
-            margin-bottom: 20px;
-            border: 1px solid #e6edf8;
-        }
-
-        .menu-toggle-btn {
-            background: linear-gradient(135deg, #2c7da0, #1f5e7a);
-            border: none;
-            width: 42px;
-            height: 42px;
+        .badge-dot {
+            position: absolute;
+            top: -2px;
+            right: -2px;
+            width: 10px;
+            height: 10px;
+            background: var(--danger);
             border-radius: 50%;
-            color: white;
-            font-size: 1.2rem;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
+            border: 2px solid var(--bg-card);
         }
 
-        .menu-toggle-btn:active {
-            transform: scale(0.95);
+        /* --- COMPONENTS --- */
+        .grid-4 {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 24px;
+            margin-bottom: 30px;
         }
 
-        .page-title-mobile {
-            font-weight: 700;
-            font-size: 1rem;
-            background: linear-gradient(145deg, #1c4e6e, #2c7da0);
-            -webkit-background-clip: text;
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
-            flex: 1;
-            text-align: center;
-        }
-
-        .live-clock-mobile {
-            background: #ecf2ff;
-            padding: 6px 12px;
-            border-radius: 40px;
-            font-weight: 500;
-            font-size: 0.7rem;
-            color: #1e4a76;
-            font-family: monospace;
-            flex-shrink: 0;
-        }
-
-        /* Desktop Header */
-        .desktop-header {
-            display: none;
-            background: white;
-            padding: 12px 24px;
-            border-radius: 48px;
-            margin-bottom: 24px;
-            border: 1px solid #e6edf8;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .desktop-header .page-title {
-            font-weight: 700;
-            font-size: 1.3rem;
-            background: linear-gradient(145deg, #1c4e6e, #2c7da0);
-            -webkit-background-clip: text;
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .live-clock-desktop {
-            background: #ecf2ff;
-            padding: 6px 20px;
-            border-radius: 40px;
-            font-weight: 500;
-            font-size: 0.75rem;
-            color: #1e4a76;
-        }
-
-        @media (min-width: 1024px) {
-            .mobile-header {
-                display: none;
-            }
-
-            .desktop-header {
-                display: flex;
-            }
-
-            .main-panel {
-                padding: 20px 24px;
-            }
-        }
-
-        /* Stats Grid */
-        .stat-grid {
+        .grid-2 {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
-            margin-bottom: 20px;
+            gap: 24px;
+            margin-bottom: 30px;
         }
 
-        @media (min-width: 640px) {
-            .stat-grid {
-                grid-template-columns: repeat(4, 1fr);
-                gap: 16px;
-            }
+        .card {
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+            padding: 24px;
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition);
         }
 
-        .stat-block {
-            background: white;
-            padding: 12px 14px;
-            border-radius: 24px;
-            border: 1px solid #e2edff;
+        .card:hover {
+            box-shadow: var(--shadow-lg);
+            border-color: var(--primary);
+        }
+
+        .stat-card {
             display: flex;
             align-items: center;
-            gap: 12px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
+            gap: 20px;
         }
 
         .stat-icon {
-            width: 44px;
-            height: 44px;
-            background: linear-gradient(135deg, #eef4ff, #e1eafe);
-            border-radius: 20px;
+            width: 60px;
+            height: 60px;
+            border-radius: 18px;
+            font-size: 1.6rem;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.4rem;
-            color: #2c7da0;
-            flex-shrink: 0;
         }
 
-        .stat-info {
-            flex: 1;
-            min-width: 0;
+        .icon-blue {
+            background: rgba(59, 130, 246, 0.1);
+            color: #3b82f6;
         }
 
-        .stat-info h4 {
-            font-weight: 500;
-            color: #5a6e8c;
-            font-size: 0.65rem;
-            letter-spacing: 0.3px;
-            white-space: nowrap;
+        .icon-green {
+            background: rgba(16, 185, 129, 0.1);
+            color: #10b981;
         }
 
-        .stat-info .figure {
-            font-weight: 800;
-            font-size: 1.5rem;
-            color: #0a2b44;
-            line-height: 1.2;
+        .icon-purple {
+            background: rgba(139, 92, 246, 0.1);
+            color: #8b5cf6;
         }
 
-        /* Content Cards */
-        .content-card {
-            background: white;
-            border-radius: 28px;
-            padding: 16px 18px;
-            border: 1px solid #e6edfc;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
-            margin-bottom: 20px;
-            overflow-x: auto;
+        .icon-orange {
+            background: rgba(249, 115, 22, 0.1);
+            color: #f97316;
         }
 
-        .card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 12px;
-            margin-bottom: 16px;
-        }
-
-        .card-header h3 {
+        .stat-data h3 {
+            font-size: 2rem;
             font-weight: 700;
-            font-size: 1rem;
-            color: #1e3a5f;
+            color: var(--text-main);
+            line-height: 1;
+        }
+
+        .stat-data p {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-top: 4px;
+            font-weight: 500;
         }
 
         /* Tables */
-        .table-responsive {
+        .table-container {
             overflow-x: auto;
-            border-radius: 20px;
-            -webkit-overflow-scrolling: touch;
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
-            font-size: 0.75rem;
-            min-width: 500px;
         }
 
         th {
             text-align: left;
-            padding: 10px 8px;
-            font-weight: 700;
-            color: #4f6f8f;
-            font-size: 0.65rem;
+            padding: 16px;
+            color: var(--text-muted);
+            font-size: 0.75rem;
             text-transform: uppercase;
-            border-bottom: 2px solid #eaf0fa;
+            font-weight: 600;
+            border-bottom: 1px solid var(--border);
         }
 
         td {
-            padding: 10px 8px;
-            border-bottom: 1px solid #f0f4fc;
-            color: #1f3b5c;
+            padding: 16px;
+            color: var(--text-main);
+            font-size: 0.9rem;
+            border-bottom: 1px solid var(--border);
             vertical-align: middle;
         }
 
-        /* Badges */
-        .status-badge {
-            padding: 3px 10px;
-            border-radius: 30px;
-            font-size: 0.65rem;
-            font-weight: 600;
-            display: inline-block;
-            white-space: nowrap;
+        tr:last-child td {
+            border-bottom: none;
         }
 
-        .badge-active {
-            background: #e1f7ea;
-            color: #0a7143;
+        tr:hover td {
+            background: var(--bg-input);
         }
 
-        .badge-pending {
-            background: #fff0db;
-            color: #b45500;
+        .status-pill {
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: capitalize;
         }
 
-        .badge-completed {
-            background: #d9effa;
-            color: #1a6d8f;
+        .pill-success {
+            background: rgba(16, 185, 129, 0.1);
+            color: #10b981;
+        }
+
+        .pill-warning {
+            background: rgba(245, 158, 11, 0.1);
+            color: #f59e0b;
+        }
+
+        .pill-danger {
+            background: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+        }
+
+        .pill-info {
+            background: rgba(14, 165, 233, 0.1);
+            color: #0ea5e9;
         }
 
         /* Buttons */
-        .btn-primary {
-            background: linear-gradient(105deg, #2c7da0, #1f5e7a);
-            color: white;
+        .btn {
+            padding: 10px 20px;
+            border-radius: 12px;
             border: none;
-            padding: 7px 16px;
-            border-radius: 40px;
             font-weight: 600;
-            font-size: 0.7rem;
+            font-size: 0.9rem;
             cursor: pointer;
+            transition: var(--transition);
             display: inline-flex;
             align-items: center;
-            gap: 6px;
-            white-space: nowrap;
+            gap: 8px;
         }
 
-        .btn-primary:active {
-            transform: scale(0.97);
+        .btn-primary {
+            background: var(--primary-gradient);
+            color: white;
+            box-shadow: 0 4px 10px var(--primary-glow);
         }
 
-        .btn-secondary {
-            background: white;
-            border: 1px solid #cfe2ff;
-            color: #1e5a88;
-            padding: 5px 12px;
-            border-radius: 30px;
-            font-size: 0.65rem;
-            cursor: pointer;
-            white-space: nowrap;
+        .btn-primary:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
         }
 
-        .icon-action {
+        .btn-outline {
             background: transparent;
-            border: none;
-            font-size: 0.85rem;
-            color: #6f8eb3;
-            padding: 5px 8px;
-            border-radius: 20px;
+            border: 1px solid var(--border);
+            color: var(--text-main);
+        }
+
+        .btn-outline:hover {
+            border-color: var(--text-main);
+        }
+
+        .btn-sm {
+            padding: 6px 12px;
+            font-size: 0.8rem;
+            border-radius: 8px;
+        }
+
+        /* --- CHARTS (CSS ONLY) --- */
+        .chart-bars {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            height: 200px;
+            padding-top: 20px;
+            gap: 10px;
+        }
+
+        .bar-wrap {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .bar-bg {
+            width: 100%;
+            background: var(--bg-input);
+            border-radius: 8px;
+            height: 100%;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .bar-fill {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: var(--primary-gradient);
+            border-radius: 8px;
+            transition: height 1s ease;
+        }
+
+        .bar-label {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        /* --- MESSAGES STYLE --- */
+        .message-item {
+            display: flex;
+            gap: 16px;
+            padding: 16px;
+            border-bottom: 1px solid var(--border);
             cursor: pointer;
+            transition: var(--transition);
+            border-radius: 12px;
         }
 
-        .icon-action:hover {
-            background: #eef3ff;
-            color: #2c7da0;
+        .message-item:hover {
+            background: var(--bg-input);
         }
 
-        /* Modal */
+        .msg-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+        }
+
+        .msg-content {
+            flex: 1;
+        }
+
+        .msg-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 4px;
+        }
+
+        .msg-name {
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .msg-time {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .msg-text {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            line-height: 1.4;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        /* --- MODAL & TOAST --- */
         .modal-overlay {
             position: fixed;
             inset: 0;
-            background: rgba(0, 0, 0, 0.5);
+            background: rgba(0, 0, 0, 0.6);
             backdrop-filter: blur(5px);
+            z-index: 100;
             display: flex;
             align-items: center;
             justify-content: center;
-            z-index: 1100;
-            padding: 16px;
+            opacity: 0;
+            pointer-events: none;
+            transition: var(--transition);
         }
 
-        .modal-window {
-            background: white;
-            border-radius: 36px;
-            padding: 24px;
+        .modal-overlay.open {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .modal {
+            background: var(--bg-card);
+            width: 100%;
             max-width: 500px;
-            width: 100%;
-            max-height: 85vh;
-            overflow-y: auto;
-        }
-
-        .form-field {
-            margin-bottom: 16px;
-        }
-
-        .form-field label {
-            font-weight: 600;
-            font-size: 0.75rem;
-            margin-bottom: 5px;
-            display: block;
-            color: #2c5270;
-        }
-
-        .form-input,
-        .form-textarea {
-            width: 100%;
-            padding: 10px 16px;
-            border: 1.5px solid #e2eaff;
-            border-radius: 40px;
-            font-size: 0.85rem;
-            font-family: inherit;
-            background: white;
-        }
-
-        .form-textarea {
+            padding: 32px;
             border-radius: 24px;
-            min-height: 80px;
-            resize: vertical;
+            box-shadow: var(--shadow-lg);
+            transform: translateY(20px);
+            transition: var(--transition);
         }
 
-        .modal-actions {
-            display: flex;
-            gap: 12px;
-            margin-top: 20px;
-            flex-wrap: wrap;
-        }
-
-        /* Toast */
-        .toast-notification {
-            position: fixed;
-            bottom: 20px;
-            left: 16px;
-            right: 16px;
-            background: #1e2f3c;
-            color: white;
-            border-radius: 60px;
-            padding: 12px 20px;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            transform: translateY(100px);
-            transition: transform 0.25s ease;
-            z-index: 1200;
-            border-left: 4px solid;
-            font-size: 0.8rem;
-        }
-
-        @media (min-width: 640px) {
-            .toast-notification {
-                left: auto;
-                right: 24px;
-                bottom: 24px;
-                min-width: 280px;
-            }
-        }
-
-        .toast-notification.show {
+        .modal-overlay.open .modal {
             transform: translateY(0);
         }
 
-        .toast-success {
-            border-left-color: #10b981;
-        }
-
-        /* Mobile Popup */
-        .mobile-popup {
-            display: none;
+        .toast {
             position: fixed;
-            background: #1e4a6b;
-            color: white;
-            padding: 10px 16px;
-            border-radius: 24px;
-            font-size: 0.8rem;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
-            z-index: 1300;
-            max-width: 85vw;
-            word-break: break-word;
-            pointer-events: none;
-            text-align: center;
+            bottom: 30px;
+            right: 30px;
+            background: var(--text-main);
+            color: var(--text-inverse);
+            padding: 16px 24px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: var(--shadow-lg);
+            transform: translateY(100px);
+            opacity: 0;
+            transition: var(--transition);
+            z-index: 200;
         }
 
-        .mobile-popup.show {
-            display: block;
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        /* --- RESPONSIVE --- */
+        .menu-toggle {
+            display: none;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            padding: 10px;
+            border-radius: 12px;
+            cursor: pointer;
+            color: var(--text-main);
+        }
+
+        @media (max-width: 1024px) {
+            .sidebar {
+                transform: translateX(-100%);
+                width: 260px;
+            }
+
+            .sidebar.active {
+                transform: translateX(0);
+            }
+
+            .main-panel {
+                margin-left: 0;
+                padding: 20px;
+            }
+
+            .menu-toggle {
+                display: block;
+            }
+
+            .grid-4,
+            .grid-2 {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
 
 <body data-sidebar-role="doctor">
     <div class="dashboard">
-        <!-- Main Panel -->
-        <div class="main-panel">
-            <!-- Mobile Header -->
-            <div class="mobile-header">
-                <button class="menu-toggle-btn" id="menuToggleBtn">
+
+
+        <!-- SIDEBAR WILL BE INJECTED HERE -->
+
+    <!-- Main Content -->
+    <main class="main-panel">
+        <header class="header">
+            <div style="display:flex; align-items:center; gap:16px;">
+                <button class="menu-toggle">
                     <i class="fas fa-bars"></i>
                 </button>
-                <span class="page-title-mobile" id="mobileTitle">Dashboard</span>
-                <span class="live-clock-mobile" id="mobileClock"></span>
+                <div class="page-title" id="headerTitle">Dashboard</div>
             </div>
-
-            <!-- Desktop Header -->
-            <div class="desktop-header">
-                <span class="page-title" id="desktopTitle">Doctor Dashboard</span>
-                <span class="live-clock-desktop" id="desktopClock"></span>
+            <div class="header-actions">
+                <div class="icon-btn" onclick="App.navigate('messages')">
+                    <i class="far fa-envelope"></i>
+                    <span class="badge-dot"></span>
+                </div>
+                <div class="icon-btn">
+                    <i class="far fa-bell"></i>
+                </div>
             </div>
+        </header>
 
-            <div class="content-area" id="contentArea"></div>
-        </div>
+        <div id="contentArea" style="opacity: 1; transition: opacity 0.3s;"></div>
+    </main>
     </div>
 
-    <!-- Mobile Popup -->
-    <div id="mobilePopup" class="mobile-popup"></div>
-    <div id="modalRoot" style="display:none;"></div>
-    <div class="toast-notification" id="toastMsg"><i class="fas" id="toastIcon"></i><span id="toastText"></span></div>
+    <!-- Modal -->
+    <div class="modal-overlay" id="modalOverlay" onclick="if(event.target===this) App.closeModal()">
+        <div class="modal" id="modalContent"></div>
+    </div>
 
+    <!-- Toast -->
+    <div class="toast" id="toast">
+        <i class="fas fa-check-circle"></i>
+        <span id="toastText">Success</span>
+    </div>
+
+    <script src="Frontend/assets/js/api.js"></script>
     <script>
-        (function () {
-            // Check authentication
-            let currentUser = JSON.parse(localStorage.getItem('currentUser'));
-            const token = localStorage.getItem('authToken');
+        // --- APPLICATION LOGIC ---
+        const App = {
+            currentUser: null,
+            data: { appointments: [], prescriptions: [], messages: [], patients: 0 },
+            currentPage: 'dashboard',
 
-            if (!currentUser || !token || currentUser.role !== 'doctor') {
-                window.location.href = 'Frontend/Auth/login.html';
-                return;
-            }
+            init: async () => {
+                App.currentUser = JSON.parse(localStorage.getItem('currentUser'));
+                const token = localStorage.getItem('authToken');
+                if (!App.currentUser || !token || App.currentUser.role !== 'doctor') {
+                    window.location.href = 'auth.html';
+                    return;
+                }
+                App.setupSidebar();
+                App.setupTheme();
+                await App.navigate('dashboard');
+            },
 
-            // Mobile Popup
-            const popup = document.getElementById('mobilePopup');
-            function showMobilePopup(event, text) {
-                if (window.innerWidth > 768) return;
-                const rect = event.target.getBoundingClientRect();
-                popup.innerHTML = text;
-                popup.classList.add('show');
-                let top = rect.top - popup.offsetHeight - 10;
-                if (top < 10) top = rect.bottom + 10;
-                let left = rect.left + (rect.width / 2) - 100;
-                if (left < 10) left = 10;
-                if (left + 200 > window.innerWidth) left = window.innerWidth - 210;
-                popup.style.top = top + 'px';
-                popup.style.left = left + 'px';
-                clearTimeout(window.popupTimer);
-                window.popupTimer = setTimeout(() => popup.classList.remove('show'), 2000);
-            }
-            window.showMobilePopup = showMobilePopup;
-
-            // Toast
-            function showToast(msg, type = 'success') {
-                const toast = document.getElementById('toastMsg');
-                const icon = document.getElementById('toastIcon');
-                const text = document.getElementById('toastText');
-                icon.className = 'fas ' + (type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle');
-                text.innerText = msg;
-                toast.className = 'toast-notification toast-' + type;
-                toast.classList.add('show');
-                setTimeout(() => toast.classList.remove('show'), 3000);
-            }
-            window.showToast = showToast;
-
-            // Initialize Storage
-            if (!localStorage.getItem('users')) {
-                localStorage.setItem('users', JSON.stringify([
-                    { id: 'P101', name: 'John Doe', email: 'john.d@example.com', phone: '555-0101', role: 'patient', status: 'active', dob: '1985-06-15' },
-                    { id: 'P102', name: 'Jane Smith', email: 'jane.s@example.com', phone: '555-0102', role: 'patient', status: 'active', dob: '1990-09-22' },
-                    { id: 'P103', name: 'Emily Davis', email: 'emily.d@example.com', phone: '555-0103', role: 'patient', status: 'active', dob: '1978-03-10' },
-                    { id: 'P104', name: 'Michael Brown', email: 'michael.b@example.com', phone: '555-0104', role: 'patient', status: 'active', dob: '1965-12-02' },
-                    { id: 'P105', name: 'Ali', email: 'ali@example.com', phone: '555-0105', role: 'patient', status: 'active', dob: '2000-01-01' },
-                    { id: 'D201', name: 'Dr. Sarah Chen', email: 'sarah.chen@clinic.com', phone: '555-8234', role: 'doctor', specialization: 'Cardiology', status: 'active' },
-                    { id: 'D202', name: 'Dr. James Wilson', email: 'j.wilson@clinic.com', phone: '555-8202', role: 'doctor', specialization: 'Neurology', status: 'active' },
-                    { id: 'D203', name: 'Dr. Lisa Ray', email: 'l.ray@clinic.com', phone: '555-8203', role: 'doctor', specialization: 'Dermatology', status: 'active' },
-                    { id: 'D204', name: 'Dr. Abdul Basit Afaq', email: 'abdulbasit@clinic.com', phone: '555-8204', role: 'doctor', specialization: 'General Physician', status: 'active' }
-                ]));
-            }
-            if (!localStorage.getItem('appointments')) {
-                const today = new Date().toISOString().slice(0, 10);
-                localStorage.setItem('appointments', JSON.stringify([
-                    { id: 'A101', patient: 'John Doe', doctor: 'Dr. Sarah Chen', date: today, time: '09:00', status: 'confirmed', reason: 'Chest pain', notes: '' },
-                    { id: 'A102', patient: 'Jane Smith', doctor: 'Dr. Sarah Chen', date: today, time: '10:30', status: 'checked-in', reason: 'Heart palpitations', notes: '' },
-                    { id: 'A103', patient: 'Emily Davis', doctor: 'Dr. Sarah Chen', date: today, time: '14:15', status: 'pending', reason: 'Follow-up', notes: '' },
-                    { id: 'A104', patient: 'Michael Brown', doctor: 'Dr. Sarah Chen', date: '2025-04-11', time: '09:30', status: 'confirmed', reason: 'ECG review', notes: '' },
-                    { id: 'A107', patient: 'Ali', doctor: 'Dr. Abdul Basit Afaq', date: today, time: '14:00', status: 'confirmed', reason: 'General Checkup', notes: '' }
-                ]));
-            }
-            if (!localStorage.getItem('medicalRecords')) {
-                localStorage.setItem('medicalRecords', JSON.stringify([
-                    { id: 'M1', patient: 'John Doe', doctor: 'Dr. Sarah Chen', date: '2025-03-15', diagnosis: 'Hypertension', prescription: 'Lisinopril 10mg', notes: 'BP 140/90' }
-                ]));
-            }
-            if (!localStorage.getItem('prescriptions')) {
-                localStorage.setItem('prescriptions', JSON.stringify([
-                    { id: 'R1', patient: 'John Doe', doctor: 'Dr. Sarah Chen', date: '2025-03-15', medication: 'Lisinopril 10mg', instructions: 'Once daily', refills: 2 }
-                ]));
-            }
-
-            // Clock
-            function updateClocks() {
-                const now = new Date();
-                const timeStr = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-                const mobileClock = document.getElementById('mobileClock');
-                const desktopClock = document.getElementById('desktopClock');
-                if (mobileClock) mobileClock.innerText = timeStr;
-                if (desktopClock) desktopClock.innerText = timeStr;
-            }
-            updateClocks();
-            setInterval(updateClocks, 1000);
-
-            // Modal Helpers
-            function closeModal() { document.getElementById('modalRoot').style.display = 'none'; }
-            window.closeModal = closeModal;
-
-            function openModal(html) {
-                document.getElementById('modalRoot').style.display = 'flex';
-                document.getElementById('modalRoot').innerHTML = `<div class="modal-overlay" onclick="closeModal()"><div class="modal-window" onclick="event.stopPropagation()">${html}</div></div>`;
-            }
-            window.openModal = openModal;
-
-            window.loadPage = function (page) {
-                const container = document.getElementById('contentArea');
-                if (page === 'dashboard') renderDashboard(container);
-                else if (page === 'appointments') renderAppointments(container);
-                else if (page === 'patients') renderPatients(container);
-                else if (page === 'records') renderRecords(container);
-                else if (page === 'prescriptions') renderPrescriptions(container);
-                else if (page === 'schedule') renderSchedule(container);
-                else if (page === 'settings') renderSettings(container);
-                window.currentDashboardPage = page;
-                window.updateSharedSidebarState?.(page);
-            };
-
-            function getTodayStr() { return new Date().toISOString().slice(0, 10); }
-
-            // Dashboard
-            function renderDashboard(con) {
-                const apps = JSON.parse(localStorage.getItem('appointments')) || [];
-                const doctorName = currentUser.name;
-                const myApps = apps.filter(a => a.doctor === doctorName);
-                const today = getTodayStr();
-                const todayApps = myApps.filter(a => a.date === today).length;
-                const pendingApps = myApps.filter(a => a.status === 'pending').length;
-                const totalPatients = [...new Set(myApps.map(a => a.patient))].length;
-                const upcomingApps = myApps.filter(a => a.date >= today && a.status !== 'cancelled').length;
-
-                con.innerHTML = `
-            <div class="stat-grid">
-                <div class="stat-block"><div class="stat-icon"><i class="fas fa-calendar-day"></i></div><div class="stat-info"><h4>Today's Apps</h4><div class="figure">${todayApps}</div></div></div>
-                <div class="stat-block"><div class="stat-icon"><i class="fas fa-clock"></i></div><div class="stat-info"><h4>Pending</h4><div class="figure">${pendingApps}</div></div></div>
-                <div class="stat-block"><div class="stat-icon"><i class="fas fa-users"></i></div><div class="stat-info"><h4>My Patients</h4><div class="figure">${totalPatients}</div></div></div>
-                <div class="stat-block"><div class="stat-icon"><i class="fas fa-calendar-week"></i></div><div class="stat-info"><h4>Upcoming</h4><div class="figure">${upcomingApps}</div></div></div>
-            </div>
-            <div class="content-card">
-                <div class="card-header"><h3>Today's Appointments</h3><button class="btn-primary" onclick="loadPage('schedule')">View All</button></div>
-                <div class="table-responsive">
-                    <table><thead><tr><th>Time</th><th>Patient</th><th>Reason</th><th>Status</th><th>Action</th></tr></thead>
-                    <tbody>${myApps.filter(a => a.date === today).sort((a, b) => a.time.localeCompare(b.time)).map(a => `
-                        <tr><td>${a.time}</td><td>${a.patient}</td><td>${a.reason || '—'}</td>
-                        <td><span class="status-badge ${a.status === 'confirmed' || a.status === 'checked-in' ? 'badge-active' : 'badge-pending'}">${a.status}</span></td>
-                        <td><button class="btn-secondary" onclick="startConsultation('${a.id}')">Consult</button></td></tr>
-                    `).join('')}</tbody></table>
-                </div>
-            </div>
-        `;
-            }
-
-            // Appointments
-            function renderAppointments(con) {
-                const apps = JSON.parse(localStorage.getItem('appointments')) || [];
-                const myApps = apps.filter(a => a.doctor === currentUser.name).sort((a, b) => a.date.localeCompare(b.date) || a.time.localeCompare(b.time));
-                con.innerHTML = `<div class="content-card"><div class="card-header"><h3>My Appointments</h3></div><div class="table-responsive"><table><thead><tr><th>Date</th><th>Time</th><th>Patient</th><th>Reason</th><th>Status</th><th>Actions</th></tr></thead>
-        <tbody>${myApps.map(a => `<tr><td>${a.date}</td><td>${a.time}</td><td>${a.patient}</td><td>${a.reason || '—'}</td>
-        <td><span class="status-badge ${a.status === 'confirmed' || a.status === 'checked-in' ? 'badge-active' : a.status === 'pending' ? 'badge-pending' : 'badge-completed'}">${a.status}</span></td>
-        <td><button class="icon-action" onclick="startConsultation('${a.id}')"><i class="fas fa-notes-medical"></i></button>
-        <button class="icon-action" onclick="editApptNotes('${a.id}')"><i class="fas fa-edit"></i></button></td></tr>`).join('')}</tbody></table></div></div>`;
-            }
-
-            // Patients
-            function renderPatients(con) {
-                const users = JSON.parse(localStorage.getItem('users')) || [];
-                const patients = users.filter(u => u.role === 'patient');
-                const apps = JSON.parse(localStorage.getItem('appointments')) || [];
-                const myPatientNames = [...new Set(apps.filter(a => a.doctor === currentUser.name).map(a => a.patient))];
-                const myPatients = patients.filter(p => myPatientNames.includes(p.name));
-                con.innerHTML = `<div class="content-card"><div class="card-header"><h3>My Patients</h3></div><div class="table-responsive"><table><thead><tr><th>Name</th><th>Email</th><th>Phone</th><th>Last Visit</th><th>Action</th></tr></thead>
-        <tbody>${myPatients.map(p => {
-                    const lastVisit = apps.filter(a => a.patient === p.name).sort((a, b) => b.date.localeCompare(a.date))[0];
-                    return `<tr><td>${p.name}</td><td>${p.email}</td><td>${p.phone}</td><td>${lastVisit ? lastVisit.date : '—'}</td>
-            <td><button class="btn-secondary" onclick="viewPatientRecords('${p.name}')">Records</button></td></tr>`;
-                }).join('')}</tbody>}</div></div>`;
-            }
-
-            // Records
-            function renderRecords(con) {
-                const records = JSON.parse(localStorage.getItem('medicalRecords')) || [];
-                const myRecords = records.filter(r => r.doctor === currentUser.name);
-                con.innerHTML = `<div class="content-card"><div class="card-header"><h3>Medical Records</h3><button class="btn-primary" onclick="addRecordModal()"><i class="fas fa-plus"></i> New Record</button></div>
-        <div class="table-responsive">${myRecords.length ? `<table><thead><tr><th>Date</th><th>Patient</th><th>Diagnosis</th><th>Prescription</th><th>Actions</th></tr></thead>
-        <tbody>${myRecords.map(r => `<tr><td>${r.date}</td><td>${r.patient}</td><td>${r.diagnosis}</td><td>${r.prescription}</td>
-        <td><button class="icon-action" onclick="editRecord('${r.id}')"><i class="fas fa-edit"></i></button></td></tr>`).join('')}</tbody></table>` : '<p>No records found.</p>'}</div></div>`;
-            }
-
-            // Prescriptions
-            function renderPrescriptions(con) {
-                const rx = JSON.parse(localStorage.getItem('prescriptions')) || [];
-                const myRx = rx.filter(r => r.doctor === currentUser.name);
-                con.innerHTML = `<div class="content-card"><div class="card-header"><h3>Prescriptions</h3><button class="btn-primary" onclick="addPrescriptionModal()"><i class="fas fa-plus"></i> New Rx</button></div>
-        <div class="table-responsive">${myRx.length ? `<table><thead><tr><th>Date</th><th>Patient</th><th>Medication</th><th>Instructions</th><th>Refills</th></tr></thead>
-        <tbody>${myRx.map(r => `<tr><td>${r.date}</td><td>${r.patient}</td><td>${r.medication}</td><td>${r.instructions}</td><td>${r.refills}</td></tr>`).join('')}</tbody></table>` : '<p>No prescriptions found.</p>'}</div></div>`;
-            }
-
-            // Schedule
-            function renderSchedule(con) {
-                const apps = JSON.parse(localStorage.getItem('appointments')) || [];
-                const today = getTodayStr();
-                const todayApps = apps.filter(a => a.doctor === currentUser.name && a.date === today).sort((a, b) => a.time.localeCompare(b.time));
-                con.innerHTML = `<div class="content-card"><div class="card-header"><h3>Schedule for ${today}</h3></div><div class="table-responsive">${todayApps.length ? `<table><thead><tr><th>Time</th><th>Patient</th><th>Reason</th><th>Status</th><th>Action</th></tr></thead>
-        <tbody>${todayApps.map(a => `<tr><td>${a.time}</td><td>${a.patient}</td><td>${a.reason || '—'}</td>
-        <td><span class="status-badge ${a.status === 'confirmed' || a.status === 'checked-in' ? 'badge-active' : 'badge-pending'}">${a.status}</span></td>
-        <td><button class="btn-primary" onclick="startConsultation('${a.id}')">Start</button></td></tr>`).join('')}</tbody></table>` : '<p>No appointments scheduled for today.</p>'}</div></div>`;
-            }
-
-            // Consultation Modal
-            window.startConsultation = function (apptId) {
-                const apps = JSON.parse(localStorage.getItem('appointments'));
-                const appt = apps.find(a => a.id === apptId);
-                if (!appt) return;
-                openModal(`
-            <h3>Consultation: ${appt.patient}</h3>
-            <p><strong>${appt.date} ${appt.time}</strong> | Reason: ${appt.reason || '—'}</p>
-            <div class="form-field"><label>Diagnosis / Notes</label><textarea class="form-textarea" id="consultNotes">${appt.notes || ''}</textarea></div>
-            <div class="form-field"><label>Prescription</label><input class="form-input" id="consultRx" placeholder="Medication name"></div>
-            <div class="form-field"><label>Instructions</label><input class="form-input" id="consultInstr" placeholder="Dosage instructions"></div>
-            <div class="modal-actions"><button class="btn-primary" onclick="saveConsultation('${apptId}')">Complete</button><button class="btn-secondary" onclick="closeModal()">Cancel</button></div>
-        `);
-            };
-
-            window.saveConsultation = function (apptId) {
-                const apps = JSON.parse(localStorage.getItem('appointments'));
-                const appt = apps.find(a => a.id === apptId);
-                if (!appt) return;
-                const notes = document.getElementById('consultNotes')?.value || '';
-                const rx = document.getElementById('consultRx')?.value || '';
-                const instr = document.getElementById('consultInstr')?.value || '';
-                appt.notes = notes;
-                appt.status = 'completed';
-
-                // Add medical record
-                const records = JSON.parse(localStorage.getItem('medicalRecords')) || [];
-                records.push({
-                    id: 'M' + Date.now(),
-                    patient: appt.patient,
-                    doctor: currentUser.name,
-                    date: getTodayStr(),
-                    diagnosis: notes.substring(0, 60),
-                    prescription: rx,
-                    notes: notes
-                });
-                localStorage.setItem('medicalRecords', JSON.stringify(records));
-
-                // Add prescription if provided
-                if (rx.trim()) {
-                    const prescriptions = JSON.parse(localStorage.getItem('prescriptions')) || [];
-                    prescriptions.push({
-                        id: 'R' + Date.now(),
-                        patient: appt.patient,
-                        doctor: currentUser.name,
-                        date: getTodayStr(),
-                        medication: rx,
-                        instructions: instr || 'As directed',
-                        refills: 0
+            setupSidebar: () => {
+                fetch('Frontend/components/sidebar.html')
+                    .then(r => r.text())
+                    .then(html => {
+                        const div = document.createElement('div');
+                        div.innerHTML = html;
+                        const script = div.querySelector('script');
+                        if (script) {
+                            const newScript = document.createElement('script');
+                            newScript.textContent = script.textContent;
+                            document.body.appendChild(newScript);
+                        }
                     });
-                    localStorage.setItem('prescriptions', JSON.stringify(prescriptions));
-                }
+            },
 
-                localStorage.setItem('appointments', JSON.stringify(apps));
-                closeModal();
-                showToast('Consultation saved', 'success');
-                loadPage('dashboard');
-            };
 
-            window.editApptNotes = function (apptId) {
-                const apps = JSON.parse(localStorage.getItem('appointments'));
-                const appt = apps.find(a => a.id === apptId);
-                openModal(`
-            <h3>Edit Appointment</h3>
-            <div class="form-field"><label>Notes</label><textarea class="form-textarea" id="editNotes">${appt?.notes || ''}</textarea></div>
-            <div class="form-field"><label>Status</label><select class="form-input" id="editStatus">
-                <option value="pending" ${appt?.status === 'pending' ? 'selected' : ''}>Pending</option>
-                <option value="confirmed" ${appt?.status === 'confirmed' ? 'selected' : ''}>Confirmed</option>
-                <option value="checked-in" ${appt?.status === 'checked-in' ? 'selected' : ''}>Checked-in</option>
-                <option value="completed" ${appt?.status === 'completed' ? 'selected' : ''}>Completed</option>
-            </select></div>
-            <div class="modal-actions"><button class="btn-primary" onclick="updateApptNotes('${apptId}')">Update</button><button class="btn-secondary" onclick="closeModal()">Cancel</button></div>
-        `);
-            };
+            setupTheme: () => {
+                const saved = localStorage.getItem('theme') || 'light';
+                document.documentElement.setAttribute('data-theme', saved);
+            },
 
-            window.updateApptNotes = function (apptId) {
-                const apps = JSON.parse(localStorage.getItem('appointments'));
-                const appt = apps.find(a => a.id === apptId);
-                if (appt) {
-                    appt.notes = document.getElementById('editNotes')?.value || appt.notes;
-                    appt.status = document.getElementById('editStatus')?.value || appt.status;
-                }
-                localStorage.setItem('appointments', JSON.stringify(apps));
-                closeModal();
-                showToast('Updated', 'success');
-                loadPage('appointments');
-            };
+            toggleTheme: () => {
+                const current = document.documentElement.getAttribute('data-theme');
+                const next = current === 'light' ? 'dark' : 'light';
+                document.documentElement.setAttribute('data-theme', next);
+                localStorage.setItem('theme', next);
+            },
 
-            window.viewPatientRecords = function (patientName) {
-                const records = JSON.parse(localStorage.getItem('medicalRecords')) || [];
-                const patientRecords = records.filter(r => r.patient === patientName);
-                openModal(`
-            <h3>Medical Records: ${patientName}</h3>
-            ${patientRecords.length ? patientRecords.map(r => `<div style="background:#f5f9ff; padding:12px; border-radius:16px; margin-bottom:10px;">
-                <strong>${r.date}</strong> - ${r.diagnosis}<br><small>${r.notes}</small><br><em>Rx: ${r.prescription}</em>
-            </div>`).join('') : '<p>No records found</p>'}
-            <div class="modal-actions"><button class="btn-secondary" onclick="closeModal()">Close</button></div>
-        `);
-            };
 
-            window.addRecordModal = function () {
-                const patients = JSON.parse(localStorage.getItem('users')).filter(u => u.role === 'patient');
-                openModal(`
-            <h3>New Medical Record</h3>
-            <div class="form-field"><label>Patient</label><select class="form-input" id="recPatient">${patients.map(p => `<option value="${p.name}">${p.name}</option>`).join('')}</select></div>
-            <div class="form-field"><label>Diagnosis</label><input class="form-input" id="recDiagnosis"></div>
-            <div class="form-field"><label>Prescription</label><input class="form-input" id="recRx"></div>
-            <div class="form-field"><label>Notes</label><textarea class="form-textarea" id="recNotes"></textarea></div>
-            <div class="modal-actions"><button class="btn-primary" onclick="saveRecord()">Save</button><button class="btn-secondary" onclick="closeModal()">Cancel</button></div>
-        `);
-            };
 
-            window.saveRecord = function () {
-                const records = JSON.parse(localStorage.getItem('medicalRecords')) || [];
-                records.push({
-                    id: 'M' + Date.now(),
-                    patient: document.getElementById('recPatient')?.value,
-                    doctor: currentUser.name,
-                    date: getTodayStr(),
-                    diagnosis: document.getElementById('recDiagnosis')?.value || '',
-                    prescription: document.getElementById('recRx')?.value || '',
-                    notes: document.getElementById('recNotes')?.value || ''
-                });
-                localStorage.setItem('medicalRecords', JSON.stringify(records));
-                closeModal();
-                showToast('Record added', 'success');
-                loadPage('records');
-            };
+            loadData: async () => {
+                try {
+                    const [apps, rxs, usersData] = await Promise.all([
+                        API.get('appointments'),
+                        API.get('prescriptions'),
+                        API.get('users')
+                    ]);
+                    App.data.appointments = apps;
+                    App.data.prescriptions = rxs;
+                    App.data.patientsList = usersData.users.filter(u => u.role === 'patient');
+                    App.data.patientsCount = App.data.patientsList.length;
+                    
+                    // Mock messages for now
+                    App.data.messages = [
+                        { id: 1, from: 'System', text: 'Welcome to ClinicCare Pro', time: 'Just now', read: false }
+                    ];
+                } catch (e) { App.showToast('Failed to load data'); }
+            },
 
-            window.addPrescriptionModal = function () {
-                const patients = JSON.parse(localStorage.getItem('users')).filter(u => u.role === 'patient');
-                openModal(`
-            <h3>New Prescription</h3>
-            <div class="form-field"><label>Patient</label><select class="form-input" id="rxPatient">${patients.map(p => `<option value="${p.name}">${p.name}</option>`).join('')}</select></div>
-            <div class="form-field"><label>Medication</label><input class="form-input" id="rxMed"></div>
-            <div class="form-field"><label>Instructions</label><input class="form-input" id="rxInstr" value="Once daily"></div>
-            <div class="form-field"><label>Refills</label><input class="form-input" type="number" id="rxRefills" value="0"></div>
-            <div class="modal-actions"><button class="btn-primary" onclick="savePrescription()">Save</button><button class="btn-secondary" onclick="closeModal()">Cancel</button></div>
-        `);
-            };
+            navigate: async (page) => {
+                await App.loadData();
+                const container = document.getElementById('contentArea');
+                container.style.opacity = '0';
+                
+                if (window.updateSharedSidebarState) window.updateSharedSidebarState(page);
 
-            window.savePrescription = function () {
-                const rx = JSON.parse(localStorage.getItem('prescriptions')) || [];
-                rx.push({
-                    id: 'R' + Date.now(),
-                    patient: document.getElementById('rxPatient')?.value,
-                    doctor: currentUser.name,
-                    date: getTodayStr(),
-                    medication: document.getElementById('rxMed')?.value || '',
-                    instructions: document.getElementById('rxInstr')?.value || '',
-                    refills: parseInt(document.getElementById('rxRefills')?.value) || 0
-                });
-                localStorage.setItem('prescriptions', JSON.stringify(rx));
-                closeModal();
-                showToast('Prescription added', 'success');
-                loadPage('prescriptions');
-            };
+                setTimeout(() => {
+                    if (page === 'dashboard') App.renderDashboard(container);
+                    else if (page === 'schedule') App.renderSchedule(container);
+                    else if (page === 'patients') App.renderPatients(container);
+                    else if (page === 'prescriptions') App.renderPrescriptions(container);
+                    else if (page === 'prescriptions-add') App.renderWritePrescription(container);
+                    else if (page === 'analytics') App.renderAnalytics(container);
+                    else if (page === 'messages') App.renderMessages(container);
+                    else if (page === 'settings') App.renderSettings(container);
 
-            window.editRecord = function (id) {
-                showToast('Edit feature coming soon', 'info');
-            };
+                    container.style.opacity = '1';
+                }, 200);
+            },
 
-        function renderSettings(container) {
-            const user = JSON.parse(localStorage.getItem('currentUser'));
-            container.innerHTML = `
-                <div style="display: grid; grid-template-columns: 250px 1fr; gap: 24px;">
-                    <!-- Settings Sidebar -->
-                    <div style="background: white; border-radius: 24px; padding: 12px; height: fit-content; border: 1px solid #e2e8f0; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);">
-                        <div class="settings-nav-item active" onclick="switchSettingsTab('account', this)">
-                            <i class="fas fa-user-circle"></i> Account Profile
+            // --- RENDERERS ---
+
+            renderDashboard: (con) => {
+                const today = new Date().toISOString().slice(0, 10);
+                const todayApps = App.data.appointments.filter(a => a.date === today);
+                
+                con.innerHTML = `
+                    <div class="grid-4">
+                        <div class="card stat-card">
+                            <div class="stat-icon icon-blue"><i class="fas fa-user-md"></i></div>
+                            <div class="stat-data"><h3>${App.data.patientsCount}</h3><p>Total Patients</p></div>
                         </div>
-                        <div class="settings-nav-item" onclick="switchSettingsTab('professional', this)">
-                            <i class="fas fa-user-md"></i> Professional Info
+                        <div class="card stat-card">
+                            <div class="stat-icon icon-green"><i class="fas fa-calendar-check"></i></div>
+                            <div class="stat-data"><h3>${todayApps.length}</h3><p>Appointments Today</p></div>
                         </div>
-                        <div class="settings-nav-item" onclick="switchSettingsTab('availability', this)">
-                            <i class="fas fa-clock"></i> Availability & Shift
+                        <div class="card stat-card">
+                            <div class="stat-icon icon-purple"><i class="fas fa-procedures"></i></div>
+                            <div class="stat-data"><h3>${App.data.prescriptions.length}</h3><p>Prescriptions</p></div>
                         </div>
-                        <div class="settings-nav-item" onclick="switchSettingsTab('fees', this)">
-                            <i class="fas fa-hand-holding-usd"></i> Fees & Payments
-                        </div>
-                        <div class="settings-nav-item" onclick="switchSettingsTab('security', this)">
-                            <i class="fas fa-shield-alt"></i> Security
-                        </div>
-                        <div class="settings-nav-item" onclick="switchSettingsTab('general', this)">
-                            <i class="fas fa-sliders-h"></i> General Settings
-                        </div>
-                        <div class="settings-nav-item" onclick="switchSettingsTab('notifications', this)">
-                            <i class="fas fa-bell"></i> Notifications
+                        <div class="card stat-card">
+                            <div class="stat-icon icon-orange"><i class="fas fa-dollar-sign"></i></div>
+                            <div class="stat-data"><h3>₹${App.data.appointments.filter(a => a.status === 'completed').length * 500}</h3><p>Earnings (Mtd)</p></div>
                         </div>
                     </div>
 
-                    <!-- Settings Content -->
-                    <div id="settingsContentArea">
-                        ${getAccountSettingsHtml(user)}
+                    <div class="grid-2">
+                        <div class="card">
+                            <div style="display:flex; justify-content:space-between; margin-bottom:20px;">
+                                <h3 style="font-size:1.1rem; font-weight:700;">Upcoming Appointments</h3>
+                                <button class="btn btn-sm btn-outline" onclick="App.navigate('schedule')">View All</button>
+                            </div>
+                            ${App.data.appointments.filter(a => a.status !== 'completed').slice(0, 4).map(app => `
+                                <div style="display:flex; justify-content:space-between; align-items:center; padding:12px 0; border-bottom:1px solid var(--border);">
+                                    <div style="display:flex; gap:12px; align-items:center;">
+                                        <div style="width:40px; height:40px; background:var(--bg-input); border-radius:10px; display:flex; align-items:center; justify-content:center; color:var(--text-muted);">
+                                            <i class="far fa-clock"></i>
+                                        </div>
+                                        <div>
+                                            <div style="font-weight:600;">${app.patient}</div>
+                                            <div style="font-size:0.8rem; color:var(--text-muted);">${app.time || ''} - ${app.reason || 'Checkup'}</div>
+                                        </div>
+                                    </div>
+                                    <div style="display:flex; align-items:center; gap:10px;">
+                                        <span class="status-pill ${app.status === 'confirmed' ? 'pill-success' : app.status === 'in-progress' ? 'pill-orange' : 'pill-warning'}">${app.status}</span>
+                                        ${app.status === 'confirmed' ? `<button class="btn btn-sm btn-primary" onclick="App.startCheckup('${app.id}', '${app.patientId}', '${app.patient}')">Start</button>` : ''}
+                                    </div>
+                                </div>
+                            `).join('') || '<p>No upcoming appointments</p>'}
+                        </div>
+                        <div class="card">
+                            <h3 style="font-size:1.1rem; font-weight:700; margin-bottom:20px;">Patient Activity</h3>
+                            <div class="chart-bars">
+                                ${['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map((day, i) => `
+                                    <div class="bar-wrap">
+                                        <div class="bar-bg"><div class="bar-fill" style="height: ${10 + Math.random() * 40}%"></div></div>
+                                        <div class="bar-label">${day}</div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
                     </div>
-                </div>
+                `;
+            },
 
-                <style>
-                    .settings-nav-item {
-                        display: flex;
-                        align-items: center;
-                        gap: 12px;
-                        padding: 12px 16px;
-                        border-radius: 12px;
-                        color: #64748b;
-                        font-weight: 500;
-                        font-size: 0.9rem;
-                        cursor: pointer;
-                        transition: all 0.2s;
-                        margin-bottom: 4px;
-                    }
-                    .settings-nav-item i {
-                        width: 20px;
-                        font-size: 1.1rem;
-                    }
-                    .settings-nav-item:hover {
-                        background: #f8fafc;
-                        color: #1e40af;
-                    }
-                    .settings-nav-item.active {
-                        background: #eff6ff;
-                        color: #2563eb;
-                    }
-                    .settings-section-card {
-                        background: white;
-                        border-radius: 24px;
-                        padding: 32px;
-                        border: 1px solid #e2e8f0;
-                        box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
-                    }
-                    .settings-section-title {
-                        font-size: 1.25rem;
-                        font-weight: 700;
-                        color: #1e293b;
-                        margin-bottom: 24px;
-                        display: flex;
-                        align-items: center;
-                        gap: 12px;
-                    }
-                    .settings-section-title i {
-                        color: #3b82f6;
-                    }
-                </style>
-            `;
-        }
+            renderMessages: (con) => {
+                con.innerHTML = `
+                    <div class="card" style="min-height: 60vh;">
+                        <div class="table-container">
+                            <table>
+                                <thead><tr><th>From</th><th>Message</th><th>Time</th><th>Action</th></tr></thead>
+                                <tbody>
+                                    ${App.data.messages.map(msg => `
+                                        <tr style="cursor:pointer;" onclick="App.openMessage('${msg.from}')">
+                                            <td>
+                                                <div style="font-weight:600;">${msg.from}</div>
+                                                ${!msg.read ? '<span class="badge-dot" style="position:static; display:inline-block; margin-left:5px; border-color:var(--bg-card);"></span>' : ''}
+                                            </td>
+                                            <td>${msg.text}</td>
+                                            <td>${msg.time}</td>
+                                            <td><button class="btn btn-sm btn-outline"><i class="fas fa-reply"></i></button></td>
+                                        </tr>
+                                    `).join('')}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                `;
+            },
 
-        window.switchSettingsTab = function(tab, element) {
-            const container = document.getElementById('settingsContentArea');
-            const user = JSON.parse(localStorage.getItem('currentUser'));
-            
-            // Update active state in nav
-            document.querySelectorAll('.settings-nav-item').forEach(el => el.classList.remove('active'));
-            element.classList.add('active');
+            renderPrescriptions: (con) => {
+                con.innerHTML = `
+                    <div class="card">
+                        <div style="display:flex; justify-content:space-between; margin-bottom:20px;">
+                            <h3>Active Prescriptions</h3>
+                            <button class="btn btn-primary" onclick="App.navigate('prescriptions-add')"><i class="fas fa-plus"></i> New Rx</button>
+                        </div>
+                        <div class="table-container">
+                            <table>
+                                <thead><tr><th>Patient</th><th>Medication</th><th>Dosage</th><th>Status</th><th>Action</th></tr></thead>
+                                <tbody>
+                                    ${App.data.prescriptions.map(rx => `
+                                        <tr>
+                                            <td style="font-weight:600;">${rx.patient || 'Patient'}</td>
+                                            <td>${rx.medication || rx.med}</td>
+                                            <td>${rx.dosage}</td>
+                                            <td><span class="status-pill pill-success">Active</span></td>
+                                            <td><button class="btn btn-sm btn-primary">Refill</button></td>
+                                        </tr>
+                                    `).join('') || '<tr><td colspan="5">No active prescriptions</td></tr>'}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                `;
+            },
 
-            if (tab === 'account') container.innerHTML = getAccountSettingsHtml(user);
-            else if (tab === 'professional') container.innerHTML = getProfessionalSettingsHtml(user);
-            else if (tab === 'availability') container.innerHTML = getAvailabilitySettingsHtml();
-            else if (tab === 'fees') container.innerHTML = getFeesSettingsHtml(user);
-            else if (tab === 'security') container.innerHTML = getSecuritySettingsHtml();
-            else if (tab === 'general') container.innerHTML = getGeneralSettingsHtml(user);
-            else if (tab === 'notifications') container.innerHTML = getNotificationSettingsHtml(user);
-        };
-
-        function getAccountSettingsHtml(user) {
-            return `
-                <div class="settings-section-card">
-                    <h3 class="settings-section-title"><i class="fas fa-user-circle"></i> Account Profile</h3>
-                    <form onsubmit="saveDoctorSettings(event, 'account')">
-                        <div style="grid-column: span 2; display: flex; align-items: center; gap: 24px; margin-bottom: 24px; padding-bottom: 24px; border-bottom: 1px solid #f1f5f9;">
-                            <div style="position: relative;">
-                                <img id="profilePicPreview" src="${user.profilePic || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(user.name) + '&background=2c7da0&color=fff'}" style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 3px solid #fff; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
-                                <label for="profilePicInput" style="position: absolute; bottom: 0; right: 0; width: 32px; height: 32px; background: #2c7da0; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; border: 2px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.2);">
-                                    <i class="fas fa-camera" style="font-size: 0.8rem;"></i>
-                                </label>
-                                <input type="file" id="profilePicInput" style="display: none;" accept="image/*" onchange="handleProfilePicChange(event)">
+            renderWritePrescription: (container) => {
+                const patients = App.data.patientsList;
+                container.innerHTML = `
+                    <div class="card" style="width: 100%; padding: 32px; border-radius: var(--radius); box-shadow: var(--shadow);">
+                        <div style="margin-bottom: 24px;">
+                            <h3 style="font-size: 1.4rem; font-weight: 700; color: var(--text-main);"><i class="fas fa-pills" style="color:var(--primary); margin-right:8px;"></i> Write Prescription</h3>
+                            <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 4px;">Log a prescription that will immediately sync with the patient directory and pharmacy inventory.</p>
+                        </div>
+                        <div style="display:flex; flex-direction:column; gap:16px;">
+                            <div>
+                                <label style="display:block; font-weight:600; font-size:0.85rem; margin-bottom:6px;">Patient</label>
+                                <select id="rx_pat" class="btn btn-outline" style="width:100%; text-align:left; padding:12px 20px;">
+                                    ${patients.map(p => `<option value="${p.id}|${p.name}">${p.name}</option>`).join('')}
+                                </select>
                             </div>
                             <div>
-                                <h4 style="font-size: 0.9rem; font-weight: 600; color: #1e293b; margin-bottom: 4px;">Profile Photo</h4>
-                                <p style="font-size: 0.75rem; color: #64748b; margin-bottom: 10px;">JPG, GIF or PNG. Max size 2MB</p>
-                                <button type="button" class="btn-secondary" onclick="document.getElementById('profilePicInput').click()" style="padding: 5px 12px; font-size: 0.7rem;">Change Photo</button>
+                                <label style="display:block; font-weight:600; font-size:0.85rem; margin-bottom:6px;">Medication</label>
+                                <input type="text" id="rx_med" class="btn btn-outline" style="width:100%; text-align:left; padding:12px 20px;" placeholder="e.g. Amoxicillin">
+                            </div>
+                            <div>
+                                <label style="display:block; font-weight:600; font-size:0.85rem; margin-bottom:6px;">Dosage & Instructions</label>
+                                <input type="text" id="rx_dose" class="btn btn-outline" style="width:100%; text-align:left; padding:12px 20px;" placeholder="e.g. 500mg, twice daily">
                             </div>
                         </div>
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
-                            <div class="form-field">
-                                <label>Full Name</label>
-                                <input type="text" class="form-input" id="setDocName" value="${user.name}" required>
-                            </div>
-                            <div class="form-field">
-                                <label>Email Address</label>
-                                <input type="email" class="form-input" value="${user.email}" disabled style="background: #f8fafc; border-color: #e2e8f0;">
-                            </div>
-                            <div class="form-field">
-                                <label>Medical Role</label>
-                                <input type="text" class="form-input" value="${user.role}" disabled style="background: #f8fafc; border-color: #e2e8f0; text-transform: capitalize;">
-                            </div>
-                            <div class="form-field">
-                                <label>Phone Number</label>
-                                <input type="text" class="form-input" id="setDocPhone" value="${user.phone || ''}" placeholder="555-0000">
-                            <div class="form-field" style="grid-column: span 2;">
-                                <label>Bio / Professional Summary</label>
-                                <textarea class="form-textarea" id="setDocBio" placeholder="Tell patients about your expertise..." style="min-height: 120px;">${user.bio || ''}</textarea>
-                            </div>
-                        </div>
-                        <div style="margin-top: 32px; display: flex; justify-content: flex-end;">
-                            <button type="submit" class="btn-primary" style="padding: 12px 32px; font-size: 0.9rem;">Save Profile Changes</button>
-                        </div>
-                    </form>
-                </div>
-            `;
-        }
-
-        function getProfessionalSettingsHtml(user) {
-            return `
-                <div class="settings-section-card">
-                    <h3 class="settings-section-title"><i class="fas fa-user-md"></i> Professional Information</h3>
-                    <form onsubmit="saveDoctorSettings(event, 'professional')">
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
-                            <div class="form-field" style="grid-column: span 2;">
-                                <label>Medical Education / Degrees</label>
-                                <input type="text" class="form-input" id="setDocEdu" value="${user.education || ''}" placeholder="e.g. MBBS, MD - Cardiology">
-                            </div>
-                            <div class="form-field">
-                                <label>Years of Experience</label>
-                                <input type="number" class="form-input" id="setDocExp" value="${user.experience || ''}" placeholder="e.g. 12">
-                            </div>
-                            <div class="form-field">
-                                <label>Languages Spoken</label>
-                                <input type="text" class="form-input" id="setDocLang" value="${user.languages || ''}" placeholder="e.g. English, Spanish, Hindi">
-                            </div>
-                        </div>
-                        <div style="margin-top: 32px; display: flex; justify-content: flex-end;">
-                            <button type="submit" class="btn-primary" style="padding: 12px 32px; font-size: 0.9rem;">Update Professional Info</button>
-                        </div>
-                    </form>
-                </div>
-            `;
-        }
-
-        function getAvailabilitySettingsHtml() {
-            const user = JSON.parse(localStorage.getItem('currentUser'));
-            const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
-            const availability = user.availability || {};
-            
-            return `
-                <div class="settings-section-card">
-                    <h3 class="settings-section-title"><i class="fas fa-clock"></i> Availability & Shift Timing</h3>
-                    <form onsubmit="saveDoctorSettings(event, 'availability')">
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 32px; padding-bottom: 24px; border-bottom: 1px solid #f1f5f9;">
-                            <div class="form-field">
-                                <label>Medical Specialty</label>
-                                <select class="form-input" id="setDocSpecSelect">
-                                    <option value="General Medicine" ${user.specialization === 'General Medicine' ? 'selected' : ''}>General Medicine</option>
-                                    <option value="Cardiology" ${user.specialization === 'Cardiology' ? 'selected' : ''}>Cardiology</option>
-                                    <option value="Pediatrics" ${user.specialization === 'Pediatrics' ? 'selected' : ''}>Pediatrics</option>
-                                    <option value="Orthopedics" ${user.specialization === 'Orthopedics' ? 'selected' : ''}>Orthopedics</option>
-                                    <option value="Neurology" ${user.specialization === 'Neurology' ? 'selected' : ''}>Neurology</option>
-                                    <option value="Dermatology" ${user.specialization === 'Dermatology' ? 'selected' : ''}>Dermatology</option>
-                                </select>
-                            </div>
-                            <div class="form-field">
-                                <label>Consultation Duration (per patient)</label>
-                                <select class="form-input" id="setDocDuration">
-                                    <option value="15" ${user.appointmentDuration == 15 ? 'selected' : ''}>15 Minutes</option>
-                                    <option value="30" ${user.appointmentDuration == 30 ? 'selected' : ''}>30 Minutes</option>
-                                    <option value="45" ${user.appointmentDuration == 45 ? 'selected' : ''}>45 Minutes</option>
-                                    <option value="60" ${user.appointmentDuration == 60 ? 'selected' : ''}>60 Minutes</option>
-                                </select>
-                            </div>
-                            <div class="form-field">
-                                <label>Buffer Time (between appointments)</label>
-                                <select class="form-input" id="setDocBuffer">
-                                    <option value="0" ${user.bufferTime == 0 ? 'selected' : ''}>No Buffer</option>
-                                    <option value="5" ${user.bufferTime == 5 ? 'selected' : ''}>5 Minutes</option>
-                                    <option value="10" ${user.bufferTime == 10 ? 'selected' : ''}>10 Minutes</option>
-                                    <option value="15" ${user.bufferTime == 15 ? 'selected' : ''}>15 Minutes</option>
-                                </select>
-                            </div>
-                            <div class="form-field">
-                                <label>Max Patients per Day</label>
-                                <input type="number" class="form-input" id="setDocMaxPatients" value="${user.maxPatients || 20}" min="1" max="100">
-                            </div>
-                        </div>
-
-                        <div style="display: grid; gap: 16px;">
-                            <label style="font-weight: 600; font-size: 0.85rem; color: #475569; margin-bottom: 8px; display: block;">Weekly Working Hours</label>
-                            ${days.map(day => {
-                                const dayData = availability[day] || { active: false, from: '09:00', to: '17:00' };
-                                return `
-                                    <div style="display: grid; grid-template-columns: 150px 1fr 1fr 1fr; align-items: center; gap: 20px; padding: 12px 16px; background: #f8fafc; border-radius: 12px;">
-                                        <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; font-weight: 500;">
-                                            <input type="checkbox" class="day-active" data-day="${day}" ${dayData.active ? 'checked' : ''} style="width: 18px; height: 18px;">
-                                            ${day}
-                                        </label>
-                                        <div style="font-size: 0.75rem; color: #64748b;">Shift Time:</div>
-                                        <input type="time" class="form-input day-from" data-day="${day}" value="${dayData.from}" style="padding: 6px 12px; height: 36px;">
-                                        <input type="time" class="form-input day-to" data-day="${day}" value="${dayData.to}" style="padding: 6px 12px; height: 36px;">
-                                    </div>
-                                `;
-                            }).join('')}
-                        </div>
-
-                        <div style="margin-top: 32px; display: flex; justify-content: flex-end;">
-                            <button type="submit" class="btn-primary" style="padding: 12px 32px; font-size: 0.9rem;">Save Availability Settings</button>
-                        </div>
-                    </form>
-                </div>
-            `;
-        }
-
-        function getFeesSettingsHtml(user) {
-            const fees = user.fees || { online: 0, inPerson: 0, followUp: 0 };
-            return `
-                <div class="settings-section-card">
-                    <h3 class="settings-section-title"><i class="fas fa-hand-holding-usd"></i> Consultation Fees & Payments</h3>
-                    <form onsubmit="saveDoctorSettings(event, 'fees')">
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
-                            <div class="form-field">
-                                <label>Online Consultation Fee ($)</label>
-                                <input type="number" class="form-input" id="feeOnline" value="${fees.online}" placeholder="0.00">
-                            </div>
-                            <div class="form-field">
-                                <label>In-Person Visit Fee ($)</label>
-                                <input type="number" class="form-input" id="feeInPerson" value="${fees.inPerson}" placeholder="0.00">
-                            </div>
-                            <div class="form-field">
-                                <label>Follow-up Consultation Fee ($)</label>
-                                <input type="number" class="form-input" id="feeFollowUp" value="${fees.followUp}" placeholder="0.00">
-                            </div>
-                            <div class="form-field">
-                                <label>Currency Preference</label>
-                                <select class="form-input">
-                                    <option value="USD" selected>USD - US Dollar</option>
-                                    <option value="EUR">EUR - Euro</option>
-                                    <option value="GBP">GBP - British Pound</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div style="margin-top: 32px; display: flex; justify-content: flex-end;">
-                            <button type="submit" class="btn-primary" style="padding: 12px 32px; font-size: 0.9rem;">Save Fee Structure</button>
-                        </div>
-                    </form>
-                </div>
-            `;
-        }
-
-        function getSecuritySettingsHtml() {
-            return `
-                <div class="settings-section-card">
-                    <h3 class="settings-section-title"><i class="fas fa-shield-alt"></i> Security & Password</h3>
-                    <form onsubmit="saveDoctorSettings(event, 'security')">
-                        <div style="max-width: 500px;">
-                            <div class="form-field">
-                                <label>Current Password</label>
-                                <input type="password" class="form-input" id="setDocCurrPass" placeholder="••••••••">
-                            </div>
-                            <div class="form-field" style="margin-top: 20px;">
-                                <label>New Password</label>
-                                <input type="password" class="form-input" id="setDocNewPass" placeholder="••••••••">
-                            </div>
-                            <div class="form-field">
-                                <label>Confirm New Password</label>
-                                <input type="password" class="form-input" id="setDocConfirmPass" placeholder="••••••••">
-                            </div>
-                        </div>
-                        <div style="margin-top: 32px; display: flex; justify-content: flex-end;">
-                            <button type="submit" class="btn-primary" style="padding: 12px 32px; font-size: 0.9rem;">Update Password</button>
-                        </div>
-                    </form>
-                </div>
-            `;
-        }
-
-        function getGeneralSettingsHtml(user) {
-            return `
-                <div class="settings-section-card">
-                    <h3 class="settings-section-title"><i class="fas fa-sliders-h"></i> General Preferences</h3>
-                    <div style="display: grid; gap: 24px;">
-                        <form onsubmit="saveDoctorSettings(event, 'general')">
-                            <div style="display: flex; justify-content: space-between; align-items: center; padding-bottom: 20px; border-bottom: 1px solid #f1f5f9;">
-                                <div>
-                                    <div style="font-weight: 600; color: #1e293b;">Interface Language</div>
-                                    <div style="font-size: 0.8rem; color: #64748b;">Select your preferred language for the dashboard</div>
-                                </div>
-                                <select class="form-input" style="width: 200px;">
-                                    <option value="en" selected>English (US)</option>
-                                    <option value="es">Spanish</option>
-                                    <option value="fr">French</option>
-                                    <option value="ar">Arabic</option>
-                                </select>
-                            </div>
-                            <div style="display: flex; justify-content: space-between; align-items: center; padding-bottom: 20px; border-bottom: 1px solid #f1f5f9; margin-top: 20px;">
-                                <div>
-                                    <div style="font-weight: 600; color: #1e293b;">Time Zone</div>
-                                    <div style="font-size: 0.8rem; color: #64748b;">Current system time: ${new Date().toLocaleTimeString()}</div>
-                                </div>
-                                <select class="form-input" style="width: 200px;">
-                                    <option value="utc">UTC (Greenwich)</option>
-                                    <option value="est" selected>Eastern Time (US)</option>
-                                    <option value="pst">Pacific Time (US)</option>
-                                </select>
-                            </div>
-                            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 20px;">
-                                <div>
-                                    <div style="font-weight: 600; color: #1e293b;">Dark Mode</div>
-                                    <div style="font-size: 0.8rem; color: #64748b;">Switch between light and dark interface</div>
-                                </div>
-                                <div style="width: 44px; height: 24px; background: #e2e8f0; border-radius: 20px; position: relative; cursor: pointer;" onclick="showToast('Dark mode coming soon', 'info')">
-                                    <div style="width: 18px; height: 18px; background: white; border-radius: 50%; position: absolute; top: 3px; left: 3px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);"></div>
-                                </div>
-                            </div>
-                            <div style="margin-top: 32px; display: flex; justify-content: flex-end;">
-                                <button type="submit" class="btn-primary" style="padding: 10px 24px; font-size: 0.85rem;">Apply Preferences</button>
-                            </div>
-                        </form>
                     </div>
-                </div>
-            `;
-        }
+                    <div class="card" style="width: 100%; padding: 24px 32px; display: flex; justify-content: flex-end; gap: 16px; margin-top: 30px; box-shadow: var(--shadow); border-radius: var(--radius); position: sticky; bottom: 0; background: white; z-index: 100;">
+                        <button class="btn btn-outline" onclick="App.navigate('prescriptions')">Cancel</button>
+                        <button class="btn btn-primary" onclick="App.savePrescription()">Create Prescription</button>
+                    </div>`;
+            },
 
-        function getNotificationSettingsHtml(user) {
-            const n = user.notifications || { email: true, sms: true, browser: false };
-            return `
-                <div class="settings-section-card">
-                    <h3 class="settings-section-title"><i class="fas fa-bell"></i> Notification Preferences</h3>
-                    <form onsubmit="saveDoctorSettings(event, 'notifications')">
-                        <div style="display: grid; gap: 20px;">
-                            <label style="display: flex; align-items: center; gap: 12px; cursor: pointer;">
-                                <input type="checkbox" id="notifEmail" ${n.email ? 'checked' : ''} style="width: 18px; height: 18px;">
-                                <div>
-                                    <div style="font-weight: 600; color: #1e293b;">Email Notifications</div>
-                                    <div style="font-size: 0.8rem; color: #64748b;">Receive daily appointment summaries</div>
-                                </div>
-                            </label>
-                            <label style="display: flex; align-items: center; gap: 12px; cursor: pointer;">
-                                <input type="checkbox" id="notifSms" ${n.sms ? 'checked' : ''} style="width: 18px; height: 18px;">
-                                <div>
-                                    <div style="font-weight: 600; color: #1e293b;">SMS Alerts</div>
-                                    <div style="font-size: 0.8rem; color: #64748b;">Emergency patient check-in alerts</div>
-                                </div>
-                            </label>
-                            <label style="display: flex; align-items: center; gap: 12px; cursor: pointer;">
-                                <input type="checkbox" id="notifBrowser" ${n.browser ? 'checked' : ''} style="width: 18px; height: 18px;">
-                                <div>
-                                    <div style="font-weight: 600; color: #1e293b;">Browser Notifications</div>
-                                    <div style="font-size: 0.8rem; color: #64748b;">Real-time desktop alerts for new records</div>
-                                </div>
-                            </label>
+            renderAnalytics: (con) => {
+                con.innerHTML = `
+                    <div class="grid-2">
+                        <div class="card">
+                            <h3 style="margin-bottom:20px;">Revenue Trends</h3>
+                            <div class="chart-bars">
+                                ${['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'].map((m, i) => `
+                                    <div class="bar-wrap">
+                                        <div class="bar-bg"><div class="bar-fill" style="height: ${40 + Math.random() * 50}%; background: linear-gradient(to top, #f59e0b, #fbbf24);"></div></div>
+                                        <div class="bar-label">${m}</div>
+                                    </div>
+                                `).join('')}
+                            </div>
                         </div>
-                        <div style="margin-top: 32px; display: flex; justify-content: flex-end;">
-                            <button type="submit" class="btn-primary" style="padding: 12px 32px; font-size: 0.9rem;">Save Notification Settings</button>
+                        <div class="card">
+                            <h3 style="margin-bottom:20px;">Department Demographics</h3>
+                            <div style="display:flex; justify-content:center; align-items:center; height:200px; position:relative;">
+                                <!-- CSS Conic Gradient Pie Chart -->
+                                <div style="
+                                    width:160px; height:160px; border-radius:50%;
+                                    background: conic-gradient(
+                                        #3b82f6 0% 40%, 
+                                        #10b981 40% 70%, 
+                                        #f59e0b 70% 90%, 
+                                        #6366f1 90% 100%
+                                    );
+                                "></div>
+                                <div style="position:absolute; width:100px; height:100px; background:var(--bg-card); border-radius:50%;"></div>
+                            </div>
+                            <div style="display:flex; justify-content:space-around; margin-top:20px; font-size:0.8rem;">
+                                <div style="display:flex; gap:8px; align-items:center;"><span style="width:10px; height:10px; background:#3b82f6; border-radius:50%;"></span> Cardio</div>
+                                <div style="display:flex; gap:8px; align-items:center;"><span style="width:10px; height:10px; background:#10b981; border-radius:50%;"></span> Neuro</div>
+                                <div style="display:flex; gap:8px; align-items:center;"><span style="width:10px; height:10px; background:#f59e0b; border-radius:50%;"></span> Ortho</div>
+                            </div>
                         </div>
-                    </form>
-                </div>
-            `;
-        }
+                    </div>
+                `;
+            },
 
-        window.handleProfilePicChange = function(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-            
-            if (file.size > 2 * 1024 * 1024) {
-                showToast('Image size must be less than 2MB', 'error');
-                return;
+            renderPatients: (con) => {
+                con.innerHTML = `
+                    <div class="card">
+                        <div style="display:flex; justify-content:space-between; margin-bottom:20px;">
+                            <h3>Patient Directory</h3>
+                        </div>
+                        <div class="table-container">
+                            <table>
+                                <thead><tr><th>Name</th><th>Email</th><th>Phone</th><th>Status</th><th>Actions</th></tr></thead>
+                                <tbody>
+                                    ${App.data.patientsList.map(p => `
+                                        <tr>
+                                            <td style="font-weight:600;">${p.name}</td>
+                                            <td>${p.email}</td>
+                                            <td>${p.phone || '—'}</td>
+                                            <td><span class="status-pill pill-success">Active</span></td>
+                                            <td>
+                                                <button class="btn btn-sm btn-outline" onclick="App.addMedicalRecordModal('${p.id}', '${p.name}')" title="Add Medical Record"><i class="fas fa-notes-medical"></i></button>
+                                                <button class="btn btn-sm btn-primary" onclick="App.addPrescriptionModal('${p.id}', '${p.name}')" title="Write Prescription"><i class="fas fa-pills"></i></button>
+                                            </td>
+                                        </tr>
+                                    `).join('') || '<tr><td colspan="5">No patients found</td></tr>'}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                `;
+            },
+
+            renderSchedule: (con) => {
+                con.innerHTML = `
+                    <div class="card">
+                        <div style="display:flex; justify-content:space-between; margin-bottom:20px;">
+                            <h3>Appointment Schedule</h3>
+                        </div>
+                        <div class="table-container">
+                            <table>
+                                <thead><tr><th>Time</th><th>Patient</th><th>Reason</th><th>Status</th><th>Action</th></tr></thead>
+                                <tbody>
+                                    ${App.data.appointments.sort((a,b) => (a.date+a.time).localeCompare(b.date+b.time)).map(app => `
+                                        <tr>
+                                            <td style="font-weight:600;">${app.date} ${app.time || ''}</td>
+                                            <td>${app.patient}</td>
+                                            <td>${app.reason || 'Checkup'}</td>
+                                            <td><span class="status-pill ${app.status === 'confirmed' || app.status === 'checked-in' ? 'pill-success' : app.status === 'in-progress' ? 'pill-orange' : app.status === 'pending' ? 'pill-warning' : 'pill-muted'}">${app.status}</span></td>
+                                            <td>
+                                                ${app.status === 'pending' ? `<button class="btn btn-sm btn-success" onclick="App.confirmAppointment('${app.id}')">Confirm</button>` : 
+                                                  (app.status === 'confirmed' || app.status === 'checked-in') ? `<button class="btn btn-sm btn-primary" onclick="App.startCheckup('${app.id}', '${app.patientId}', '${app.patient}')">Start Checkup</button>` : 
+                                                  app.status === 'in-progress' ? `<button class="btn btn-sm btn-orange" onclick="App.startCheckup('${app.id}', '${app.patientId}', '${app.patient}')">Resume</button>` : '—'}
+                                            </td>
+                                        </tr>
+                                    `).join('') || '<tr><td colspan="5">No appointments scheduled</td></tr>'}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                `;
+            },
+
+            renderSettings: (con) => {
+                con.innerHTML = `
+                    <div class="card" style="max-width: 600px; margin: 0 auto;">
+                        <h3 style="margin-bottom:24px;">Account Settings</h3>
+                        <div style="display:flex; flex-direction:column; gap:20px;">
+                            <div>
+                                <label style="display:block; margin-bottom:8px; font-weight:600; font-size:0.9rem;">Display Name</label>
+                                <input type="text" id="set_name" class="btn btn-outline" style="width:100%; text-align:left;" value="${App.currentUser.name}">
+                            </div>
+                            <div>
+                                <label style="display:block; margin-bottom:8px; font-weight:600; font-size:0.9rem;">Email</label>
+                                <input type="email" id="set_email" class="btn btn-outline" style="width:100%; text-align:left;" value="${App.currentUser.email}">
+                            </div>
+                            <div>
+                                <label style="display:block; margin-bottom:8px; font-weight:600; font-size:0.9rem;">Specialty</label>
+                                <input type="text" class="btn btn-outline" style="width:100%; text-align:left;" value="${App.currentUser.role.toUpperCase()}" disabled>
+                            </div>
+                            <button class="btn btn-primary" onclick="App.saveSettings()">Save Changes</button>
+                        </div>
+                    </div>
+                `;
+            },
+
+            // --- UTILS ---
+            // --- ACTIONS ---
+            addPrescriptionModal: (pId, pName) => {
+                const patients = App.data.patientsList;
+                App.showModal(`
+                    <h3 style="margin-bottom:20px;">💊 New Prescription</h3>
+                    <div style="display:flex; flex-direction:column; gap:16px;">
+                        <div>
+                            <label style="display:block; font-size:0.8rem; margin-bottom:4px;">Patient</label>
+                            <select id="rx_pat" class="btn btn-outline" style="width:100%; text-align:left;">
+                                ${patients.map(p => `<option value="${p.id}|${p.name}" ${pId === p.id ? 'selected' : ''}>${p.name}</option>`).join('')}
+                            </select>
+                        </div>
+                        <div>
+                            <label style="display:block; font-size:0.8rem; margin-bottom:4px;">Medication</label>
+                            <input type="text" id="rx_med" class="btn btn-outline" style="width:100%; text-align:left;" placeholder="e.g. Amoxicillin">
+                        </div>
+                        <div>
+                            <label style="display:block; font-size:0.8rem; margin-bottom:4px;">Dosage & Instructions</label>
+                            <input type="text" id="rx_dose" class="btn btn-outline" style="width:100%; text-align:left;" placeholder="e.g. 500mg, twice daily">
+                        </div>
+                        <div style="display:flex; gap:12px; margin-top:10px;">
+                            <button class="btn btn-primary" style="flex:1" onclick="App.savePrescription()">Create Prescription</button>
+                            <button class="btn btn-outline" onclick="App.closeModal()">Cancel</button>
+                        </div>
+                    </div>
+                `);
+            },
+
+            savePrescription: async () => {
+                const [pId, pName] = document.getElementById('rx_pat').value.split('|');
+                const rx = {
+                    patientId: pId,
+                    patient: pName,
+                    doctorId: App.currentUser.id,
+                    medication: document.getElementById('rx_med').value,
+                    dosage: document.getElementById('rx_dose').value,
+                    instructions: document.getElementById('rx_dose').value,
+                    date: new Date().toISOString().slice(0,10)
+                };
+                if(!rx.medication) return App.showToast('Medication name required');
+                try {
+                    await API.post('prescriptions', rx);
+                    await API.post('audit-logs', { user: App.currentUser.name, action: `Wrote prescription for ${rx.patient}: ${rx.medication}` });
+                    App.showToast('Prescription Created');
+                    App.closeModal();
+                    App.navigate('prescriptions');
+                } catch(e) { App.showToast('Save failed'); }
+            },
+
+            addMedicalRecordModal: (pId, pName) => {
+                App.showModal(`
+                    <h3 style="margin-bottom:20px;">📝 Add Medical Record</h3>
+                    <div style="display:flex; flex-direction:column; gap:16px;">
+                        <div class="btn btn-outline" style="width:100%; text-align:left; background:var(--bg-input);">Patient: <b>${pName}</b></div>
+                        <input type="hidden" id="mr_patId" value="${pId}">
+                        <input type="hidden" id="mr_patName" value="${pName}">
+                        <div>
+                            <label style="display:block; font-size:0.8rem; margin-bottom:4px;">Diagnosis</label>
+                            <input type="text" id="mr_diag" class="btn btn-outline" style="width:100%; text-align:left;" placeholder="e.g. Hypertension">
+                        </div>
+                        <div>
+                            <label style="display:block; font-size:0.8rem; margin-bottom:4px;">Clinical Notes</label>
+                            <textarea id="mr_notes" class="btn btn-outline" style="width:100%; height:100px; text-align:left; padding:12px;" placeholder="Detailed notes..."></textarea>
+                        </div>
+                        <div style="display:flex; gap:12px; margin-top:10px;">
+                            <button class="btn btn-primary" style="flex:1" onclick="App.saveMedicalRecord()">Save Record</button>
+                            <button class="btn btn-outline" onclick="App.closeModal()">Cancel</button>
+                        </div>
+                    </div>
+                `);
+            },
+
+            saveMedicalRecord: async () => {
+                const record = {
+                    patientId: document.getElementById('mr_patId').value,
+                    patient: document.getElementById('mr_patName').value,
+                    doctorId: App.currentUser.id,
+                    doctor: App.currentUser.name,
+                    diagnosis: document.getElementById('mr_diag').value,
+                    notes: document.getElementById('mr_notes').value,
+                    date: new Date().toISOString().slice(0,10)
+                };
+                if(!record.diagnosis) return App.showToast('Diagnosis required');
+                try {
+                    await API.post('medical-records', record);
+                    await API.post('audit-logs', { user: App.currentUser.name, action: `Added medical record for ${record.patient}` });
+                    App.showToast('Medical Record Saved');
+                    if (window.activeCheckup) {
+                        // If in checkup flow, don't close modal yet or navigate
+                        return true;
+                    }
+                    App.closeModal();
+                    App.navigate('patients');
+                } catch(e) { App.showToast('Save failed'); throw e; }
+            },
+
+            startCheckup: async (apptId, pId, pName) => {
+                window.activeCheckup = { apptId, pId, pName };
+                try {
+                    await API.put(`appointments/${apptId}`, { status: 'in-progress' });
+                    App.showModal(`
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+                            <h3>🩺 Active Checkup: ${pName}</h3>
+                            <span class="status-pill pill-orange">In Progress</span>
+                        </div>
+                        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:20px;">
+                            <div class="card" style="padding:15px; background:var(--bg-input);">
+                                <h4 style="margin-bottom:10px;"><i class="fas fa-notes-medical"></i> Medical Record</h4>
+                                <input type="hidden" id="mr_patId" value="${pId}">
+                                <input type="hidden" id="mr_patName" value="${pName}">
+                                <div style="margin-bottom:10px;">
+                                    <label style="display:block; font-size:0.75rem;">Diagnosis</label>
+                                    <input type="text" id="mr_diag" class="btn btn-outline" style="width:100%; text-align:left;" placeholder="Enter diagnosis">
+                                </div>
+                                <div>
+                                    <label style="display:block; font-size:0.75rem;">Clinical Notes</label>
+                                    <textarea id="mr_notes" class="btn btn-outline" style="width:100%; height:120px; text-align:left; padding:10px;" placeholder="Observation, symptoms, etc."></textarea>
+                                </div>
+                            </div>
+                            <div class="card" style="padding:15px; background:var(--bg-input);">
+                                <h4 style="margin-bottom:10px;"><i class="fas fa-pills"></i> Prescription</h4>
+                                <div style="margin-bottom:10px;">
+                                    <label style="display:block; font-size:0.75rem;">Medication</label>
+                                    <input type="text" id="rx_med" class="btn btn-outline" style="width:100%; text-align:left;" placeholder="e.g. Paracetamol">
+                                </div>
+                                <div>
+                                    <label style="display:block; font-size:0.75rem;">Dosage & Duration</label>
+                                    <input type="text" id="rx_dose" class="btn btn-outline" style="width:100%; text-align:left;" placeholder="e.g. 500mg, 1-0-1 for 5 days">
+                                </div>
+                                <div style="margin-top:15px; font-size:0.8rem; color:var(--text-muted);">
+                                    <i class="fas fa-info-circle"></i> This will be visible to the patient instantly.
+                                </div>
+                            </div>
+                        </div>
+                        <div style="display:flex; gap:12px; margin-top:20px; justify-content:flex-end;">
+                            <button class="btn btn-outline" onclick="App.closeModal(); App.navigate('schedule');">Save Draft & Close</button>
+                            <button class="btn btn-primary" style="padding:10px 30px;" onclick="App.finishCheckup()">Finish Checkup & Save All</button>
+                        </div>
+                    `);
+                } catch(e) { App.showToast('Failed to start checkup'); }
+            },
+
+            finishCheckup: async () => {
+                const { apptId, pId, pName } = window.activeCheckup;
+                try {
+                    // 1. Save Medical Record
+                    const hasDiag = document.getElementById('mr_diag').value;
+                    if (hasDiag) {
+                        await App.saveMedicalRecord();
+                    }
+
+                    // 2. Save Prescription (if medication is entered)
+                    const med = document.getElementById('rx_med').value;
+                    if (med) {
+                        const rx = {
+                            patientId: pId,
+                            patient: pName,
+                            doctorId: App.currentUser.id,
+                            medication: med,
+                            dosage: document.getElementById('rx_dose').value,
+                            instructions: document.getElementById('rx_dose').value,
+                            date: new Date().toISOString().slice(0,10)
+                        };
+                        await API.post('prescriptions', rx);
+                        await API.post('audit-logs', { user: App.currentUser.name, action: `Completed checkup and issued Rx for ${pName}` });
+                    }
+
+                    // 3. Complete Appointment
+                    await API.put(`appointments/${apptId}`, { status: 'completed' });
+                    
+                    App.showToast('Checkup Finished Successfully');
+                    window.activeCheckup = null;
+                    App.closeModal();
+                    App.navigate('schedule');
+                } catch(e) { App.showToast('Failed to finish checkup'); }
+            },
+
+            confirmAppointment: async (id) => {
+                try {
+                    await API.put(`appointments/${id}`, { status: 'confirmed' });
+                    await API.post('audit-logs', { user: App.currentUser.name, action: `Confirmed appointment ID ${id}` });
+                    App.showToast('Appointment Confirmed');
+                    App.navigate('schedule');
+                } catch(e) { App.showToast('Action failed'); }
+            },
+
+            completeAppointment: async (id) => {
+                try {
+                    await API.put(`appointments/${id}`, { status: 'completed' });
+                    App.showToast('Appointment Completed');
+                    App.navigate('schedule');
+                } catch(e) { App.showToast('Action failed'); }
+            },
+
+            saveSettings: async () => {
+                const name = document.getElementById('set_name').value;
+                const email = document.getElementById('set_email').value;
+                try {
+                    await API.put(`users/${App.currentUser.id}`, { name, email });
+                    App.currentUser.name = name;
+                    App.currentUser.email = email;
+                    localStorage.setItem('currentUser', JSON.stringify(App.currentUser));
+                    App.showToast('Settings Saved');
+                    location.reload();
+                } catch(e) { App.showToast('Update failed'); }
+            },
+
+            openMessage: (from) => {
+                App.showModal(`
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+                        <h3>Message from ${from}</h3>
+                        <button class="btn btn-sm btn-outline" onclick="App.closeModal()">Close</button>
+                    </div>
+                    <div style="background:var(--bg-input); padding:16px; border-radius:12px; margin-bottom:20px;">
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Please let me know when we can reschedule.
+                    </div>
+                    <textarea class="btn btn-outline" style="width:100%; height:100px; padding:12px;" placeholder="Type your reply..."></textarea>
+                    <button class="btn btn-primary" style="margin-top:16px;" onclick="App.closeModal(); App.showToast('Reply Sent')">Send Reply</button>
+                `);
+            },
+
+            showModal: (html) => {
+                const overlay = document.getElementById('modalOverlay');
+                document.getElementById('modalContent').innerHTML = html;
+                overlay.classList.add('open');
+            },
+
+            closeModal: () => {
+                document.getElementById('modalOverlay').classList.remove('open');
+            },
+
+            showToast: (msg) => {
+                const t = document.getElementById('toast');
+                t.querySelector('span').innerText = msg;
+                t.classList.add('show');
+                setTimeout(() => t.classList.remove('show'), 3000);
             }
-
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                document.getElementById('profilePicPreview').src = e.target.result;
-                const sidebarPic = document.getElementById('sidebarUserPic');
-                if (sidebarPic) sidebarPic.src = e.target.result;
-            };
-            reader.readAsDataURL(file);
         };
 
-        window.saveDoctorSettings = async function(event, type) {
-            if (event) event.preventDefault();
-            
-            let updateData = {};
-            
-            if (type === 'account') {
-                const name = document.getElementById('setDocName').value;
-                const phone = document.getElementById('setDocPhone').value;
-                const bio = document.getElementById('setDocBio').value;
-                const profilePic = document.getElementById('profilePicPreview').src;
-                updateData = { name, phone, bio, profilePic };
-            } else if (type === 'professional') {
-                const education = document.getElementById('setDocEdu').value;
-                const experience = document.getElementById('setDocExp').value;
-                const languages = document.getElementById('setDocLang').value;
-                updateData = { education, experience, languages };
-            } else if (type === 'availability') {
-                const specialization = document.getElementById('setDocSpecSelect').value;
-                const appointmentDuration = parseInt(document.getElementById('setDocDuration').value);
-                const bufferTime = parseInt(document.getElementById('setDocBuffer').value);
-                const maxPatients = parseInt(document.getElementById('setDocMaxPatients').value);
-                const availability = {};
-                
-                document.querySelectorAll('.day-active').forEach(cb => {
-                    const day = cb.dataset.day;
-                    const from = document.querySelector(`.day-from[data-day="${day}"]`).value;
-                    const to = document.querySelector(`.day-to[data-day="${day}"]`).value;
-                    availability[day] = { active: cb.checked, from, to };
-                });
+        window.loadPage = App.navigate;
 
-                updateData = { specialization, appointmentDuration, bufferTime, maxPatients, availability };
-            } else if (type === 'fees') {
-                const online = parseFloat(document.getElementById('feeOnline').value) || 0;
-                const inPerson = parseFloat(document.getElementById('feeInPerson').value) || 0;
-                const followUp = parseFloat(document.getElementById('feeFollowUp').value) || 0;
-                updateData = { fees: { online, inPerson, followUp } };
-            } else if (type === 'notifications') {
-                const email = document.getElementById('notifEmail').checked;
-                const sms = document.getElementById('notifSms').checked;
-                const browser = document.getElementById('notifBrowser').checked;
-                updateData = { notifications: { email, sms, browser } };
-            } else if (type === 'general') {
-                showToast('General preferences updated', 'success');
-                return;
-            } else if (type === 'security') {
-                const newPass = document.getElementById('setDocNewPass').value;
-                const confirmPass = document.getElementById('setDocConfirmPass').value;
-                if (!newPass) {
-                    showToast('Please enter a new password', 'error');
-                    return;
-                }
-                if (newPass !== confirmPass) {
-                    showToast('Passwords do not match', 'error');
-                    return;
-                }
-                updateData = { password: newPass };
-            }
 
-            try {
-                const response = await fetch(`http://localhost:5000/api/users/${currentUser.id || currentUser._id}`, {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${token}`
-                    },
-                    body: JSON.stringify(updateData)
-                });
-
-                const data = await response.json();
-                if (data.success) {
-                    currentUser = { ...currentUser, ...updateData };
-                    localStorage.setItem('currentUser', JSON.stringify(currentUser));
-                    showToast('Settings saved successfully!', 'success');
-                    if (window.renderSidebarProfile) window.renderSidebarProfile();
-                } else {
-                    showToast(data.message || 'Failed to update settings', 'error');
-                }
-            } catch (err) {
-                showToast('Server error connecting to backend', 'error');
-            }
-        };
-
-            // Start
-            loadPage('dashboard');
-        })();
-    </script>
-    <script>
-        fetch('Frontend/components/sidebar.html')
-            .then(response => response.text())
-            .then(html => {
-                const wrapper = document.createElement('div');
-                wrapper.innerHTML = html;
-                wrapper.querySelectorAll('script').forEach(scriptNode => {
-                    const script = document.createElement('script');
-                    script.textContent = scriptNode.textContent;
-                    document.body.appendChild(script);
-                    script.remove();
-                });
-            })
-            .catch(error => console.error('Sidebar failed:', error));
+        // Initialize
+        window.addEventListener('DOMContentLoaded', App.init);
     </script>
 </body>
 

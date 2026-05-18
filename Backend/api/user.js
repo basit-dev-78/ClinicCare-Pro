@@ -21,18 +21,8 @@ function mapSafeUser(user) {
     profilePic: user.profilePic || '',
     blocked: !!user.blocked,
     createdAt: user.createdAt
-
-
-
-
   };
 }
-
-
-
-
-
-
 
 function isValidObjectId(ObjectId, id) {
   return typeof id === 'string' && ObjectId.isValid(id);

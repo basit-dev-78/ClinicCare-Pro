@@ -733,6 +733,8 @@
                                     <option value="doctor">Doctor / Physician</option>
                                     <option value="patient">Patient</option>
                                     <option value="receptionist">Receptionist</option>
+                                    <option value="vital">Vital Signs Monitor (Vital)</option>
+                                    <option value="pharma">Medical Pharmacy Manager (Medical Pharma)</option>
                                 </select>
                             </div>
                         </div>
@@ -851,10 +853,26 @@
                     localStorage.setItem('authToken', token);
                     localStorage.setItem('currentUser', JSON.stringify(user));
 
+                    // Log login activity
+                    try {
+                        await fetch(`${API_URL}/audit-logs`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                            body: JSON.stringify({ user: user.name, action: 'Logged in to the system' })
+                        });
+                    } catch(e) { console.error('Logging failed', e); }
+
                     showToast(`Welcome back, ${user.name}!`, 'success');
                     
                     setTimeout(() => {
-                        window.location.href = `${user.role}-dashboard.html`;
+                        const role = user.role;
+                        if (role === 'pharma') {
+                            window.location.href = 'medical-pharma.html';
+                        } else if (role === 'vital') {
+                            window.location.href = 'vital-dashboard.html';
+                        } else {
+                            window.location.href = `${role}-dashboard.html`;
+                        }
                     }, 1200);
                 } else {
                     showToast(result.message || 'Login failed', 'error');
@@ -943,9 +961,16 @@
 
             if (currentUser && token) {
                 // User is already authenticated, redirect to their dashboard
-                window.location.href = `${currentUser.role}-dashboard.html`;
+                const role = currentUser.role;
+                if (role === 'pharma') {
+                    window.location.href = 'medical-pharma.html';
+                } else if (role === 'vital') {
+                    window.location.href = 'vital-dashboard.html';
+                } else {
+                    window.location.href = `${role}-dashboard.html`;
+                }
             }
         });
     </script>
 </body>
-</html>c
+</html>
