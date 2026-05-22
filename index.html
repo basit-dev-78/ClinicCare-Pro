@@ -1222,9 +1222,14 @@
         window.openAuth = function (tab, role = null) {
             showToast('Redirecting to ' + tab + ' page...', 'success');
             setTimeout(() => {
-                let url = tab === 'signup' ? 'Frontend/Auth/signup.html' : 'Frontend/Auth/login.html';
-                if (role && tab === 'signup') {
-                    url += '?role=' + role;
+                let url = 'auth.html';
+                if (tab === 'signup' || tab === 'register') {
+                    url += '?mode=register';
+                } else {
+                    url += '?mode=login';
+                }
+                if (role) {
+                    url += '&role=' + role;
                 }
                 window.location.href = url;
             }, 500);

@@ -339,6 +339,35 @@
         #aDoc {
             width: 450px;
         }
+
+        .fixed-footer-action {
+            position: fixed;
+            bottom: 0;
+            left: 280px;
+            right: 0;
+            padding: 20px 32px;
+            display: flex;
+            justify-content: flex-end;
+            gap: 16px;
+            background: white;
+            box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.05);
+            z-index: 1000;
+            margin: 0;
+            border-top: 1px solid #e5edfc;
+            transition: left 0.3s ease;
+        }
+
+        .dashboard.sidebar-compact .fixed-footer-action {
+            left: 80px;
+        }
+
+        @media (max-width: 768px) {
+            .fixed-footer-action {
+                left: 0;
+                width: 100%;
+                padding: 16px;
+            }
+        }
     </style>
 </head>
 
@@ -593,16 +622,34 @@
                                 <label>Phone Number</label>
                                 <input id="pPhone" class="form-input" placeholder="e.g. +91 9876543210">
                             </div>
+                            <div class="form-field">
+                                <label>Password</label>
+                                <div style="position: relative;">
+                                    <input id="pPassword" type="password" class="form-input" placeholder="Enter secure password" style="padding-right: 40px;">
+                                    <i class="fas fa-eye" style="position: absolute; right: 14px; top: 50%; transform: translateY(-50%); color: #64748b; cursor: pointer;" onclick="const p = this.previousElementSibling; if(p.type === 'password'){ p.type = 'text'; this.classList.replace('fa-eye', 'fa-eye-slash'); } else { p.type = 'password'; this.classList.replace('fa-eye-slash', 'fa-eye'); }"></i>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <div class="content-card" style="width: 100%; padding: 24px 32px; display: flex; justify-content: flex-end; gap: 16px; margin-top: 30px; box-shadow: var(--shadow); border-radius: 24px; position: sticky; bottom: 0; background: white; z-index: 100;">
+                    <div style="height: 80px;"></div>
+                    <div class="fixed-footer-action">
                         <button class="btn-outline" onclick="app.loadPage('patients')">Cancel</button>
                         <button class="btn-primary" onclick="app.savePatient()">Register</button>
                     </div>`;
             },
 
             savePatient: async () => {
-                const data = { name: document.getElementById('pName').value, email: document.getElementById('pEmail').value, phone: document.getElementById('pPhone').value, role: 'patient', password: 'password123' };
+                const name = document.getElementById('pName').value;
+                const email = document.getElementById('pEmail').value;
+                const phone = document.getElementById('pPhone').value;
+                const password = document.getElementById('pPassword').value;
+
+                if (!name || !email || !password) {
+                    app.showToast('Name, Email and Password required', 'error');
+                    return;
+                }
+
+                const data = { name, email, phone, role: 'patient', password };
                 try {
                     await API.post('signup', data);
                     await API.post('audit-logs', { user: app.currentUser.name, action: `Registered new patient: ${data.name}` });

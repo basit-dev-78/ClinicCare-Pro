@@ -616,8 +616,9 @@
         <!-- Left Brand Panel -->
         <div class="brand-panel">
             <div class="brand-logo">
-               
-                <h1>ClinicCare<br>Pro</h1>
+                <a href="index.html" style="text-decoration: none; color: inherit; display: inline-block; transition: opacity 0.2s;" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'">
+                    <h1>ClinicCare<br>Pro</h1>
+                </a>
                 <p>Intelligent healthcare management for modern medical practices</p>
                 <ul class="features">
                     <li><i class="fas fa-brain"></i> AI-Powered Scheduling</li>
@@ -652,6 +653,11 @@
 
         <!-- Right Form Panel -->
         <div class="form-panel">
+            <div style="display: flex; justify-content: flex-start; margin-bottom: 20px; flex-shrink: 0;">
+                <a href="index.html" style="color: #64748b; text-decoration: none; font-size: 0.85rem; font-weight: 600; display: flex; align-items: center; gap: 6px; transition: color 0.2s;" onmouseover="this.style.color='#4158D0'" onmouseout="this.style.color='#64748b'">
+                    <i class="fas fa-arrow-left"></i> Back to Home
+                </a>
+            </div>
             <div class="toggle-buttons">
                 <button class="toggle-btn active" onclick="switchForm('login')">Sign In</button>
                 <button class="toggle-btn" onclick="switchForm('register')">Create Account</button>
@@ -683,10 +689,9 @@
                     </button>
                     <div class="demo-credentials">
                         <i class="fas fa-flask"></i> Demo Accounts:<br>
-                        Admin: admin@example.com / admin123<br>
-                        Doctor: doctor@example.com / doctor123<br>
-                        Patient: patient@example.com / patient123<br>
-                        Receptionist: receptionist@example.com / receptionist123
+                        Admin: admin@clinic.com / admin123 · Doctor: sarah@clinic.com / doctor123<br>
+                        Patient: john@example.com / patient123 · Receptionist: receptionist@clinic.com / receptionist123<br>
+                        Vital: vital@clinic.com / vital123 · Pharma: pharma@clinic.com / pharma123
                     </div>
                     <div class="form-footer">
                         <p>Don't have an account? <a href="#" onclick="switchForm('register'); return false;">Create one</a></p>
@@ -932,12 +937,33 @@
                 const result = await response.json();
 
                 if (result.success) {
-                    showToast('Account created successfully! Please sign in.', 'success');
+                    const token = result.token;
+                    const user = result.user;
+
+                    // Save auth token and user info
+                    localStorage.setItem('authToken', token);
+                    localStorage.setItem('currentUser', JSON.stringify(user));
+
+                    // Log registration activity
+                    try {
+                        await fetch(`${API_URL}/audit-logs`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                            body: JSON.stringify({ user: user.name, action: 'Registered and logged in to the system' })
+                        });
+                    } catch(e) { console.error('Logging failed', e); }
+
+                    showToast('Account created successfully! Redirecting...', 'success');
                     setTimeout(() => {
-                        switchForm('login');
-                        btn.innerHTML = '<span><i class="fas fa-user-plus"></i> Create Account</span>';
-                        btn.disabled = false;
-                    }, 1500);
+                        const role = user.role;
+                        if (role === 'pharma') {
+                            window.location.href = 'medical-pharma.html';
+                        } else if (role === 'vital') {
+                            window.location.href = 'vital-dashboard.html';
+                        } else {
+                            window.location.href = `${role}-dashboard.html`;
+                        }
+                    }, 1200);
                 } else {
                     showToast(result.message || 'Registration failed', 'error');
                     btn.innerHTML = '<span><i class="fas fa-user-plus"></i> Create Account</span>';
@@ -968,6 +994,27 @@
                     window.location.href = 'vital-dashboard.html';
                 } else {
                     window.location.href = `${role}-dashboard.html`;
+                }
+            } else {
+                // Switch form based on URL parameter
+                const urlParams = new URLSearchParams(window.location.search);
+                const mode = urlParams.get('mode');
+                if (mode === 'register' || mode === 'signup') {
+                    switchForm('register');
+                    
+                    // Pre-select role if specified
+                    const roleParam = urlParams.get('role');
+                    if (roleParam) {
+                        const regRoleSelect = document.getElementById('regRole');
+                        if (regRoleSelect) {
+                            regRoleSelect.value = roleParam;
+                            if (window.toggleSpecializationField) {
+                                window.toggleSpecializationField();
+                            }
+                        }
+                    }
+                } else {
+                    switchForm('login');
                 }
             }
         });

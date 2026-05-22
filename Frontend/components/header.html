@@ -1,78 +1,453 @@
-<div class="custom-header-bar">
-    <button class="header-menu-toggle" id="headerMenuToggle"><i class="fas fa-bars"></i></button>
-    <div class="header-title" id="headerTitle">Dashboard</div>
-    <div class="header-clock" id="desktopClock">--:--</div>
+<nav class="navbar" id="navbar">
+    <div class="nav-container">
+        <!-- Left Side: Logo -->
+        <a href="#home" class="logo">
+            <img style="height: 50px;" src="assets/logo.png" alt="ClinicCare Pro Logo" class="logo-img">
+
+        </a>
+
+        <!-- Center: Navigation Links -->
+        <div class="nav-links-desktop">
+            <a href="#home" class="nav-link">Home</a>
+            <a href="#features" class="nav-link">Features</a>
+            <a href="#doctors" class="nav-link">Specialists</a>
+            <a href="#solutions" class="nav-link">Solutions</a>
+            <a href="#pricing" class="nav-link">Pricing</a>
+            <a href="#contact" class="nav-link">Contact</a>
+        </div>
+
+        <!-- Right Side: Auth Buttons -->
+        <div class="nav-auth-desktop">
+            <a href="auth.html?mode=login" class="nav-btn-login">Login</a>
+            <a href="auth.html?mode=register" class="nav-btn-signup">Sign Up</a>
+        </div>
+
+        <!-- Mobile Menu Toggle -->
+        <button class="menu-toggle-btn" id="menuToggleBtn" aria-label="Toggle Menu">
+            <i class="fas fa-bars"></i>
+        </button>
+    </div>
+</nav>
+
+<!-- Mobile Sidebar Component -->
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+<div class="mobile-sidebar" id="mobileSidebar">
+    <div class="sidebar-header">
+        <a href="#home" class="logo">
+            <img src="assets/logo.png" alt="ClinicCare Pro Logo" class="logo-img">
+            <span class="logo-text">ClinicCare<span>Pro</span></span>
+        </a>
+        <button class="close-sidebar-btn" id="closeSidebarBtn" aria-label="Close Menu">
+            <i class="fas fa-times"></i>
+        </button>
+    </div>
+    <div class="sidebar-nav">
+        <a href="#home" class="sidebar-link">Home</a>
+        <a href="#features" class="sidebar-link">Features</a>
+        <a href="#doctors" class="sidebar-link">Specialists</a>
+        <a href="#solutions" class="sidebar-link">Solutions</a>
+        <a href="#pricing" class="sidebar-link">Pricing</a>
+        <a href="#contact" class="sidebar-link">Contact</a>
+    </div>
+    <div class="sidebar-auth">
+        <a href="auth.html?mode=login" class="sidebar-btn-login">Login</a>
+        <a href="auth.html?mode=register" class="sidebar-btn-signup">Sign Up</a>
+    </div>
 </div>
 
 <style>
-    .custom-header-bar {
+    /* Navbar Styles */
+    .navbar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        padding: 1.4rem 5%;
+        background: rgba(255, 255, 255, 0.7);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        z-index: 1000;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.25);
+        transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .navbar.scrolled {
+        padding: 0.9rem 5%;
+        background: rgba(255, 255, 255, 0.88);
+        box-shadow: 0 10px 30px rgba(65, 88, 208, 0.06);
+        border-bottom: 1px solid rgba(65, 88, 208, 0.08);
+    }
+
+    .nav-container {
+        max-width: 1400px;
+        margin: 0 auto;
         display: flex;
         justify-content: space-between;
         align-items: center;
-        background: rgba(255, 255, 255, 0.85);
-        backdrop-filter: blur(12px);
-        -webkit-backdrop-filter: blur(12px);
-        padding: 14px 28px;
-        border-radius: 20px;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
-        margin-bottom: 28px;
-        border: 1px solid rgba(230, 237, 250, 0.6);
-        transition: all 0.3s ease;
+        width: 100%;
     }
 
-    .header-menu-toggle {
-        background: linear-gradient(135deg, #2c9b8f, #1f7a6e);
-        color: white;
-        border: none;
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
-        cursor: pointer;
-        display: none;
+    /* Logo Styles */
+    .logo {
+        display: flex;
         align-items: center;
-        justify-content: center;
-        box-shadow: 0 4px 10px rgba(44, 155, 143, 0.3);
-        transition: all 0.2s ease;
+        gap: 10px;
+        text-decoration: none;
+        transition: transform 0.3s ease;
     }
 
-    .header-menu-toggle:hover {
-        transform: scale(1.05);
+    .logo:hover {
+        transform: translateY(-1px);
     }
 
-    .header-title {
-        font-weight: 700;
-        font-size: 1.5rem;
-        background: linear-gradient(135deg, #1f7a6e, #2c9b8f);
-        -webkit-background-clip: text;
-        background-clip: text;
-        -webkit-text-fill-color: transparent;
+    .logo-img {
+        height: 38px;
+        width: auto;
+        object-fit: contain;
+    }
+
+    .logo-text {
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        font-weight: 800;
+        font-size: 1.35rem;
+        color: #1a1f2b;
         letter-spacing: -0.5px;
     }
 
-    .header-clock {
-        background: rgba(44, 155, 143, 0.08);
-        padding: 8px 20px;
-        border-radius: 50px;
-        font-weight: 600;
-        color: #1f7a6e;
-        font-size: 0.82rem;
-        letter-spacing: 0.5px;
-        box-shadow: inset 0 2px 4px rgba(44, 155, 143, 0.04);
+    .logo-text span {
+        background: linear-gradient(90deg, #4158D0, #C850C0);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
     }
 
-    @media (max-width: 1024px) {
-        .header-menu-toggle {
+    /* Desktop Navigation Links */
+    .nav-links-desktop {
+        display: flex;
+        align-items: center;
+        gap: 2rem;
+    }
+
+    .nav-link {
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        font-weight: 600;
+        font-size: 0.95rem;
+        color: #4a5568;
+        text-decoration: none;
+        position: relative;
+        transition: color 0.3s ease;
+        padding: 0.4rem 0;
+    }
+
+    .nav-link:hover {
+        color: #4158D0;
+    }
+
+    .nav-link::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 0;
+        height: 2px;
+        background: linear-gradient(90deg, #4158D0, #C850C0);
+        transition: width 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .nav-link:hover::after {
+        width: 100%;
+    }
+
+    /* Auth Buttons (Desktop) */
+    .nav-auth-desktop {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .nav-btn-login {
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        font-weight: 700;
+        font-size: 0.9rem;
+        color: #4158D0;
+        text-decoration: none;
+        padding: 0.6rem 1.4rem;
+        border-radius: 50px;
+        border: 2px solid rgba(65, 88, 208, 0.15);
+        background: transparent;
+        transition: all 0.3s ease;
+    }
+
+    .nav-btn-login:hover {
+        background: rgba(65, 88, 208, 0.05);
+        border-color: #4158D0;
+        transform: translateY(-1px);
+    }
+
+    .nav-btn-signup {
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        font-weight: 700;
+        font-size: 0.9rem;
+        color: white;
+        text-decoration: none;
+        padding: 0.7rem 1.6rem;
+        border-radius: 50px;
+        background: linear-gradient(90deg, #4158D0, #C850C0);
+        box-shadow: 0 4px 15px rgba(65, 88, 208, 0.15);
+        transition: all 0.3s ease;
+    }
+
+    .nav-btn-signup:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(65, 88, 208, 0.25);
+    }
+
+    /* Mobile Menu Toggle Button */
+    .menu-toggle-btn {
+        display: none;
+        background: rgba(65, 88, 208, 0.05);
+        border: 1px solid rgba(65, 88, 208, 0.1);
+        color: #4158D0;
+        width: 42px;
+        height: 42px;
+        border-radius: 12px;
+        cursor: pointer;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.15rem;
+        transition: all 0.2s ease;
+    }
+
+    .menu-toggle-btn:hover {
+        background: rgba(65, 88, 208, 0.1);
+        transform: scale(1.05);
+    }
+
+    /* Mobile Sidebar styles */
+    .sidebar-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(26, 31, 43, 0.3);
+        backdrop-filter: blur(4px);
+        -webkit-backdrop-filter: blur(4px);
+        z-index: 1040;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.4s ease;
+    }
+
+    .sidebar-overlay.active {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    .mobile-sidebar {
+        position: fixed;
+        top: 0;
+        right: -320px;
+        width: 320px;
+        height: 100%;
+        background: white;
+        box-shadow: -10px 0 40px rgba(0, 0, 0, 0.08);
+        z-index: 1050;
+        display: flex;
+        flex-direction: column;
+        transition: right 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        padding: 1.5rem;
+    }
+
+    .mobile-sidebar.active {
+        right: 0;
+    }
+
+    .sidebar-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-bottom: 1.5rem;
+        border-bottom: 1px solid #f1f5f9;
+        margin-bottom: 1.5rem;
+    }
+
+    .close-sidebar-btn {
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        color: #64748b;
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.95rem;
+        transition: all 0.2s ease;
+    }
+
+    .close-sidebar-btn:hover {
+        background: #f1f5f9;
+        color: #1a1f2b;
+        transform: rotate(90deg);
+    }
+
+    .sidebar-nav {
+        display: flex;
+        flex-direction: column;
+        gap: 0.8rem;
+        flex-grow: 1;
+    }
+
+    .sidebar-link {
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        font-weight: 600;
+        font-size: 1.05rem;
+        color: #334155;
+        text-decoration: none;
+        padding: 0.8rem 1rem;
+        border-radius: 12px;
+        transition: all 0.2s ease;
+    }
+
+    .sidebar-link:hover {
+        background: #f8fafc;
+        color: #4158D0;
+        padding-left: 1.25rem;
+    }
+
+    .sidebar-auth {
+        display: flex;
+        flex-direction: column;
+        gap: 0.8rem;
+        padding-top: 1.5rem;
+        border-top: 1px solid #f1f5f9;
+    }
+
+    .sidebar-btn-login {
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        font-weight: 700;
+        font-size: 0.95rem;
+        color: #4158D0;
+        text-decoration: none;
+        text-align: center;
+        padding: 0.8rem;
+        border-radius: 50px;
+        border: 2px solid rgba(65, 88, 208, 0.15);
+        transition: all 0.2s ease;
+    }
+
+    .sidebar-btn-login:hover {
+        background: rgba(65, 88, 208, 0.05);
+        border-color: #4158D0;
+    }
+
+    .sidebar-btn-signup {
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        font-weight: 700;
+        font-size: 0.95rem;
+        color: white;
+        text-decoration: none;
+        text-align: center;
+        padding: 0.9rem;
+        border-radius: 50px;
+        background: linear-gradient(90deg, #4158D0, #C850C0);
+        box-shadow: 0 4px 15px rgba(65, 88, 208, 0.15);
+        transition: all 0.2s ease;
+    }
+
+    .sidebar-btn-signup:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 6px 20px rgba(65, 88, 208, 0.2);
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 992px) {
+
+        .nav-links-desktop,
+        .nav-auth-desktop {
+            display: none;
+        }
+
+        .menu-toggle-btn {
             display: flex;
-        }
-
-        .custom-header-bar {
-            padding: 12px 20px;
-            border-radius: 16px;
-            margin-bottom: 20px;
-        }
-
-        .header-title {
-            font-size: 1.25rem;
         }
     }
 </style>
+
+<script>
+    (function () {
+        // Mobile Sidebar Controls
+        const menuToggle = document.getElementById('menuToggleBtn');
+        const mobileSidebar = document.getElementById('mobileSidebar');
+        const sidebarOverlay = document.getElementById('sidebarOverlay');
+        const closeSidebarBtn = document.getElementById('closeSidebarBtn');
+
+        function openSidebar() {
+            if (mobileSidebar && sidebarOverlay) {
+                mobileSidebar.classList.add('active');
+                sidebarOverlay.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            }
+        }
+
+        function closeSidebar() {
+            if (mobileSidebar && sidebarOverlay) {
+                mobileSidebar.classList.remove('active');
+                sidebarOverlay.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        }
+
+        if (menuToggle) {
+            menuToggle.addEventListener('click', function (e) {
+                e.stopPropagation();
+                openSidebar();
+            });
+        }
+        if (closeSidebarBtn) {
+            closeSidebarBtn.addEventListener('click', function (e) {
+                e.stopPropagation();
+                closeSidebar();
+            });
+        }
+        if (sidebarOverlay) {
+            sidebarOverlay.addEventListener('click', function (e) {
+                e.stopPropagation();
+                closeSidebar();
+            });
+        }
+
+        // Close sidebar and smooth scroll when clicking sidebar nav links
+        document.querySelectorAll('.sidebar-link, .mobile-sidebar .logo').forEach(link => {
+            link.addEventListener('click', function (e) {
+                const targetId = this.getAttribute('href');
+                if (targetId && targetId.startsWith('#')) {
+                    e.preventDefault();
+                    const targetElement = document.querySelector(targetId);
+                    closeSidebar();
+                    if (targetElement) {
+                        setTimeout(() => {
+                            targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        }, 250);
+                    }
+                }
+            });
+        });
+
+        // Desktop nav smooth scroll
+        document.querySelectorAll('.nav-links-desktop a, .navbar .logo').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                const hash = this.getAttribute('href');
+                if (hash && hash.startsWith('#')) {
+                    e.preventDefault();
+                    const target = document.querySelector(hash);
+                    if (target) {
+                        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                }
+            });
+        });
+    })();
+</script>

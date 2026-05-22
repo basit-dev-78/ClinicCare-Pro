@@ -56,6 +56,7 @@ async function startServer() {
     const vitals = db.collection('vitals');
     const inventory = db.collection('inventory');
     const suppliers = db.collection('suppliers');
+    const settingsCol = db.collection('settings');
 
     // JWT verification middleware
     async function authenticateToken(req, res, next) {
@@ -153,6 +154,60 @@ async function startServer() {
       } catch (e) { 
         console.error('Delete Login History Error:', e);
         res.status(500).json({ success: false, message: 'Internal Server Error' }); 
+      }
+    });
+    
+    app.delete('/api/login-history', authenticateToken, async (req, res) => {
+      try {
+        await loginHistory.deleteMany({});
+        res.json({ success: true, message: 'History cleared' });
+      } catch (e) { 
+        console.error('Clear Login History Error:', e);
+        res.status(500).json({ success: false, message: 'Internal Server Error' }); 
+      }
+    });
+
+    // Settings API
+    app.get('/api/settings', authenticateToken, async (req, res) => {
+      try {
+        let currentSettings = await settingsCol.findOne({ id: 'admin_settings' });
+        if (!currentSettings) {
+           currentSettings = {
+             id: 'admin_settings',
+             clinicName: 'ClinicCare Pro Medical Center',
+             adminEmail: 'admin@cliniccare.pro',
+             phone: '+1 234 567 8900',
+             address: '123 Health Ave, Medical District',
+             timezone: 'UTC',
+             currency: 'USD',
+             dateFormat: 'MM/DD/YYYY',
+             theme: 'light',
+             twoFactorAuth: false,
+             sessionTimeout: '30',
+             notifAppointments: true,
+             notifDailySummary: true,
+             notifAlerts: true
+           };
+           await settingsCol.insertOne(currentSettings);
+        }
+        res.json({ success: true, settings: currentSettings });
+      } catch (e) {
+        console.error('Fetch Settings Error:', e);
+        res.status(500).json({ success: false, message: 'Internal Server Error' });
+      }
+    });
+
+    app.put('/api/settings', authenticateToken, async (req, res) => {
+      try {
+        if (req.user.role !== 'admin') return res.status(403).json({ success: false, message: 'Forbidden' });
+        const updateData = { ...req.body };
+        delete updateData._id;
+        delete updateData.id;
+        await settingsCol.updateOne({ id: 'admin_settings' }, { $set: updateData }, { upsert: true });
+        res.json({ success: true, message: 'Settings updated successfully' });
+      } catch (e) {
+        console.error('Update Settings Error:', e);
+        res.status(500).json({ success: false, message: 'Internal Server Error' });
       }
     });
 
